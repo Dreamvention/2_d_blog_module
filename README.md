@@ -1,6 +1,7 @@
 #d_blog_module
-Blog module for opencart 2.0.x - 2.2.x
-for version 2.3.x and go [here](https://github.com/Dreamvention/2_d_blog_module_230)
+Blog module for opencart 2.0.x - 2.2.x.
+
+For version 2.3.x and over go [here](https://github.com/Dreamvention/2_d_blog_module_230)
 
 [DEMO](https://dreamvention.myshopunity.com/230/d_blog_module/index.php?route=d_blog_module/category)
 
