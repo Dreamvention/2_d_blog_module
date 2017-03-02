@@ -19,7 +19,7 @@ class ControllerDBlogModuleReview extends Controller {
         }
 
         $this->load->language('d_blog_module/review');
-        $this->load->model('extension/module/d_blog_module');
+        $this->load->model('module/d_blog_module');
         $this->load->model('d_blog_module/category');
         $this->load->model('d_blog_module/post');
         $this->load->model('d_blog_module/review');
@@ -28,11 +28,11 @@ class ControllerDBlogModuleReview extends Controller {
 
         $this->session->data['d_blog_module_debug'] = $this->config->get('d_blog_module_debug');
 
-        //$this->mbooth = $this->model_extension_module_d_blog_module->getMboothFile($this->id, $this->sub_versions);
+        //$this->mbooth = $this->model_module_d_blog_module->getMboothFile($this->id, $this->sub_versions);
 
-        $this->config_file = $this->model_extension_module_d_blog_module->getConfigFile($this->id, $this->sub_versions);
+        $this->config_file = $this->model_module_d_blog_module->getConfigFile($this->id, $this->sub_versions);
 
-        $this->setting = $this->model_extension_module_d_blog_module->getConfigData($this->id, $this->id.'_setting', $this->config->get('config_store_id'),$this->config_file);
+        $this->setting = $this->model_module_d_blog_module->getConfigData($this->id, $this->id.'_setting', $this->config->get('config_store_id'),$this->config_file);
     }
 
     public function index() {
@@ -177,9 +177,9 @@ class ControllerDBlogModuleReview extends Controller {
             $data['customer'] = true;
             $data['customer_name'] = $this->customer->getFirstName() . ' ' . $this->customer->getLastName();
 
-            if ($this->model_extension_module_d_blog_module->isInstalled('d_social_login') && $this->config->get('d_social_login_status') && $this->setting['review']['social_login']) {
-                $this->load->model('extension/module/d_social_login');
-                $customer = $this->model_extension_module_d_social_login->getCustomer($this->customer->getId());
+            if ($this->model_module_d_blog_module->isInstalled('d_social_login') && $this->config->get('d_social_login_status') && $this->setting['review']['social_login']) {
+                $this->load->model('module/d_social_login');
+                $customer = $this->model_module_d_social_login->getCustomer($this->customer->getId());
                 if(isset($customer['photo_url'])){
                     $customer_image = $customer['photo_url'];
                 }
@@ -204,7 +204,7 @@ class ControllerDBlogModuleReview extends Controller {
             }
         }
 
-        if ($this->model_extension_module_d_blog_module->isInstalled('d_social_login') && $this->config->get('d_social_login_status') && $this->setting['review']['social_login']) {
+        if ($this->model_module_d_blog_module->isInstalled('d_social_login') && $this->config->get('d_social_login_status') && $this->setting['review']['social_login']) {
             $data['d_social_login'] = $this->load->controller('module/d_social_login');
         } else {
             $data['d_social_login'] = '';
@@ -259,9 +259,9 @@ class ControllerDBlogModuleReview extends Controller {
         $data['delete'] = false;
         if($review['customer_id']){
 
-            if ($this->model_extension_module_d_blog_module->isInstalled('d_social_login') && $this->config->get('d_social_login_status') && $this->setting['review']['social_login']) {
-                $this->load->model('extension/module/d_social_login');
-                $customer = $this->model_extension_module_d_social_login->getCustomer($review['customer_id']);
+            if ($this->model_module_d_blog_module->isInstalled('d_social_login') && $this->config->get('d_social_login_status') && $this->setting['review']['social_login']) {
+                $this->load->model('module/d_social_login');
+                $customer = $this->model_module_d_social_login->getCustomer($review['customer_id']);
                 if(!empty($customer['provider'])){
                     $setting_social_login = $this->config->get('d_social_login_setting');
                     $provider = $setting_social_login['providers'][$customer['provider']];

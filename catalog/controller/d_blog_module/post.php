@@ -20,7 +20,7 @@ class ControllerDBlogModulePost extends Controller {
         }
 
         $this->load->language('d_blog_module/post');
-        $this->load->model('extension/module/d_blog_module');
+        $this->load->model('module/d_blog_module');
         $this->load->model('d_blog_module/category');
         $this->load->model('d_blog_module/post');
         $this->load->model('d_blog_module/review');
@@ -29,11 +29,11 @@ class ControllerDBlogModulePost extends Controller {
 
         $this->session->data['d_blog_module_debug'] = $this->config->get('d_blog_module_debug');
 
-        //$this->mbooth = $this->model_extension_module_d_blog_module->getMboothFile($this->id, $this->sub_versions);
+        //$this->mbooth = $this->model_module_d_blog_module->getMboothFile($this->id, $this->sub_versions);
 
-        $this->config_file = $this->model_extension_module_d_blog_module->getConfigFile($this->id, $this->sub_versions);
+        $this->config_file = $this->model_module_d_blog_module->getConfigFile($this->id, $this->sub_versions);
 
-        $this->setting = $this->model_extension_module_d_blog_module->getConfigData($this->id, $this->id.'_setting', $this->config->get('config_store_id'),$this->config_file);
+        $this->setting = $this->model_module_d_blog_module->getConfigData($this->id, $this->id.'_setting', $this->config->get('config_store_id'),$this->config_file);
 
     }
 
@@ -119,14 +119,14 @@ class ControllerDBlogModulePost extends Controller {
             $data['author_description'] = (isset($author['short_description'])) ? strip_tags(html_entity_decode($author['short_description'], ENT_QUOTES, 'UTF-8')) : '';
 
             if($this->config->get('d_visual_designer_status')) {
-                $this->load->model('extension/module/d_visual_designer');
+                $this->load->model('module/d_visual_designer');
                 $designer_data = array(
                     'config' => 'edit_blog_module_post',
                     'content' => $post_info['description'],
                     'field_name' => 'description['.(int)$this->config->get('config_language_id').'][description]',
                     'id' => $post_id
                     );  
-                $post_info['description'] = $this->model_extension_module_d_visual_designer->parseDescription($designer_data);
+                $post_info['description'] = $this->model_module_d_visual_designer->parseDescription($designer_data);
             }
             $data['description'] = html_entity_decode($post_info['description'], ENT_QUOTES, 'UTF-8');
             $data['date_published'] = date($this->setting['post']['date_format'], strtotime($post_info['date_published']));

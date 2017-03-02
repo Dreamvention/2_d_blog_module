@@ -3,7 +3,7 @@
  *	location: admin/model
  */
 
-class ModelExtensionModuleDBlogModule extends Model {
+class ModelModuleDBlogModule extends Model {
 
 
 	 public function in_array_multi($needle, $haystack, $strict = true) {
