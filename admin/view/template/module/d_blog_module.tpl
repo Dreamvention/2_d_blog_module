@@ -219,7 +219,7 @@
                                         </div>
                                     </div>
                                     <script type="text" id="template_input_category_layout">
-                                        <div class="input-group">
+                                        <div class="input-group m-b">
                                                 <select name="<?php echo $codename;?>_setting[category][layout][]" class="form-control">
                                                     <?php foreach ($cols as $col) { ?>
                                                        <option value="<?php echo $col; ?>"><?php echo $col; ?></option>
@@ -787,7 +787,7 @@
                                         </div>
                                     </div>
                                     <script type="text" id="template_input_author_layout">
-                                        <div class="input-group">
+                                        <div class="input-group m-b">
                                                 <select name="<?php echo $codename;?>_setting[author][layout][]" class="form-control">
                                                     <?php foreach ($cols as $col) { ?>
                                                     <option value="<?php echo $col; ?>"><?php echo $col; ?></option>

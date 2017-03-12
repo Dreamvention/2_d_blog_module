@@ -19,12 +19,12 @@ class ControllerEventDBlogModule extends Controller {
 
 
 			$data['text_blog'] = $this->language->get('text_blog');
-			$data['blog'] = $this->url->link('d_blog_module/category', '', 'SSL');
+			$data['blog'] = $this->url->link('d_blog_module/category', 'category_id=' . $bm_category_id , 'SSL');
 			$data['categories'][] = array(
 				'name'     => $this->language->get('text_blog'),
 				'children' => $bm_children_data,
 				'column'   => 1,
-				'href'     => $this->url->link('d_blog_module/category', '', 'SSL')
+				'href'     => $this->url->link('d_blog_module/category', 'category_id=' . $bm_category_id, 'SSL')
 			);
 		}
 	}
