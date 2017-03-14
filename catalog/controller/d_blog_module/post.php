@@ -70,7 +70,12 @@ class ControllerDBlogModulePost extends Controller {
 
             $this->document->addScript('catalog/view/javascript/jquery/magnific/jquery.magnific-popup.min.js');
             $this->document->addStyle('catalog/view/javascript/jquery/magnific/magnific-popup.css');
-            $this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment.js');
+            if(VERSION >= '2.1.0.0'){
+                $this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment.js');
+            }else{
+                $this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment.min.js');
+            }
+            
             $this->document->addScript('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js');
             $this->document->addStyle('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css');
 
