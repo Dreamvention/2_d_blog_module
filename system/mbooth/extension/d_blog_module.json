@@ -63,6 +63,7 @@
         "admin/language/en-gb/module/d_blog_module.php",
         "admin/language/english/module/d_blog_module.php",
         "admin/view/template/module/d_blog_module.tpl",
+        "admin/view/template/event/d_blog_module.tpl",
 
         "catalog/model/module/d_blog_module.php",
         "catalog/controller/event/d_blog_module.php",
