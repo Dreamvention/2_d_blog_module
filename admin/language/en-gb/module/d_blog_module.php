@@ -13,7 +13,7 @@ $_['text_width']                                = 'Width';
 $_['text_height']                               = 'Height';
 
 $_['help_install_demo_data']                    = '<h4>Warning! These options will clear your Blog data forever</h4>
-<p>You can use this option to start off quickly with demo data at your disposal. But be very careful, because this option will cleare the data accordingly. So before you do this please backup your current blog data if you have any with Export function.</p>';
+<p>You can use this option to start off quickly with demo data at your disposal. But be very careful, because this option will cleare the data accordingly. So before you do this please backup your current blog data if you have any with Opencart Backup function.</p>';
 $_['warning_install_demo_data']                 = 'You are about to delete any data that you have in your blog and replace with demo data. Are you sure you want to do this?';
 //tab
 $_['tab_setting']                               = 'Setting';
@@ -33,6 +33,8 @@ $_['text_menu_category']                        = 'Categories';
 $_['text_menu_review']                          = 'Reviews';
 $_['text_menu_author']                          = 'Authors';
 
+$_['text_install_twig_support']                 = 'Install twig';
+$_['text_install_event_support']                = 'Install events';
 $_['help_twig_support']                         = '<h4>Important! Twig support required</h4><p>Before you can activate the Blog module, you need to install Twig manager and activate Twig compatibility support.</p>';
 $_['help_event_support']                        = '<h4>Important! Event support required</h4><p>Before you can activate the Blog module, you need to install Event manager and activate Event compatibility support.</p>';
 $_['help_layout']                               = '<h4>What is layout?</h4><p>A layout is a simple way of defining how your posts should be presented on the page. You can set 1 row with 1 column: you will see only one post under another. Dull, wouldn\'t you say?. Lest spice it up. Try setting 1 row - 1 columns, 2 row - 2 columns, 3 row - 3 columns. Make your blog standout.</p>';

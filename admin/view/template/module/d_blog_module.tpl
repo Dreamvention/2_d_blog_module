@@ -161,10 +161,20 @@
                                             <input type="checkbox" class="switcher" data-label-text="<?php echo $text_enabled; ?>" id="input_status" name="<?php echo $codename;?>_status" <?php echo (${$codename.'_status'}) ? 'checked="checked"':'';?> value="1" />
                                         <?php } ?>
                                         <?php if(!$twig_support) { ?> 
-                                            <div class="alert alert-danger"><?php echo $help_twig_support; ?> </div>
+                                            <div class="alert alert-info">
+                                                <div class="row">
+                                                    <div class="col-md-10"><?php echo $help_twig_support; ?> </div>
+                                                    <div class="col-md-2"><a href="<?php echo $install_twig_support; ?>" class="btn btn-info btn-block"><?php echo $text_install_twig_support; ?></a></div>
+                                                </div>
+                                            </div>
                                         <?php } ?>
                                         <?php if(!$event_support) { ?> 
-                                            <div class="alert alert-danger"><?php echo $help_event_support; ?> </div>
+                                            <div class="alert alert-info">
+                                                <div class="row">
+                                                    <div class="col-md-10"><?php echo $help_event_support; ?> </div>
+                                                    <div class="col-md-2"><a href="<?php echo $install_event_support; ?>" class="btn btn-info btn-block"><?php echo $text_install_event_support; ?></a></div>
+                                                </div>
+                                            </div>
                                         <?php } ?>
                                     </div>
                                 </div><!-- //status -->

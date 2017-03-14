@@ -293,6 +293,12 @@ class ControllerModuleDBlogModule extends Controller {
         $data['action'] = $this->url->link($this->route, 'token=' . $this->session->data['token'] . $url, 'SSL');
         $data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL');
 
+        $data['text_install_twig_support'] = $this->language->get('text_install_twig_support');
+        $data['install_twig_support'] = $this->url->link($this->route.'/install_twig_support', 'token=' . $this->session->data['token'], 'SSL');
+
+        $data['text_install_event_support'] = $this->language->get('text_install_event_support');
+        $data['install_event_support'] = $this->url->link($this->route.'/install_event_support', 'token=' . $this->session->data['token'], 'SSL');
+
         //instruction
         $data['tab_instruction'] = $this->language->get('tab_instruction');
         $data['text_instruction'] = $this->language->get('text_instruction');
@@ -489,6 +495,38 @@ class ControllerModuleDBlogModule extends Controller {
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+    }
+
+    public function install_twig_support(){
+
+        if (!$this->user->hasPermission('modify', $this->route)) {
+            $this->session->data['error'] = $this->language->get('error_permission');
+            $this->response->redirect($this->url->link($this->route, 'token='.$this->session->data['token'], 'SSL'));
+        }
+
+        if(file_exists(DIR_SYSTEM.'mbooth/extension/d_twig_manager.json')){
+            $this->load->model('module/d_twig_manager');
+            $this->model_module_d_twig_manager->installCompatibility();
+        }
+
+        $this->response->redirect($this->url->link($this->route, 'token='.$this->session->data['token'], 'SSL'));
+        
+    }
+
+    public function install_event_support(){
+
+        if (!$this->user->hasPermission('modify', $this->route)) {
+            $this->session->data['error'] = $this->language->get('error_permission');
+            $this->response->redirect($this->url->link($this->route, 'token='.$this->session->data['token'], 'SSL'));
+        }
+
+        if(file_exists(DIR_SYSTEM.'mbooth/extension/d_event_manager.json')){
+            $this->load->model('module/d_event_manager');
+            $this->model_module_d_event_manager->installCompatibility();
+        }
+
+        $this->response->redirect($this->url->link($this->route, 'token='.$this->session->data['token'], 'SSL'));
+        
     }
 
 }
