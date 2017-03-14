@@ -19,6 +19,7 @@ class ControllerDBlogModuleSearch extends Controller
             }else{
                 $this->user = new User($registry);
             }
+            
             $this->theme = $this->config->get($this->config->get('config_theme').'_directory');
         }
 
