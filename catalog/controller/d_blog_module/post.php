@@ -15,7 +15,11 @@ class ControllerDBlogModulePost extends Controller {
     public function __construct($registry) {
         parent::__construct($registry);
         if(!isset($this->user)){
-            $this->user = new Cart\User($registry);
+            if(VERSION >= '2.2.0.0'){
+                $this->user = new Cart\User($registry);
+            }else{
+                $this->user = new User($registry);
+            }
             $this->theme = $this->config->get($this->config->get('config_theme').'_directory');
         }
 
