@@ -68,22 +68,22 @@ class ControllerEventDBlogModule extends Controller {
 
     //admin/model/localisation/language/addLanguage/after
     public function model_localisation_language_addLanguage_after($route, $data, $output){
-        $this->load->model('extension/module/d_blog_module');
+        $this->load->model('module/d_blog_module');
 
         $data = $data[0];
         $data['language_id'] = $output; 
 
 
-        $this->model_extension_module_d_blog_module->addLanguage($data);
+        $this->model_module_d_blog_module->addLanguage($data);
     }
 
     //admin/model/localisation/language/deleteLanguage/after
     public function model_localisation_language_deleteLanguage_after($route, $data, $output){
-        $this->load->model('extension/module/d_blog_module');
+        $this->load->model('module/d_blog_module');
 
         $language_id = $data[0];
         $data['language_id'] = $language_id;
 
-        $this->model_extension_module_d_blog_module->deleteLanguage($data);
+        $this->model_module_d_blog_module->deleteLanguage($data);
     }
 }
