@@ -62,15 +62,15 @@ class ControllerModuleDBlogModule extends Controller {
         $this->load->model('d_shopunity/setting');
 
         //save post
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') ) {
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 
             $this->model_setting_setting->editSetting($this->codename, $this->request->post, $this->store_id);
             $this->uninstallEvents();
             if(!empty($this->request->post[$this->codename.'_status'])){
                 $this->installEvents();
             }
-
-            $this->session->data['success'] = $this->language->get('text_success');
+            
+            $this->session->data['success'] = $this->language->get('success_modifed');
             
             $this->response->redirect($this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL'));
         }
@@ -303,6 +303,16 @@ class ControllerModuleDBlogModule extends Controller {
         $data['tab_instruction'] = $this->language->get('tab_instruction');
         $data['text_instruction'] = $this->language->get('text_instruction');
 
+        $data['ads'] = false;
+        $data['extension_id'] = false;
+        if(!file_exists(DIR_SYSTEM.'mbooth/extension/d_seo_module_blog.json')){
+            $data['ads'] = true;
+            $data['extension_id'] = 121; 
+        }
+        if(!file_exists(DIR_SYSTEM.'mbooth/extension/d_blog_module_pack.json')){
+            $data['ads'] = true;
+            $data['extension_id'] = 119; 
+        }
 
         if (isset($this->request->post[$this->codename.'_status'])) {
             $data[$this->codename.'_status'] = $this->request->post[$this->codename.'_status'];
@@ -383,16 +393,6 @@ class ControllerModuleDBlogModule extends Controller {
             return false;
         }
 
-        if(empty($this->request->post[$this->codename.'_setting']['select'])){
-            $this->error['select'] = $this->language->get('error_select');
-            return false;
-        }
-
-        if(empty($this->request->post[$this->codename.'_setting']['text'])){
-            $this->error['text'] = $this->language->get('error_text');
-            return false;
-        }
-
         return true;
     }
 
@@ -423,7 +423,7 @@ class ControllerModuleDBlogModule extends Controller {
     }
 
     public function uninstall() {
-        if($this->d_shopunity){
+        if($this->d_shopunity && $this->validate()){
             $this->uninstallEvents();
         }
     }

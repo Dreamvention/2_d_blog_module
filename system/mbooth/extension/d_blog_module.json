@@ -1,6 +1,6 @@
 {
     "codename": "d_blog_module",
-    "version": "1.3.2",
+    "version": "1.3.3",
     "name": "Blog module",
     "description": "A blog module based on twig and events. Huge functionality packed in one great solution.",
     "index": "module/d_blog_module",
@@ -37,7 +37,7 @@
         "url": "https://dreamvention.ee/support"
     },
     "required": {
-        "d_shopunity": ">= 3.0.0",
+        "d_shopunity": ">= 3.0.52",
         "d_event_manager": ">=1.1.0",
         "d_twig_manager": ">= 1.3.0",
         "d_simple_html_dom": ">= 1.0.3",
@@ -72,12 +72,9 @@
         "image/catalog/d_blog_module/no_profile_image.png",
         "image/catalog/d_blog_module/review/index.html",
 
-        "system/config/d_visual_designer_route/edit_blog_module_category.php",
-        "system/config/d_visual_designer_route/add_blog_module_category.php",
-        "system/config/d_visual_designer_route/edit_blog_module_post.php",
-        "system/config/d_visual_designer_route/add_blog_module_post.php",
-        "system/config/d_visual_designer_route/edit_blog_module_author.php",
-        "system/config/d_visual_designer_route/add_blog_module_author.php",
+        "system/config/d_visual_designer_route/d_blog_module_category.php",
+        "system/config/d_visual_designer_route/d_blog_module_post.php",
+        "system/config/d_visual_designer_route/d_blog_module_author.php",
         
         "catalog/view/theme/default/stylesheet/d_blog_module/d_blog_module.scss",
         "catalog/view/theme/default/stylesheet/d_blog_module/d_blog_module.css.map",
@@ -108,6 +105,10 @@
         "image/catalog/d_blog_module/post"
     ],
     "changelog": [
+        {
+            "version":"1.3.3",
+            "change": "1. Visual designer update, 2.Bug fixes."
+        },
         {
             "version":"1.3.2",
             "change": "1. Events for add and delete language"

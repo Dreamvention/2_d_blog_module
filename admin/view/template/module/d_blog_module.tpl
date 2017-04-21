@@ -47,6 +47,10 @@
                 <h3 class="panel-title"><i class="fa fa-pencil"></i> <?php echo $text_edit; ?></h3>
             </div>
             <div class="panel-body">
+                <?php if($ads) { ?>
+                <div class="row">
+                    <div class="col-md-9">
+                <?php } ?>
                 <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form" class="form-horizontal">
                     <ul  class="nav nav-tabs">
                         <li class="active"><a href="#tab_setting" data-toggle="tab">
@@ -86,9 +90,7 @@
                             <?php echo $tab_instruction; ?>
                         </a></li>
                     </ul>
-
                     <div class="tab-content">
-
                         <div class="tab-pane active" id="tab_setting" >
                             <div class="tab-body">
                                 <?php if (!${$codename.'_status'}) { ?>
@@ -945,6 +947,22 @@
                         </div> -->
                     </div>
                 </form>
+                <?php if($ads) { ?>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="d_shopunity_widget_1"></div>
+                        <script src="view/javascript/d_shopunity/d_shopunity_widget.js" type="text/javascript"></script>
+                        <script type="text/javascript">
+                            var d_shopunity_widget_1 = jQuery.extend(true, {}, d_shopunity_widget);
+                            d_shopunity_widget_1.init({
+                                class: '.d_shopunity_widget_1',
+                                token: '<?php echo $_GET['token']; ?>',
+                                extension_id: '<?php echo $extension_id; ?>'
+                            })
+                        </script>
+                    </div>
+                </div>
+                <?php } ?>
             </div>
 
         </div>

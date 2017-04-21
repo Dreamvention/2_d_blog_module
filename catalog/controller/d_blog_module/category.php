@@ -82,6 +82,8 @@ class ControllerDBlogModuleCategory extends Controller
             $category_id = $this->setting['category']['main_category_id'];
         }
 
+        $data['category_id'] = $category_id;
+
         $url = '';
         $data['setting'] = $this->setting;
 
@@ -127,17 +129,6 @@ class ControllerDBlogModuleCategory extends Controller
         $data['breadcrumbs'][] = array('text' => $category_info['title']);
 
         $data['heading_title'] = $category_info['title'];
-         
-        if($this->config->get('d_visual_designer_status')) {
-            $this->load->model('module/d_visual_designer');
-            $designer_data = array(
-                'config' => 'edit_blog_module_category',
-                'content' => $category_info['description'],
-                'field_name' => 'description['.(int)$this->config->get('config_language_id').'][description]',
-                'id' => $category_id
-            );  
-            $category_info['description'] = $this->model_module_d_visual_designer->parseDescription($designer_data);
-        }
         $data['description'] = html_entity_decode($category_info['description'], ENT_QUOTES, 'UTF-8');
         $data['text_categories'] = $this->language->get('text_categories');
         $data['text_tags'] = $this->language->get('text_tags');
