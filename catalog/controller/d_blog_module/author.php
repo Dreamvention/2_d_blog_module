@@ -45,33 +45,14 @@ class ControllerDBlogModuleAuthor extends Controller {
             $this->response->redirect($this->url->link('error/not_found'));
         }
 
-        $partials = $this->config->get('d_handlebars_partials');
-        $partials['d_blog_module_post_thumb'] = (file_exists(DIR_TEMPLATE.$this->theme.'/template/d_blog_module/post_thumb.hbs')) ? file_get_contents(DIR_TEMPLATE.$this->theme.'/template/d_blog_module/post_thumb.hbs') : '' ;
-        $this->config->set('d_handlebars_partials', $partials);
+        $styles = array(
+            'd_blog_module/d_blog_module.css',
+            'd_blog_module/bootstrap.css',
+        );
 
-        if (file_exists(DIR_TEMPLATE . $this->theme . '/stylesheet/d_blog_module/d_blog_module.css')) {
-            $this->document->addStyle('catalog/view/theme/'.$this->theme.'/stylesheet/d_blog_module/d_blog_module.css');
-        } else {
-            $this->document->addStyle('catalog/view/theme/default/stylesheet/d_blog_module/d_blog_module.css');
-        }
-        if (file_exists(DIR_TEMPLATE . $this->theme . '/stylesheet/d_blog_module/bootstrap.css')) {
-            $this->document->addStyle('catalog/view/theme/'.$this->theme.'/stylesheet/d_blog_module/bootstrap.css');
-        } else {
-            $this->document->addStyle('catalog/view/theme/default/stylesheet/d_blog_module/bootstrap.css');
-        }
-
-        $this->document->addStyle('catalog/view/theme/default/stylesheet/d_blog_module/theme/'.$this->setting['theme'].'.css');
-
-        if (file_exists(DIR_TEMPLATE . $this->theme . '/javascript/d_blog_module/main.js')) {
-            $this->document->addScript('catalog/view/theme/'.$this->theme.'/javascript/d_blog_module/main.js');
-        } else {
-            $this->document->addScript('catalog/view/theme/default/javascript/d_blog_module/main.js');
-        }
-        if (file_exists(DIR_TEMPLATE . $this->theme . '/javascript/d_blog_module/review.js')) {
-            $this->document->addScript('catalog/view/theme/'.$this->theme.'/javascript/d_blog_module/review.js');
-        } else {
-            $this->document->addScript('catalog/view/theme/default/javascript/d_blog_module/review.js');
-        }
+        $scripts = array(
+            'd_blog_module/author.js'
+        );
 
         if (isset($this->request->get['user_id'])) {
             $user_id = (int) $this->request->get['user_id'];
@@ -79,7 +60,6 @@ class ControllerDBlogModuleAuthor extends Controller {
             $user_id = 0;
         }
         $data['user_id'] = $user_id;
-        
         $data['breadcrumbs'] = array();
 
         $data['breadcrumbs'][] = array(
@@ -141,6 +121,19 @@ class ControllerDBlogModuleAuthor extends Controller {
 
         $author = $this->model_d_blog_module_author->getAuthorDescriptions($user_id);
 
+        $layout_type = $this->setting['author']['layout_type'];
+        $this->load->config('d_blog_module_layout/'.$layout_type);
+        $layout_type = $this->config->get('d_blog_module_layout');
+        $data['layout_template'] = $layout_type['template'];
+
+        if(isset($layout_type['styles'])){
+           $styles = array_merge($layout_type['styles'], $styles);
+        }
+
+        if(isset($layout_type['scripts'])){
+           $scripts = array_merge($layout_type['scripts'], $scripts);
+        }
+
         if(!empty($author)) {
             $this->document->setTitle($author['name']);
             $data['heading_title'] = $author['name'];
@@ -150,6 +143,7 @@ class ControllerDBlogModuleAuthor extends Controller {
 
 
             $data['short_description'] =  strip_tags(html_entity_decode($author['short_description'], ENT_QUOTES, 'UTF-8'));
+
             $data['description'] = html_entity_decode($author['description'], ENT_QUOTES, 'UTF-8');
 
             if ($author['image']) {
@@ -202,6 +196,8 @@ class ControllerDBlogModuleAuthor extends Controller {
 
                     $data['posts'][] = array(
                         'post' => $this->load->controller('d_blog_module/post/thumb', $post['post_id']),
+                        'col_count' => $col_count,
+                        'animate' => $this->setting['post_thumb']['animate'],
                         'col' => ($col_count) ? round(12 / $col_count) : 12,
                         'row' => $new_row,);
 
@@ -239,6 +235,24 @@ class ControllerDBlogModuleAuthor extends Controller {
 
             if ($limit && ceil($post_total / $limit) > $page) {
                 $this->document->addLink($this->url->link('d_blog_module/author', 'user_id=' . $user_id . '&page='. ($page + 1), 'SSL'), 'next');
+            }
+
+            $styles[] = 'd_blog_module/theme/'.$this->setting['theme'].'.css';
+        
+            foreach($styles as $style){
+                if (file_exists(DIR_TEMPLATE . $this->theme . '/stylesheet/'.$style)) {
+                    $this->document->addStyle('catalog/view/theme/'.$this->theme.'/stylesheet/'.$style);
+                } else {
+                    $this->document->addStyle('catalog/view/theme/default/stylesheet/'.$style);
+                }
+            }
+
+            foreach($scripts as $script){
+                if (file_exists(DIR_TEMPLATE . $this->theme . '/javascript/'.$script)) {
+                    $this->document->addScript('catalog/view/theme/'.$this->theme.'/javascript/'.$script);
+                } else {
+                    $this->document->addScript('catalog/view/theme/default/javascript/'.$script);
+                }
             }
 
             $data['column_left'] = $this->load->controller('common/column_left');

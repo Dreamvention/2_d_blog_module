@@ -90,8 +90,11 @@
                             <?php echo $tab_instruction; ?>
                         </a></li>
                     </ul>
+
                     <div class="tab-content">
-                        <div class="tab-pane active" id="tab_setting" >
+
+                        <div class="tab-pane active" id="tab_setting">
+                            
                             <div class="tab-body">
                                 <?php if (!${$codename.'_status'}) { ?>
 
@@ -158,23 +161,14 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label" for="input_status"><?php echo $entry_status; ?></label>
                                     <div class="col-sm-10">
-                                        <?php if ($twig_support && $event_support) {?> 
+                                        <?php if ($twig_support) {?> 
                                             <input type="hidden" name="<?php echo $codename;?>_status" value="0" />
                                             <input type="checkbox" class="switcher" data-label-text="<?php echo $text_enabled; ?>" id="input_status" name="<?php echo $codename;?>_status" <?php echo (${$codename.'_status'}) ? 'checked="checked"':'';?> value="1" />
-                                        <?php } ?>
-                                        <?php if(!$twig_support) { ?> 
+                                        <?php }else{ ?> 
                                             <div class="alert alert-info">
                                                 <div class="row">
                                                     <div class="col-md-10"><?php echo $help_twig_support; ?> </div>
                                                     <div class="col-md-2"><a href="<?php echo $install_twig_support; ?>" class="btn btn-info btn-block"><?php echo $text_install_twig_support; ?></a></div>
-                                                </div>
-                                            </div>
-                                        <?php } ?>
-                                        <?php if(!$event_support) { ?> 
-                                            <div class="alert alert-info">
-                                                <div class="row">
-                                                    <div class="col-md-10"><?php echo $help_event_support; ?> </div>
-                                                    <div class="col-md-2"><a href="<?php echo $install_event_support; ?>" class="btn btn-info btn-block"><?php echo $text_install_event_support; ?></a></div>
                                                 </div>
                                             </div>
                                         <?php } ?>
@@ -204,6 +198,22 @@
                                         </div>
                                     </div>
                                 </div><!-- //select -->
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="input_category_layout_type"><?php echo $entry_category_layout_type; ?></label>
+                                    <div class="col-sm-10">
+                                        <div class="btn-group colors" data-toggle="buttons">
+                                            <?php  foreach( $layout_types as $layout_type){ ?>
+                                            <label class="btn btn-default <?php if(isset($setting['category']['layout_type']) && $layout_type['id'] == $setting['category']['layout_type']) { ?>active<?php } ?>"
+                                             data-toggle="tooltip" data-html="true" title="<?php echo htmlspecialchars($layout_type['description']); ?>">
+                                                <input type="radio" name="<?php echo $codename;?>_setting[category][layout_type]" value="<?php echo $layout_type['id']; ?>" autocomplete="off" <?php if(isset($setting['category']['layout_type']) && $layout_type['id'] == $setting['category']['layout_type']) { ?>checked<?php } ?>> <?php echo $layout_type['name']; ?>
+                                            </label>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                </div><!-- //status -->
+
+
 
                                 <div class="form-group" id="category_layout">
                                     <label class="col-sm-2 control-label" for="input_category_layout"><?php echo $entry_category_layout; ?></label>
@@ -604,6 +614,17 @@
                                         <input type="checkbox" class="switcher" data-label-text="<?php echo $text_enabled; ?>"id="input_post_thumb_read_more_display" name="<?php echo $codename;?>_setting[post_thumb][read_more_display]" <?php echo ($setting['post_thumb']['read_more_display']) ? 'checked="checked"':'';?> value="1" />
                                     </div>
                                 </div><!-- //checkbox -->
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="input_post_thumb_animate"><?php echo $entry_post_thumb_animate; ?></label>
+                                    <div class="col-sm-10">
+                                        <select name="<?php echo $codename;?>_setting[post_thumb][animate]" id="input_post_thumb_animate" class="form-control">
+                                            <?php  foreach( $animations as $animate){ ?>
+                                            <option value="<?php echo $animate; ?>" <?php if(isset($setting['post_thumb']['animate']) && $animate == $setting['post_thumb']['animate']) { ?>selected="selected"<?php } ?>><?php echo $animate; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div><!-- //status -->
                             </div>
                         </div>
                         <div class="tab-pane " id="tab_review" >
@@ -773,8 +794,22 @@
                         <div class="tab-pane " id="tab_author" >
                             <div class="tab-body">
 
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="input_category_layout_type"><?php echo $entry_author_layout_type; ?></label>
+                                    <div class="col-sm-10">
+                                        <div class="btn-group colors" data-toggle="buttons">
+                                            <?php  foreach( $layout_types as $layout_type){ ?>
+                                            <label class="btn btn-default <?php if(isset($setting['author']['layout_type']) && $layout_type['id'] == $setting['author']['layout_type']) { ?>active<?php } ?>"
+                                             data-toggle="tooltip" data-html="true" title="<?php echo htmlspecialchars($layout_type['description']); ?>">
+                                                <input type="radio" name="<?php echo $codename;?>_setting[author][layout_type]" value="<?php echo $layout_type['id']; ?>" autocomplete="off" <?php if(isset($setting['author']['layout_type']) && $layout_type['id'] == $setting['author']['layout_type']) { ?>checked<?php } ?>> <?php echo $layout_type['name']; ?>
+                                            </label>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                </div><!-- //status -->
+
                                 <div class="form-group" id="author_layout">
-                                    <label class="col-sm-2 control-label" for="input_category_layout"><?php echo $entry_author_layout; ?></label>
+                                    <label class="col-sm-2 control-label" for="input_author_layout"><?php echo $entry_author_layout; ?></label>
                                     <div class="col-sm-10 ">
                                         <div class="input">
 
@@ -973,6 +1008,7 @@
 
 
     $(function () {
+
     //checkbox
     $(".switcher[type='checkbox']").bootstrapSwitch({
         'onColor': 'success',
