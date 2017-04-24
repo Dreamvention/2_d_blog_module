@@ -165,7 +165,8 @@ $_['error_failed']                              = 'Oops! We could not connect to
 //support
 $_['text_support']                              = 'Support';
 $_['entry_support']                             = 'Support';
-$_['button_support']                      		= 'New ticket';
+$_['button_support']                            = 'New ticket';
+$_['button_add']                                = 'Add';
 
 //instruction
 $_['tab_instruction']                           = 'Instructions';
