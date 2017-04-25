@@ -172,6 +172,14 @@
                                                 </div>
                                             </div>
                                         <?php } ?>
+                                        <?php if(!$event_support) { ?> 
+                                            <div class="alert alert-info">
+                                                <div class="row">
+                                                    <div class="col-md-10"><?php echo $help_event_support; ?> </div>
+                                                    <div class="col-md-2"><a href="<?php echo $install_event_support; ?>" class="btn btn-info btn-block"><?php echo $text_install_event_support; ?></a></div>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
                                     </div>
                                 </div><!-- //status -->
                                 <div class="form-group">
