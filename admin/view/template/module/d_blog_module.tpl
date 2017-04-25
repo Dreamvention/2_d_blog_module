@@ -161,10 +161,11 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label" for="input_status"><?php echo $entry_status; ?></label>
                                     <div class="col-sm-10">
-                                        <?php if ($twig_support) {?> 
+                                        <?php if ($twig_support && $event_support) {?>
                                             <input type="hidden" name="<?php echo $codename;?>_status" value="0" />
                                             <input type="checkbox" class="switcher" data-label-text="<?php echo $text_enabled; ?>" id="input_status" name="<?php echo $codename;?>_status" <?php echo (${$codename.'_status'}) ? 'checked="checked"':'';?> value="1" />
-                                        <?php }else{ ?> 
+                                        <?php } ?>
+                                        <?php if (!$twig_support) {?> 
                                             <div class="alert alert-info">
                                                 <div class="row">
                                                     <div class="col-md-10"><?php echo $help_twig_support; ?> </div>
