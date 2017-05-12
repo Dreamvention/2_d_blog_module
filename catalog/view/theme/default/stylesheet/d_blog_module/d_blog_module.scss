@@ -81,7 +81,11 @@ $stars-color:#FC0;
 .post-nav{
     margin-top:20px
 }
-
+.bm-author:after {
+  content: "";
+  display: table;
+  clear: both;
+}
 /*review*/
 .bm-reviews{
      .bm-pagination{
