@@ -458,14 +458,14 @@ class ControllerModuleDBlogModule extends Controller {
             $config = $this->request->get['config'];
         }
 
-        $this->config->load($config);
+        $this->config->load('d_blog_module_demo/'.$config);
         $data = $this->config->get($config.'_demo');
 
         $this->load->language($this->route);
         $this->load->model('module/d_blog_module');
         $setting = $this->model_module_d_blog_module->getConfigData($this->codename, $this->codename.'_setting', $this->store_id, $this->config_file);
         
-        $result = $this->model_module_d_blog_module->installDemoData(DIR_APPLICATION.$data['sql']);
+        $result = $this->model_module_d_blog_module->installDemoData(DIR_CONFIG.'d_blog_module_demo/'.$data['sql']);
 
         if(!empty($data['permission']) && is_array($data['permission'])){
             $this->load->model('user/user_group');

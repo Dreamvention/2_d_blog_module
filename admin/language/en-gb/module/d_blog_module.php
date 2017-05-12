@@ -12,8 +12,9 @@ $_['text_undefined']                            = 'Undefined';
 $_['text_width']                                = 'Width';
 $_['text_height']                               = 'Height';
 
-$_['help_install_demo_data']                    = '<h4>Warning! These options will clear your Blog data forever</h4>
-<p>You can use this option to populare your blog with demo data. But be careful, because this option will cleare the any blog data your already have. So before you do this please backup your current blog with the Opencart backup function.</p>';
+$_['help_install_demo_data']                    = '<h4>Welcome to The Blog Module Setup</h4>
+<p>You have just installed the Blog module - the most feature rich Blog extension for Opencart. To help you get a quick start, you can begin by Installing the Demo Data. If you feel comfortable without Demo Data, you can skip this option and go directly to activation. Before you can activate, you may need to install some required feature for Opencart Like Events and Twig. Just click the buttons and once you see the Status option - swipe it.</p>
+<p>If you ever need to return to the setup, simply switch the status of the Blog Module to off and save.</p>';
 $_['warning_install_demo_data']                 = 'You are about to delete any data that you have in your blog and replace with demo data. Are you sure you want to do this?';
 //tab
 $_['tab_setting']                               = 'Setting';
@@ -33,10 +34,10 @@ $_['text_menu_category']                        = 'Categories';
 $_['text_menu_review']                          = 'Reviews';
 $_['text_menu_author']                          = 'Authors';
 
-$_['text_install_twig_support']                 = 'Install twig';
-$_['text_install_event_support']                = 'Install events';
-$_['help_twig_support']                         = '<h4>Important! Twig support required</h4><p>Before you can activate the Blog module, you need to install Twig manager and activate Twig compatibility support.</p>';
-$_['help_event_support']                        = '<h4>Important! Event support required</h4><p>Before you can activate the Blog module, you need to install Event manager and activate Event compatibility support.</p>';
+$_['text_install_twig_support']                 = 'Install Twig';
+$_['text_install_event_support']                = 'Install Events';
+$_['help_twig_support']                         = '<h4>Activate Twig support</h4><p>The Blog Module runs on twig that allows you to edit your twig files vertually with Twig manager from your opencart Admin. Click install Twig.</p>';
+$_['help_event_support']                        = '<h4>Activate Event support</h4><p>The Blog Module uses the latest Opencart Events mechanism instead of Vqmod/Ocmod. Old version of Opencart do not support events but you can enable them here. Click install Events. </p>';
 $_['help_layout']                               = '<h4>What is layout?</h4><p>A layout is a simple way of defining how your posts should be presented on the page. You can set 1 row with 1 column: you will see only one post under another. Dull, wouldn\'t you say?. Lest spice it up. Try setting 1 row - 1 columns, 2 row - 2 columns, 3 row - 3 columns. Make your blog standout.</p>';
 $_['help_home_category']                        = '<h4>What is Home category?</h4><p>It is best prectice to pick one category which will be your Home category. When going to the root of your blog, this category will be displayed. Every other category should be a child to it. This way you can edit the description and title and other things a category lets you do.</p>';
 
@@ -108,7 +109,6 @@ $_['entry_review_image_limit']                  = 'Number of pictures in review'
 $_['entry_review_image_user_display']           = 'Display images in review';
 $_['entry_review_upload_image_size']            = 'Size upload image';
 
-
 $_['entry_review_thumb_image_size']             = 'Profile image size';
 $_['entry_review_thumb_no_image']               = 'Set no image url link';
 $_['entry_review_thumb_date_display']           = 'Display date';
@@ -166,7 +166,6 @@ $_['error_failed']                              = 'Oops! We could not connect to
 $_['text_support']                              = 'Support';
 $_['entry_support']                             = 'Support';
 $_['button_support']                            = 'New ticket';
-$_['button_add']                                = 'Add';
 
 //instruction
 $_['tab_instruction']                           = 'Instructions';
