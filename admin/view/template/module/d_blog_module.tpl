@@ -99,7 +99,7 @@
                                 <?php if (!${$codename.'_status'}) { ?>
 
                                 <img src="view/image/d_blog_module/welcome.jpg" class="img-responsive" /><br/>
-                                <div class="row">
+                                <div class="form-group">
                                     <div class="col-md-6">
                                         <div class="bs-callout bs-callout-info  ">
                                             <?php echo $help_install_demo_data; ?>
