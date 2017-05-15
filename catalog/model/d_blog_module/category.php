@@ -135,7 +135,8 @@ class ModelDBlogModuleCategory extends Model {
         LEFT JOIN " . DB_PREFIX . "bm_category_description cd2 ON (cp.category_id = cd2.category_id) 
         WHERE cd1.language_id = '" . (int)$this->config->get('config_language_id') . "' 
         AND cd2.language_id = '" . (int)$this->config->get('config_language_id') . "'
-        AND cp.category_id = '".$category_id."'";
+        AND cp.category_id = '".$category_id."'
+        GROUP BY category_id";
 
         $sql .= " ORDER BY cp.level";
         
