@@ -104,6 +104,7 @@ $_['d_blog_module_setting'] = array(
     )
         //'support' => 1,
 );
+
 $_['d_blog_module_animations'] = array(
     '',
     'slideInUp',

@@ -180,7 +180,7 @@ class ModelModuleDBlogModule extends Model {
         }
     }
 
-    public function createTables() {
+    public function updateTables(){
 
         $query = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '".DB_DATABASE."' AND TABLE_NAME = '" . DB_PREFIX . "customer' ORDER BY ORDINAL_POSITION");
         $result = $query->rows;
@@ -193,6 +193,56 @@ class ModelModuleDBlogModule extends Model {
             $this->db->query("ALTER TABLE " . DB_PREFIX . "customer ADD image VARCHAR( 255 )  NOT NULL");
         }
 
+        //added support for custom settings;
+        $query = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '".DB_DATABASE."' AND TABLE_NAME = '" . DB_PREFIX . "bm_post' ORDER BY ORDINAL_POSITION");
+        $result = $query->rows;
+        $columns = array();
+        foreach($result as $column){
+            $columns[] = $column['COLUMN_NAME'];
+        }
+
+        if(!in_array('custom', $columns)){
+            $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_post ADD custom INT( 1 ) DEFAULT 0");
+        }
+
+        if(!in_array('setting', $columns)){
+            $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_post ADD setting TEXT NOT NULL");
+        }
+
+        $query = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '".DB_DATABASE."' AND TABLE_NAME = '" . DB_PREFIX . "bm_author' ORDER BY ORDINAL_POSITION");
+        $result = $query->rows;
+        $columns = array();
+        foreach($result as $column){
+            $columns[] = $column['COLUMN_NAME'];
+        }
+
+        if(!in_array('custom', $columns)){
+            $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_author ADD custom INT( 1 ) DEFAULT 0");
+        }
+
+        if(!in_array('setting', $columns)){
+            $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_author ADD setting TEXT NOT NULL");
+        }
+
+        $query = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '".DB_DATABASE."' AND TABLE_NAME = '" . DB_PREFIX . "bm_category' ORDER BY ORDINAL_POSITION");
+        $result = $query->rows;
+        $columns = array();
+        foreach($result as $column){
+            $columns[] = $column['COLUMN_NAME'];
+        }
+
+        if(!in_array('custom', $columns)){
+            $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_category ADD custom INT( 1 ) DEFAULT 0");
+        }
+
+        if(!in_array('setting', $columns)){
+            $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_category ADD setting TEXT NOT NULL");
+        }
+
+    }
+
+    public function createTables() {
+
         $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "bm_post (
             post_id INT(11) NOT NULL AUTO_INCREMENT,
             user_id INT(11) NOT NULL,
@@ -204,6 +254,8 @@ class ModelModuleDBlogModule extends Model {
             images_review INT(1) DEFAULT 0,
             viewed INT(11) DEFAULT 1,
             status INT(1) DEFAULT 1,
+            custom INT(1) DEFAULT 0,
+            setting TEXT NOT NULL,
             date_added DATETIME NOT NULL,
             date_published DATETIME NOT NULL,
             date_modified DATETIME NOT NULL,
@@ -243,6 +295,8 @@ class ModelModuleDBlogModule extends Model {
             author_id int(11) NOT NULL AUTO_INCREMENT,
             user_id int(11) NOT NULL,
             author_group_id int(11) NOT NULL,
+            custom INT(1) DEFAULT 0,
+            setting TEXT NOT NULL,
             PRIMARY KEY (author_id)
         )
         COLLATE='utf8_general_ci'
@@ -275,6 +329,8 @@ class ModelModuleDBlogModule extends Model {
             sort_order INT(3) NOT NULL,
             image VARCHAR(255) DEFAULT NULL,
             status INT(1) DEFAULT 1,
+            custom INT(1) DEFAULT 0,
+            setting TEXT NOT NULL,
             date_added DATETIME NOT NULL,
             date_modified DATETIME NOT NULL,
             PRIMARY KEY (category_id)
@@ -425,7 +481,6 @@ class ModelModuleDBlogModule extends Model {
 
         //add category
         $query = $this->db->query(" INSERT IGNORE INTO `" . DB_PREFIX . "bm_category` (`category_id`, `parent_id`, `sort_order`, `image`, `status`, `date_added`, `date_modified`) VALUES ('1', '0', '1', 'catalog/d_blog_module/category/Photo_blog_17.jpg', '1', '2016-04-09 11:28:15', '2016-04-18 18:16:48')");
-
         if($query->row){
             $this->db->query(" INSERT IGNORE INTO `" . DB_PREFIX . "bm_category_description` (`category_description_id`, `category_id`, `language_id`, `title`, `description`, `meta_title`, `meta_keyword`, `meta_description`) VALUES ('1', '1', '1', 'Blog', '&lt;p&gt;&lt;span style=&quot;line-height: 1.42857;&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas, soluta! Non magnam ex, illo maxime maiores, quia perspiciatis sed voluptate quaerat dolorum enim veritatis recusandae qui ad voluptates aspernatur beatae.&amp;nbsp;&lt;/span&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;line-height: 1.42857;&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas, soluta! Non magnam ex, illo maxime maiores, quia perspiciatis sed voluptate quaerat dolorum enim veritatis recusandae qui ad voluptates aspernatur beatae.&lt;/span&gt;&lt;br&gt;&lt;/p&gt;', 'Blog', '', '')");
             $this->db->query(" INSERT IGNORE INTO `" . DB_PREFIX . "bm_category_path` (`category_id`, `path_id`, `level`) VALUES ('1', '1', '0')");
@@ -435,6 +490,7 @@ class ModelModuleDBlogModule extends Model {
               $this->db->query(" INSERT IGNORE INTO `" . DB_PREFIX . "bm_category_description` (`category_description_id`, `category_id`, `language_id`, `title`, `description`, `meta_title`, `meta_keyword`, `meta_description`) VALUES ('2', '1', '".$this->config->get('config_language_id')."', 'Blog', '&lt;p&gt;&lt;span style=&quot;line-height: 1.42857;&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas, soluta! Non magnam ex, illo maxime maiores, quia perspiciatis sed voluptate quaerat dolorum enim veritatis recusandae qui ad voluptates aspernatur beatae.&amp;nbsp;&lt;/span&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;line-height: 1.42857;&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas, soluta! Non magnam ex, illo maxime maiores, quia perspiciatis sed voluptate quaerat dolorum enim veritatis recusandae qui ad voluptates aspernatur beatae.&lt;/span&gt;&lt;br&gt;&lt;/p&gt;', 'Blog', '', '')");
             }
         }
+        
 
     }
 
@@ -450,7 +506,7 @@ class ModelModuleDBlogModule extends Model {
     } 
 
     public function getDemos(){
-
+        
         $files = glob(DIR_CONFIG . 'd_blog_module_demo/*.php', GLOB_BRACE);
         $demo = array();
         foreach ($files as $key => $file) {
@@ -583,6 +639,7 @@ class ModelModuleDBlogModule extends Model {
         $this->db->query("DELETE FROM " . DB_PREFIX . "bm_category_description WHERE language_id = '" . (int)$data['language_id'] . "'");
         $this->db->query("DELETE FROM " . DB_PREFIX . "bm_author_description WHERE language_id = '" . (int)$data['language_id'] . "'");
     }
+    
 
     protected function getLanguages() {
         $query = $this->db->query( "SELECT * FROM `".DB_PREFIX."language` WHERE `status`=1 ORDER BY `code`" );
