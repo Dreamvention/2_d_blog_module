@@ -154,6 +154,13 @@ class ControllerDBlogModuleCategory extends Controller
             $data['thumb'] = '';
         }
 
+        if(isset($this->request->get['format'])){
+            $format = $this->request->get['format'];
+            if($this->format($format, $data)){
+                return false;
+            }
+        }
+
         //categories
         $data['categories'] = array();
         $categories = $this->model_d_blog_module_category->getCategories($category_id);
@@ -285,6 +292,15 @@ class ControllerDBlogModuleCategory extends Controller
 
         $this->response->setOutput($this->load->view('d_blog_module/category', $data));
 
+    }
+
+    public function format($format, $json){
+        if($format == 'json'){
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+            return true;
+        }
+        return false;
     }
 
     public function editCategory(){
