@@ -1,0 +1,530 @@
+{{header}}{{column_left}}
+<div id="content">
+    <div class="page-header">
+        <div class="container-fluid">
+            <div class="pull-right">
+                <button type="submit" form="form-post" data-toggle="tooltip" title="{{button_save}}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+                <a href="{{cancel}}" data-toggle="tooltip" title="{{button_cancel}}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+            </div>
+            <h1>{{heading_title}}</h1>
+            <ul class="breadcrumb">
+                {% for breadcrumb in breadcrumbs %}
+                <li><a href="{{breadcrumb.href}}">{{breadcrumb.text}}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="container-fluid">
+        {% if error_warning %}
+        <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{error_warning}}
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
+        {% endif %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-pencil"></i> {{text_form}}</h3>
+            </div>
+            <div class="panel-body">
+                <form action="{{action}}" method="post" enctype="multipart/form-data" id="form-post" class="form-horizontal">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#tab-general" data-toggle="tab">{{tab_general}}</a></li>
+                        <li><a href="#tab-data" data-toggle="tab">{{tab_data}}</a></li>
+                        <li><a href="#tab-related" data-toggle="tab">{{tab_related}}</a></li>
+                        <li><a href="#tab-youtube" data-toggle="tab">{{tab_youtube}}</a></li>
+                        <li><a href="#tab-links" data-toggle="tab">{{tab_links}}</a></li>
+                        <li><a href="#tab-design" data-toggle="tab">{{tab_design}}</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab-general">
+                            <ul class="nav nav-tabs" id="language">
+                                {% for language in languages %}
+                                <li><a href="#language{{language.language_id}}" data-toggle="tab"><img src="{{language.flag}}" title="{{language.name}}" /> {{language.name}}</a></li>
+                                {% endfor %}
+                            </ul>
+                            <div class="tab-content">
+                                {% for language in languages %}
+                                <div class="tab-pane" id="language{{language.language_id}}">
+                                    <div class="form-group required">
+                                        <label class="col-sm-2 control-label" for="input-title{{language.language_id}}">{{entry_title}}</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="post_description[{{language.language_id}}][title]" value="{{post_description[language.language_id] ? post_description[language.language_id]['title'] : ''}}" placeholder="{{entry_title}}" id="input-title{{language.language_id}}" class="form-control" />
+                                            <input type="hidden" name="post_description[{{language.language_id}}][user_id]" value="{{user_id ? user_id : 0 }}" id="get-user_id" class="form-control" />
+                                            {% if error_title[language.language_id] %}
+                                            <div class="text-danger">{{error_title[language.language_id]}}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label" for="input-short-description{{language.language_id}}">{{entry_short_description}}</label>
+                                        <div class="col-sm-10">
+                                            <textarea name="post_description[{{language.language_id}}][short_description]" placeholder="{{entry_short_description}}" class="form-control" id="input-short-description{{language.language_id}}">{{ post_description[language.language_id] ? post_description[language.language_id].short_description : ''}}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label" for="input-description{{language.language_id}}">{{entry_description}}</label>
+                                        <div class="col-sm-10">
+                                            <textarea name="post_description[{{language.language_id}}][description]" class="d_visual_designer" placeholder="{{entry_description}}" id="input-description{{language.language_id}}">{{ post_description[language.language_id] ? post_description[language.language_id].description : ''}}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group required">
+                                        <label class="col-sm-2 control-label" for="input-meta-title{{language.language_id}}">{{entry_meta_title}}</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="post_description[{{language.language_id}}][meta_title]" value="{{ post_description[language.language_id] ? post_description[language.language_id].meta_title : ''}}" placeholder="{{entry_meta_title}}" id="input-meta-title{{language.language_id}}" class="form-control" />
+                                            {% if error_meta_title[language.language_id] %}
+                                            <div class="text-danger">{{error_meta_title[language.language_id]}}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label" for="input-meta-description{{language.language_id}}">{{entry_meta_description}}</label>
+                                        <div class="col-sm-10">
+                                            <textarea name="post_description[{{language.language_id}}][meta_description]" rows="5" placeholder="{{entry_meta_description}}" id="input-meta-description{{language.language_id}}" class="form-control">{{post_description[language.language_id] ? post_description[language.language_id].meta_description : ''}}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label" for="input-meta-keyword{{language.language_id}}">{{entry_meta_keyword}}</label>
+                                        <div class="col-sm-10">
+
+                                            <textarea name="post_description[{{language.language_id}}][meta_keyword]" rows="5" placeholder="{{entry_meta_keyword}}" id="input-meta-keyword{{language.language_id}}" class="form-control">{{post_description[language.language_id] ? post_description[language.language_id].meta_keyword : ''}}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tab-data">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-image">{{entry_image}}</label>
+                                <div class="col-sm-10">
+                                    <a href="" id="thumb-image" data-toggle="image" class="img-thumbnail"><img src="{{thumb}}" alt="" title="" data-placeholder="{{placeholder}}" /></a>
+                                    <input type="hidden" name="image" value="{{image}}" id="input-image" />
+                                </div>
+                            </div>
+                            <div class="form-group {{change_author?'':'hidden'}}">
+                                <label class="col-sm-2 control-label" for="input-author">{{entry_author}}</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" name="current_author">
+                                        {% for author in authors %}
+                                        {% if author.user_id == current_author %}
+                                        <option selected="selected" value="{{author.user_id}}">{{author.name}}</option>
+                                        {% else %}
+                                        <option value="{{author.user_id}}">{{author.name}}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-keyword"><span data-toggle="tooltip" title="{{help_date_published}}">{{entry_date_published}}</span></label>
+                                <div class="col-sm-10">
+                                    <div class="input-group date">
+                                        <input type="text" name="date_published" value="{{date_published ? date_published : '' }}" placeholder="{{entry_date_published}}" id="input-keyword" class="form-control" data-date-format="YYYY-MM-DD"  />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-tag"><span data-toggle="tooltip" title="{{help_tag}}">{{entry_tag}}</span></label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="tag" data-role="tagsinput" value="{{tag}}" placeholder="{{entry_tag}}" id="input-tag" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-status">{{entry_status}}</label>
+                                <div class="col-sm-10">
+                                    <select name="status" id="input-status" class="form-control">
+                                        {% if status %}
+                                        <option value="1" selected="selected">{{text_enabled}}</option>
+                                        <option value="0">{{text_disabled}}</option>
+                                        {% else %}
+                                        <option value="1">{{text_enabled}}</option>
+                                        <option value="0" selected="selected">{{text_disabled}}</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-review-display">{{entry_review_display}}</label>
+                                <div class="col-sm-10">
+                                    <select name="review_display" id="input-review-display" class="form-control">
+                                        {% if review_display == 0 %}
+                                        <option value="0" selected="selected">{{text_default}}</option>
+                                        <option value="1">{{text_yes}}</option>
+                                        <option value="2">{{text_no}}</option>
+                                        {% endif %}
+                                        {% if review_display == 1 %}
+                                        <option value="0">{{text_default}}</option>
+                                        <option value="1" selected="selected">{{text_yes}}</option>
+                                        <option value="2">{{text_no}}</option>
+                                        {% endif %}
+                                        {% if review_display == 2 %}
+                                        <option value="0">{{text_default}}</option>
+                                        <option value="1">{{text_yes}}</option>
+                                        <option value="2" selected="selected">{{text_no}}</option>
+                                       {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-images-review">{{entry_images_review}}</label>
+                                <div class="col-sm-10">
+                                    <select name="images_review" id="input-images-review" class="form-control">
+                                        {% if images_review == 0 %}
+                                        <option value="0" selected="selected">{{text_default}}</option>
+                                        <option value="1">{{text_yes}}</option>
+                                        <option value="2">{{text_no}}</option>
+                                        {% endif %}
+                                        {% if images_review == 1 %}
+                                        <option value="0">{{text_default}}</option>
+                                        <option value="1" selected="selected">{{text_yes}}</option>
+                                        <option value="2">{{text_no}}</option>
+                                        {% endif %}
+                                        {% if images_review == 2 %}
+                                        <option value="0">{{text_default}}</option>
+                                        <option value="1">{{text_yes}}</option>
+                                        <option value="2" selected="selected">{{text_no}}</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tab-youtube">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th style="width:15%;">{{text_youtube_url}}</th>
+                                        <th style="width:66%;">{{text_youtube_title}}</th>
+                                        <th style="width:5%;">{{text_youtube_width}}</th>
+                                        <th style="width:5%;">{{text_youtube_height}}</th>
+                                        <th style="width:6%;">{{text_youtube_sort_order}}</th>
+                                        <th style="width:3%;">{{text_youtube_action}}</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody">
+                                    {% if post_videos %}
+                                    {% set video_row = 0 %}
+                                    {% for post_video in post_videos %}
+                                    <tr id="video_row_{{video_row}}">
+                                        <td><input class="form-control" type="text" value="{{post_video.video}}" name="post_video[{{video_row}}][video]"></td>
+                                        <td>
+
+                                            {% for language in languages %}
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><img src="{{language.flag}}" title="{{language.name}}" /></span>
+                                                <textarea style="min-width: 100%;" class="form-control" type="text" name="post_video[{{video_row}}][text][{{language.language_id}}]">{{post_video.text[language.language_id]}}</textarea>
+                                            </div>
+                                            {% endfor %}
+                                        </td>
+                                        <td><input class="form-control" type="text" value="{{post_video.width}}" name="post_video[{{video_row}}][width]"></td>
+                                        <td><input class="form-control" type="text" value="{{post_video.height}}" name="post_video[{{video_row}}][height]"></td>
+                                        <td><input class="form-control" type="text" value="{{post_video.sort_order}}" name="post_video[{{video_row}}][sort_order]"></td>
+                                        <td><a class="btn btn-danger" onclick="RemoveVideo('video_row_{{video_row}}');"><i class="fa fa-minus"></i></a></td>
+                                    </tr>
+                                    {% set video_row = video_row + 1 %}
+                                    {% endfor %}
+                                    {% endif %}
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><a class="btn btn-primary" onclick="AddVideo();"><i class="fa fa-plus"></i></a></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="tab-pane" id="tab-links">
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-category"><span data-toggle="tooltip" title="{{help_category}}">{{entry_category}}</span></label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="category" value="" placeholder="{{entry_category}}" id="input-category" class="form-control" />
+                                    <div id="post-category" class="well well-sm" style="height: 150px; overflow: auto;">
+                                        {% if error_post_category[language.language_id] %}
+                                        <div class="text-danger">{{error_post_category[language.language_id]}}</div>
+                                        {% endif %}
+                                        {% if post_categories %}
+                                        {% for post_category in post_categories %}
+                                        <div id="post-category{{post_category.category_id}}"><i class="fa fa-minus-circle"></i> {{post_category.title}}
+                                            <input type="hidden" name="post_category[]" value="{{post_category.category_id}}" />
+                                        </div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{entry_store}}</label>
+                                <div class="col-sm-10">
+                                    <div class="well well-sm" style="height: 150px; overflow: auto;">
+                                        <div class="checkbox">
+                                            <label>
+                                                {% if 0 in post_store %}
+                                                <input type="checkbox" name="post_store[]" value="0" checked="checked" />
+                                                {{text_default}}
+                                                {% else %}
+                                                <input type="checkbox" name="post_store[]" value="0" />
+                                                {{text_default}}
+                                                {% endif %}
+                                            </label>
+                                        </div>
+                                        {% for stores in store %}
+                                        <div class="checkbox">
+                                            <label>
+                                                {% if store.store_id in post_store %}
+                                                <input type="checkbox" name="post_store[]" value="{{store.store_id}}" checked="checked" />
+                                                {{store.name}}
+                                                {% else %}
+                                                <input type="checkbox" name="post_store[]" value="{{store.store_id}}" />
+                                                {{store.name}}
+                                                {% endif %}
+                                            </label>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tab-related">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-product">{{entry_product}}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="product" value="" placeholder="{{entry_product}}" id="input-product" class="form-control" />
+                                    <div id="post_product" class="well well-sm" style="height: 150px; overflow: auto;">
+                                        {% if post_products|length > 0 %}
+                                        {% for post_product in post_products %}
+                                        <div id="post_product{{post_product.product_id}}"><i class="fa fa-minus-circle"></i> {{post_product.title}}
+                                            <input type="hidden" name="post_product[]" value="{{post_product.product_id}}" />
+                                        </div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-product">{{entry_post}}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="post" value="" placeholder="{{entry_post}}" id="input-product" class="form-control" />
+                                    <div id="related_post" class="well well-sm" style="height: 150px; overflow: auto;">
+                                        {% if related_posts|length > 0 %}
+                                        {% for related_post in related_posts %}
+                                        <div id="related_post{{related_post.post_id}}"><i class="fa fa-minus-circle"></i> {{related_post.title}}
+                                            <input type="hidden" name="related_post[]" value="{{related_post.post_id}}" />
+                                        </div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tab-design">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <td class="text-left">{{entry_store}}</td>
+                                            <td class="text-left">{{entry_layout}}</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-left">{{text_default}}</td>
+                                            <td class="text-left"><select name="post_layout[0]" class="form-control">
+                                                <option value=""></option>
+                                                {% for layout in layouts %}
+                                                {% if post_layout[0] and post_layout[0] == layout.layout_id %}
+                                                <option value="{{layout.layout_id}}" selected="selected">{{layout.name}}</option>
+                                                {% else %}
+                                                <option value="{{layout.layout_id}}">{{layout.name}}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </select></td>
+                                        </tr>
+                                        {% for store in stores %}
+                                        <tr>
+                                            <td class="text-left">{{store.name}}</td>
+                                            <td class="text-left"><select name="post_layout[{{store['store_id']}}]" class="form-control">
+                                                <option value=""></option>
+                                                {% for layout in layouts %}
+                                                {% if post_layout[store.store_id] and post_layout[store.store_id] == layout.layout_id %}
+                                                <option value="{{layout.layout_id}}" selected="selected">{{layout.name}}</option>
+                                                {% else %}
+                                                <option value="{{layout.layout_id}}">{{layout.name}}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </select></td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript"><!--
+                {% for language in languages %}
+                {% if style_short_description_display %}
+                    $("#input-short-description{{language.language_id}}").summernote({ height: 100 });
+                {% endif %}
+                $("#input-description{{language.language_id}}").summernote({ height: 300 });
+                {% endfor %}
+                //--></script>
+                <script type="text/javascript"><!--
+				// Category
+                $('input[name=\'category\']').autocomplete({
+                    'source': function (request, response) {
+                        $.ajax({
+                            url: '{{category_autocomplete}}' + '&filter_name=' + encodeURIComponent(request),
+                            dataType: 'json',
+                            success: function (json) {
+                                response($.map(json, function (item) {
+                                    return {
+                                        label: item['title'],
+                                        value: item['category_id']
+                                    }
+                                }));
+                            }
+                        });
+                    },
+                    'select': function (item) {
+                        $('input[name=\'category\']').val('');
+
+                        $('#post-category' + item['value']).remove();
+
+                        $('#post-category').append('<div id="post-category' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="post_category[]" value="' + item['value'] + '" /></div>');
+                    }
+                });
+
+$('#post-category').delegate('.fa-minus-circle', 'click', function () {
+    $(this).parent().remove();
+});
+//--></script>
+<script type="text/javascript"><!--
+    $('.date').datetimepicker({
+        pickTime: false
+    });
+
+    $('.time').datetimepicker({
+        pickDate: false
+    });
+
+    $('.datetime').datetimepicker({
+        pickDate: true,
+        pickTime: true
+    });
+    //--></script>
+    <script type="text/javascript"><!--
+        $('#language a:first').tab('show');
+        $('#option a:first').tab('show');
+        $('#related_language a:first').tab('show');
+
+        //--></script>
+        <script type="text/javascript"><!--
+            $('input[name=\'product\']').autocomplete({
+              source: function(request, response) {
+                $.ajax({
+                  url: '{{product_autocomplete}}&filter_name=' +  encodeURIComponent(request),
+                  dataType: 'json',
+                  success: function(json) {
+                    response($.map(json, function(item) {
+                      return {
+                        label: item['name'],
+                        value: item['product_id']
+                    }
+                }));
+                }
+            });
+            },
+            'select': function(item) {
+               $('input[name=\'product\']').val('');
+
+               $('#post_product' + item['value']).remove();
+
+               $('#post_product').append('<div id="post_product' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="post_product[]" value="' + item['value'] + '" /></div>');
+   /* $('input[name=\'subscribers\']').val('');
+
+    $('#subscriber' + item['value']).remove();
+
+    $('#subscriber').append('<div id="subscriber' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="subscriber[]" value="' + item['value'] + '" /></div>'); */
+}
+});
+
+$('#post_product').delegate('.fa-minus-circle', 'click', function() {
+  $(this).parent().remove();
+});
+//--></script>
+  <script type="text/javascript"><!--
+            $('input[name=\'post\']').autocomplete({
+              source: function(request, response) {
+                $.ajax({
+                  url: '{{post_autocomplete}}&filter_title=' +  encodeURIComponent(request),
+                  dataType: 'json',
+                  success: function(json) {
+                    response($.map(json, function(item) {
+                      return {
+                        label: item['title'],
+                        value: item['post_id']
+                    }
+                }));
+                }
+            });
+            },
+            'select': function(item) {
+               $('input[name=\'post\']').val('');
+
+               $('#related_post' + item['value']).remove();
+
+               $('#related_post').append('<div id="related_post' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="related_post[]" value="' + item['value'] + '" /></div>');
+   /* $('input[name=\'subscribers\']').val('');
+
+    $('#subscriber' + item['value']).remove();
+
+    $('#subscriber').append('<div id="subscriber' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="subscriber[]" value="' + item['value'] + '" /></div>'); */
+}
+});
+
+$('#related_post').delegate('.fa-minus-circle', 'click', function() {
+  $(this).parent().remove();
+});
+function AddVideo()
+{
+    var token = Math.random().toString(36).substr(2);
+    var html = '';
+    html += '<tr id="video_row_'+token+'">';
+    html += '<td><input class="form-control" type="text" name="post_video['+token+'][video]"></td>';
+    html +='<td>';
+    {% for language in languages %}
+            html += ' <div class="input-group"><span class="input-group-addon"><img src="{{language.flag}}" title="{{language.name}}" /></span><textarea class="form-control" name="post_video['+token+'][text][{{language.language_id}}]"></textarea></div>';
+    {% endfor %}
+    html +='</td>';
+
+    html += '<td><input class="form-control" type="text" name="post_video['+token+'][width]" value="0"></td>';
+    html += '<td><input class="form-control" type="text" name="post_video['+token+'][height]" value="0"></td>';
+    html += '<td><input class="form-control" type="text" name="post_video['+token+'][sort_order]" value="0"></td>';
+    html += '<td><a class="btn btn-danger" onclick="RemoveVideo(\'video_row_'+token+'\');"><i class="fa fa-minus"></i></a></td>';
+
+    html += '</tr>';
+
+    $('#tbody').append(html);
+}
+function RemoveVideo(id)
+{
+    $('#'+id).remove();
+}
+//--></script>
+<script src="view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+<link href="view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" media="screen" />
+<script type="text/javascript"><!--
+$('.date').datetimepicker({
+    pickTime: false
+});
+//--></script>
+{{footer}}

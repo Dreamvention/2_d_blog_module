@@ -155,15 +155,15 @@ $(function(){
 
     var countImage = 0;
     $("#fileupload").fileinput({
-        uploadUrl: 'index.php?route=d_blog_module/review/uploadFile',
+        uploadUrl: 'index.php?route=extension/d_blog_module/review/uploadFile',
         allowedFileExtensions: ["jpg", "png", "gif"],
-        maxImageWidth: {{ setting.review.image_upload_width}},
-        maxImageHeight: {{ setting.review.image_upload_height}},
-        maxFileCount: {{ setting.review.image_limit}},
+        maxImageWidth: {{setting.review.image_upload_width}},
+        maxImageHeight: {{setting.review.image_upload_height}},
+        maxFileCount: {{setting.review.image_limit}},
     }).on('filesuccessremove', function(event, id) {
         var code =  $('#'+id+' > input[type=hidden]').val();
         $.ajax({
-            url: 'index.php?route=d_blog_module/review/deleteFile',
+            url: 'index.php?route=extension/d_blog_module/review/deleteFile',
             type: 'post',
             data: 'code='+code,
             dataType: 'json',

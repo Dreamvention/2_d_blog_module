@@ -59,7 +59,7 @@ var Review = {
             $('#guest_info').addClass('hidden');
             $('#customer_info').removeClass('hidden');
             $.ajax({
-                url: 'index.php?route=d_blog_module/review/mode&mode=' + account,
+                url: 'index.php?route=extension/d_blog_module/review/mode&mode=' + account,
                 type: 'post',
                 dataType: 'json',
                 success: function(json) {
@@ -80,7 +80,7 @@ var Review = {
             self = this;
 
         $.ajax({
-            url: 'index.php?route=d_blog_module/review/write&post_id=' + post_id,
+            url: 'index.php?route=extension/d_blog_module/review/write&post_id=' + post_id,
             type: 'post',
             dataType: 'json',
             data: form.serialize(),
@@ -116,7 +116,7 @@ var Review = {
         var form = this.setting.form;
             reviews = this.setting.reviews;
         $.ajax({
-            url: 'index.php?route=d_blog_module/review/delete&review_id=' + review_id,
+            url: 'index.php?route=extension/d_blog_module/review/delete&review_id=' + review_id,
             type: 'post',
             dataType: 'json',
             beforeSend: function() {
