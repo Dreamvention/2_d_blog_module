@@ -2,7 +2,7 @@
     "codename": "d_blog_module",
     "version": "3.0.0",
     "name": "Blog module",
-    "description": "A blog module based on twig and events. Huge functionality packed in one great solution.",
+    "description": "A blog module based on twig and events. Huge functionality packed in one great solution. ",
     "index": "extension/module/d_blog_module",
     "author": {
         "name": "Dreamvention",
