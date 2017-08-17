@@ -1,4 +1,4 @@
-#d_blog_module
+# d_blog_module
 Blog module for opencart 2.0.x - 2.2.x.
 
 For version 2.3.x and over go [here](https://github.com/Dreamvention/2_d_blog_module_230)
@@ -20,7 +20,7 @@ You can also extend the functionality by adding
 3. d_social_login - lite or pro. Adds Social login functionality to reviews.
 4. d_visual_designer - lite or pro. Adds support for the best Opencart live Page Builder.
 
-##Installation
+## Installation
 1. Shopunity Required. You must first install [Shopunity](https://shopunity.net).
 2. Donwload the Archive
 3. Unzip 
@@ -32,9 +32,9 @@ You can also extend the functionality by adding
 9. Then Go to Twig Manager -> Tab Settings and activate Twig support.
 10. Then go to Blog Module and switch the status ON.
 
-###Requirements
+### Requirements
 1. d_blog_module requires TWIG templating engine to be installed and supported by Opencart. You can add Twig support with the [d_twig_manager](https://github.com/Dreamvention/2_d_twig_manager).
 2. It also requires events to be avalible. Opencart 2.3.0.x and above have support for events, yet if you want to use the blog below 2.3.x - you will need to install the [d_event_manager](https://github.com/Dreamvention/2_d_event_manager) (d_twig_manager also requires it). 
 
-##Support
+## Support
 Please create a Issue in this git repository and we will get back to you.
