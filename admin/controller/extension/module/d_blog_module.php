@@ -67,6 +67,11 @@ class ControllerExtensionModuleDBlogModule extends Controller {
                 }
             }
 
+            $new_post = array();
+            foreach ($this->request->post as $k => $v) {
+                $new_post['module_'.$k] = $v;
+            }
+            $this->model_setting_setting->editSetting('module_'.$this->codename, $new_post, $this->store_id);
             $this->model_setting_setting->editSetting($this->codename, $this->request->post, $this->store_id);
             $this->uninstallEvents();
             if(!empty($this->request->post[$this->codename.'_status'])){
@@ -438,6 +443,9 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         if($this->d_shopunity && $this->validate()){
             $this->uninstallEvents();
         }
+        $this->load->model('setting/setting');
+        $this->model_setting_setting->deleteSetting('d_blog_module');
+        $this->model_setting_setting->deleteSetting('module_d_blog_module');
     }
 
     public function installEvents(){
