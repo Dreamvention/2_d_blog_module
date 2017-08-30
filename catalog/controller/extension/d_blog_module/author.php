@@ -121,7 +121,7 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
 
         $data['custom_style'] = $this->setting['design']['custom_style'];
 
-        $author = $this->model_d_blog_module_author->getAuthorDescriptions($user_id);
+        $author = $this->model_extension_d_blog_module_author->getAuthorDescriptions($user_id);
 
         $layout_type = $this->setting['author']['layout_type'];
         $this->load->config('d_blog_module_layout/'.$layout_type);
@@ -183,9 +183,9 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
 
             $filter_data = array('filter_user_id' => $user_id, 'limit' => $limit, 'start' => ($page - 1) * $limit,);
 
-            $post_total = $this->model_d_blog_module_post->getTotalPosts($filter_data);
+            $post_total = $this->model_extension_d_blog_module_post->getTotalPosts($filter_data);
 
-            $posts = $this->model_d_blog_module_post->getPosts($filter_data);
+            $posts = $this->model_extension_d_blog_module_post->getPosts($filter_data);
             $new_row = false;
             $layout = $this->setting['author']['layout'];
             if ($posts) {
@@ -203,7 +203,7 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
                     }
 
                     $data['posts'][] = array(
-                        'post' => $this->load->controller('d_blog_module/post/thumb', $post['post_id']),
+                        'post' => $this->load->controller('extension/d_blog_module/post/thumb', $post['post_id']),
                         'col_count' => $col_count,
                         'animate' => $this->setting['post_thumb']['animate'],
                         'col' => ($col_count) ? round(12 / $col_count) : 12,
@@ -271,7 +271,7 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
             $data['header'] = $this->load->controller('common/header');
 
 
-            $this->response->setOutput($this->model_extension_d_opencart_patch_load->view('extension/d_blog_module/author', $data));
+            $this->response->setOutput($this->model_extension_d_opencart_patch_load->view('d_blog_module/author', $data));
 
         } else {
             $url = '';
@@ -327,7 +327,7 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
 
         if(isset($description)&&isset($user_id)){
 
-            $this->model_d_blog_module_author->editAuthor($user_id, array('description' => $description));
+            $this->model_extension_d_blog_module_author->editAuthor($user_id, array('description' => $description));
 
             $json['success'] = 'success';
         }

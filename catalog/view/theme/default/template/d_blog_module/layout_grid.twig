@@ -5,7 +5,7 @@
                 {% if post.row %}
                     </div><div class="row">
                 {% endif %}
-                <div class="bm-grid-item col-sm-{{post.col}}" {%if post.animate %}animate="{{post.animate}}"{%endif%}>
+                <div class="bm-grid-item col-sm-{{post.col}}" {% if post.animate %}animate="{{post.animate}}"{% endif %}>
                     <div class="bm-grid-item-body animated">
                         {% include template('d_blog_module/post_thumb') with post %}
                     </div>
