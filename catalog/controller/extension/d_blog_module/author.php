@@ -65,7 +65,7 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
             'href' => $this->url->link('common/home', '', 'SSL')
             );
 
-        $main_category_info = $this->model_d_blog_module_category->getCategory($this->setting['category']['main_category_id']);
+        $main_category_info = $this->model_extension_d_blog_module_category->getCategory($this->setting['category']['main_category_id']);
 
         if(empty($main_category_info)){
             $this->load->language('extension/d_blog_module/category');
