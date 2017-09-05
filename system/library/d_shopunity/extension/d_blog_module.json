@@ -1,6 +1,6 @@
 {
     "codename": "d_blog_module",
-    "version": "3.0.1",
+    "version": "3.0.2",
     "name": "Blog module",
     "description": "A blog module based on twig and events. Huge functionality packed in one great solution. ",
     "index": "extension/module/d_blog_module",
@@ -120,6 +120,10 @@
         "image/catalog/d_blog_module/post"
     ],
     "changelog": [
+        {
+            "version":"3.0.2",
+            "change": "Fix for Social Login module"
+        },
         {
             "version":"3.0.1",
             "change": "Fix demo data and saving settings"
