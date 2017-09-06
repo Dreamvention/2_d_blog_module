@@ -276,8 +276,10 @@ class ControllerExtensionDBlogModuleCategory extends Controller {
         $this->document->addScript('view/javascript/d_bootstrap_switch/js/bootstrap-switch.min.js');
         $this->document->addStyle('view/javascript/d_bootstrap_switch/css/bootstrap-switch.css');
 
-        if(VERSION >= '2.3.0.2'){
-            $this->document->addScript('view/javascript/summernote/opencart.js');
+        if(VERSION >= '2.2.0.0'){
+            if(file_exists(DIR_APPLICATION.'view/javascript/summernote/opencart.js')){
+                $this->document->addScript('view/javascript/summernote/opencart.js');
+            }
             $data['store_2302'] = true;
         }
 
