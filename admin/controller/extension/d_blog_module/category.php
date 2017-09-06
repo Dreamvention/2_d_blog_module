@@ -276,6 +276,11 @@ class ControllerExtensionDBlogModuleCategory extends Controller {
         $this->document->addScript('view/javascript/d_bootstrap_switch/js/bootstrap-switch.min.js');
         $this->document->addStyle('view/javascript/d_bootstrap_switch/css/bootstrap-switch.css');
 
+        if(VERSION >= '2.3.0.2'){
+            $this->document->addScript('view/javascript/summernote/opencart.js');
+            $data['store_2302'] = true;
+        }
+
         $data['codename'] = $this->codename;
         $data['heading_title'] = $this->language->get('heading_title');
         $data['text_form'] = !isset($this->request->get['category_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');

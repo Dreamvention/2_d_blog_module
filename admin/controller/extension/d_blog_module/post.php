@@ -378,6 +378,11 @@ class ControllerExtensionDBlogModulePost extends Controller {
         $this->document->addScript('view/javascript/shopunity/bootstrap-tagsinput/bootstrap-tagsinput.js');
         $this->document->addStyle('view/stylesheet/shopunity/bootstrap-tagsinput/bootstrap-tagsinput.css');
 
+        if(VERSION >= '2.3.0.2'){
+            $this->document->addScript('view/javascript/summernote/opencart.js');
+            $data['store_2302'] = true;
+        }
+
         $data['heading_title'] = $this->language->get('heading_title');
         $data['text_form'] = !isset($this->request->get['post_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
         $data['text_plus'] = $this->language->get('text_plus');

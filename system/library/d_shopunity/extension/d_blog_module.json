@@ -122,7 +122,7 @@
     "changelog": [
         {
             "version":"3.0.2",
-            "change": "Fix for Social Login module"
+            "change": "1. Fix for Social Login module. 2. Fix image manager in admin panel."
         },
         {
             "version":"3.0.1",

@@ -72,7 +72,7 @@
                     <div class="form-group required">
                       <label class="col-sm-2 control-label" for="input-description{{language.language_id}}">{{entry_name}}</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" name="author_description[{{language.language_id}}][name]" placeholder="{{entry_name}}" id="input-name{{language.language_id}}" value="{{ author_description[language.language_id] ? author_description[language.language_id].name : ''}}">
+                        <input type="text" class="form-control" data-toggle="summernote" name="author_description[{{language.language_id}}][name]" placeholder="{{entry_name}}" id="input-name{{language.language_id}}" value="{{ author_description[language.language_id] ? author_description[language.language_id].name : ''}}">
                         {% if error_name[language.language_id] %}
                         <div class="text-danger">{{error_name[language.language_id]}}</div>
                         {% endif %}
@@ -179,8 +179,10 @@
     $('#language a:first').tab('show');
     //--></script>
         <script type="text/javascript"><!--
-          {% for language in languages %}
-            $("#input-description{{language.language_id}}").summernote({ height: 300 });
+            {% for language in languages %}
+                {% if not store_2302 %}
+                    $("#input-description{{language.language_id}}").summernote({ height: 300 });
+                {% endif %}
             {% endfor %}
             //--></script>
             <script type="text/javascript">
