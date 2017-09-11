@@ -189,7 +189,7 @@ class ControllerExtensionDBlogModulePost extends Controller {
             foreach ($post_videos as $video) {
                 $data['post_videos'][] = array(
                     'text' => $video['text'],
-                    'code' => '<iframe frameborder="0" allowfullscreen src="' . str_replace("watch?v=","embed/",$video['video']) . '" height="'.$video['height'].'"width="100%" style="max-width:'.$video['width'].'px"></iframe>'
+                    'code' => '<iframe frameborder="0" allowfullscreen src="' . str_replace("watch?v=","embed/",$video['video']) . '" height="'.$video['height'].'" width="100%" style="max-width:'.$video['width'].'px"></iframe>'
                     );
             }
 
