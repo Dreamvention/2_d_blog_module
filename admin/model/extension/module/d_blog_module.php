@@ -548,7 +548,16 @@ class ModelExtensionModuleDBlogModule extends Model {
                         $this->db->query($sql);
 
                         if(VERSION <= '2.0.3.1'){
-
+                            if(preg_match('/'.DB_PREFIX.'module/', $sql)){
+                                $module_id = $this->db->getLastId();
+                                $query = $this->db->query("SELECT * FROM `".DB_PREFIX."module` WHERE `module_id`= ".$module_id);
+                                if($query->row){
+                                    $value = serialize(json_decode($query->row['setting'], true));
+                                    $this->db->query("UPDATE " . DB_PREFIX . "module
+                                        SET setting = '" . $this->db->escape($value)
+                                        . "' WHERE module_id = '" . (int) $module_id . "'");
+                                }
+                            }
                             if(preg_match('/'.DB_PREFIX.'setting/', $sql)){
 
                                 $setting_id = $this->db->getLastId();
