@@ -31,7 +31,7 @@ class ControllerExtensionEventDBlogModule extends Controller {
             'href'     => $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/author_group'),
             'children' => array()
         );
-        
+
         $d_blog_module[] = array(
             'name'     => $this->language->get('text_blog_settings'),
             'href'     => $this->model_extension_d_opencart_patch_url->link('extension/module/d_blog_module'),
@@ -47,7 +47,7 @@ class ControllerExtensionEventDBlogModule extends Controller {
         );
 
         if(VERSION > '2.2.0.0'){
-            array_splice( $data['menus'], 2, 0, $insert['menus'] ); 
+            array_splice( $data['menus'], 2, 0, $insert['menus'] );
         } else {
             $html = $this->load->view('extension/event/d_blog_module', $insert);
 
@@ -75,7 +75,7 @@ class ControllerExtensionEventDBlogModule extends Controller {
         $this->load->model('extension/module/d_blog_module');
 
         $data = $data[0];
-        $data['language_id'] = $output; 
+        $data['language_id'] = $output;
 
 
         $this->model_extension_module_d_blog_module->addLanguage($data);
@@ -157,5 +157,4 @@ class ControllerExtensionEventDBlogModule extends Controller {
         $output = (string)$html_dom;
     }
 
-    
 }

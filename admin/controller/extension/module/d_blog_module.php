@@ -10,28 +10,39 @@ class ControllerExtensionModuleDBlogModule extends Controller {
     private $store_id = 0;
     private $error = array();
 
-    public function __construct($registry) {
+    public function __construct($registry)
+    {
         parent::__construct($registry);
+
+        $this->load->language($this->route);
+        $this->load->model($this->route);
+        $this->load->model('setting/setting');
+        $this->load->model('extension/d_blog_module/category');
+        $this->load->model('extension/d_shopunity/setting');
+        $this->load->model('extension/d_opencart_patch/load');
+
         $this->d_shopunity = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_shopunity.json'));
         $this->d_opencart_patch = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_opencart_patch.json'));
         if($this->d_opencart_patch){
             $this->load->model('extension/d_opencart_patch/url');
             $this->load->model('extension/d_opencart_patch/user');
         }
-        $this->load->model('extension/module/d_blog_module');
         $this->d_twig_manager = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_twig_manager.json'));
         $this->d_event_manager = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_event_manager.json'));
         $this->extension = json_decode(file_get_contents(DIR_SYSTEM.'library/d_shopunity/extension/d_blog_module.json'), true);
-        
+
         if (isset($this->request->get['store_id'])) {
             $this->store_id = $this->request->get['store_id'];
         }
 
+        // give some permissions
+        $this->permission_handler('main');
+
         $this->config_file = $this->model_extension_module_d_blog_module->getConfigFile($this->codename, $this->sub_versions);
     }
 
-    public function index(){
-
+    public function index()
+    {
         if($this->d_shopunity){
             $this->load->model('extension/d_shopunity/mbooth');
             $this->model_extension_d_shopunity_mbooth->validateDependencies($this->codename);
@@ -45,16 +56,8 @@ class ControllerExtensionModuleDBlogModule extends Controller {
                 $this->session->data['success'] = $this->language->get('success_twig_compatible');
                 $this->load->model('extension/d_opencart_patch/url');
                 $this->response->redirect($this->model_extension_d_opencart_patch_url->link('marketplace/extension', 'type=module'));
-            } 
+            }
         }
-
-        //dependencies
-        $this->load->language($this->route);
-        $this->load->model('extension/d_blog_module/category');
-        $this->load->model('extension/module/d_blog_module');
-        $this->load->model('setting/setting');
-        $this->load->model('extension/d_shopunity/setting');
-        $this->load->model('extension/d_opencart_patch/load');
 
         $this->model_extension_module_d_blog_module->updateTables();
 
@@ -77,9 +80,9 @@ class ControllerExtensionModuleDBlogModule extends Controller {
             if(!empty($this->request->post[$this->codename.'_status'])){
                 $this->installEvents();
             }
-            
+
             $this->session->data['success'] = $this->language->get('success_modifed');
-            
+
             $this->response->redirect($this->model_extension_d_opencart_patch_url->getExtensionLink('module'));
         }
 
@@ -132,7 +135,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
             'text' => $this->language->get('text_module'),
             'href' => $this->model_extension_d_opencart_patch_url->getExtensionLink('module')
             );
-        
+
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('heading_title_main'),
             'href' => $this->model_extension_d_opencart_patch_url->link($this->route, $url)
@@ -166,7 +169,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $data['tab_review_thumb'] = $this->language->get('tab_review_thumb');
         $data['tab_author'] = $this->language->get('tab_author');
         $data['tab_design'] = $this->language->get('tab_design');
-        
+
         $data['menu_post'] = $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/post');
         $data['menu_category'] = $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/category');
         $data['menu_review'] = $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/review');
@@ -190,13 +193,13 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $data['button_add'] = $this->language->get('button_add');
         $data['button_remove'] = $this->language->get('button_remove');
         $data['button_enabled_ssl'] = $this->language->get('button_enabled_ssl');
-        
+
         //demo data
         $data['entry_install_demo_data'] = $this->language->get('entry_install_demo_data');
         $data['button_install_demo_data'] = $this->language->get('button_install_demo_data');
         $data['help_install_demo_data'] = $this->language->get( 'help_install_demo_data' );
         $data['warning_install_demo_data'] = $this->language->get( 'warning_install_demo_data' );
-        
+
         //common
         $data['text_enabled'] = $this->language->get('text_enabled');
         $data['text_disabled'] = $this->language->get('text_disabled');
@@ -204,7 +207,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $data['text_no'] = $this->language->get('text_no');
         $data['text_width'] = $this->language->get('text_width');
         $data['text_height'] = $this->language->get('text_height');
-        
+
         //help
         $data['help_event_support'] = $this->language->get('help_event_support');
         $data['help_twig_support'] = $this->language->get('help_twig_support');
@@ -216,7 +219,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
 
          // Entry
         $data['entry_status'] = $this->language->get('entry_status');
-        
+
         $data['entry_config_files'] = $this->language->get('entry_config_files');
         $data['entry_category_layout'] = $this->language->get('entry_category_layout');
         $data['entry_category_layout_type'] = $this->language->get('entry_category_layout_type');
@@ -229,7 +232,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $data['entry_category_sub_category_image'] = $this->language->get('entry_category_sub_category_image');
         $data['entry_category_sub_category_post_count'] = $this->language->get('entry_category_sub_category_post_count');
         $data['entry_category_sub_category_image_size'] = $this->language->get('entry_category_sub_category_image_size');
-        
+
 
         $data['entry_post_image_display'] = $this->language->get('entry_post_image_display');
         $data['entry_post_popup_display'] = $this->language->get('entry_post_popup_display');
@@ -319,11 +322,11 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $data['extension_id'] = false;
         if(!file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_seo_module_blog.json')){
             $data['ads'] = true;
-            $data['extension_id'] = 121; 
+            $data['extension_id'] = 121;
         }
         if(!file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_blog_module_pack.json')){
             $data['ads'] = true;
-            $data['extension_id'] = 119; 
+            $data['extension_id'] = 119;
         }
 
         if (isset($this->request->post[$this->codename.'_status'])) {
@@ -334,7 +337,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
 
         //get setting
         $data['setting'] = $this->model_extension_module_d_blog_module->getConfigData($this->codename, $this->codename.'_setting', $this->store_id, $this->config_file);
-        
+
         //demo
         $data['demos'] = $this->model_extension_module_d_blog_module->getDemos();
         foreach($data['demos'] as $key => $demo){
@@ -345,7 +348,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $data['themes'] = $this->model_extension_module_d_blog_module->getThemes();
         $data['layout_types'] = $this->model_extension_module_d_blog_module->getLayouts();
         $data['animations'] = $this->config->get('d_blog_module_animations');
-        
+
         //select
         $data['categories'][] = array('category_id' => 0, 'title' => $this->language->get('text_undefined'));
         $data['categories'] = array_merge($data['categories'], $this->model_extension_d_blog_module_category->getCategories());
@@ -411,35 +414,23 @@ class ControllerExtensionModuleDBlogModule extends Controller {
     }
 
 
-    public function install() {
+    public function install()
+    {
         $this->load->model('extension/module/d_blog_module');
         $this->model_extension_module_d_blog_module->createTables( );
         $this->model_extension_module_d_blog_module->updateTables();
-           
+
         if($this->d_shopunity){
 
             $this->load->model('extension/d_shopunity/mbooth');
             $this->model_extension_d_shopunity_mbooth->installDependencies($this->codename);
-
         }
 
-        $this->load->model('user/user_group');
-
-        $this->model_user_user_group->addPermission($this->model_extension_module_d_blog_module->getGroupId(), 'access', 'extension/'.$this->codename);
-        $this->model_user_user_group->addPermission($this->model_extension_module_d_blog_module->getGroupId(), 'modify', 'extension/'.$this->codename);
-        $this->model_user_user_group->addPermission($this->model_extension_module_d_blog_module->getGroupId(), 'access', 'extension/'.$this->codename.'/category');
-        $this->model_user_user_group->addPermission($this->model_extension_module_d_blog_module->getGroupId(), 'modify', 'extension/'.$this->codename.'/category');
-        $this->model_user_user_group->addPermission($this->model_extension_module_d_blog_module->getGroupId(), 'access', 'extension/'.$this->codename.'/post');
-        $this->model_user_user_group->addPermission($this->model_extension_module_d_blog_module->getGroupId(), 'modify', 'extension/'.$this->codename.'/post');
-        $this->model_user_user_group->addPermission($this->model_extension_module_d_blog_module->getGroupId(), 'access', 'extension/'.$this->codename.'/review');
-        $this->model_user_user_group->addPermission($this->model_extension_module_d_blog_module->getGroupId(), 'modify', 'extension/'.$this->codename.'/review');
-        $this->model_user_user_group->addPermission($this->model_extension_module_d_blog_module->getGroupId(), 'access', 'extension/'.$this->codename.'/author');
-        $this->model_user_user_group->addPermission($this->model_extension_module_d_blog_module->getGroupId(), 'modify', 'extension/'.$this->codename.'/author');
-        $this->model_user_user_group->addPermission($this->model_extension_module_d_blog_module->getGroupId(), 'access', 'extension/'.$this->codename.'/author_group');
-        $this->model_user_user_group->addPermission($this->model_extension_module_d_blog_module->getGroupId(), 'modify', 'extension/'.$this->codename.'/author_group');
+        $this->permission_handler('all');
     }
 
-    public function uninstall() {
+    public function uninstall()
+    {
         if($this->d_shopunity && $this->validate()){
             $this->uninstallEvents();
         }
@@ -448,7 +439,29 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $this->model_setting_setting->deleteSetting('module_d_blog_module');
     }
 
-    public function installEvents(){
+    private function permission_handler($perm = 'main')
+    {
+        $this->load->model('user/user_group');
+
+        $this->model_user_user_group->addPermission($this->model_extension_module_d_blog_module->getGroupId(), 'access', 'extension/'.$this->codename);
+        $this->model_user_user_group->addPermission($this->model_extension_module_d_blog_module->getGroupId(), 'modify', 'extension/'.$this->codename);
+
+        if ($perm == 'all') {
+            $this->model_user_user_group->addPermission($this->model_extension_module_d_blog_module->getGroupId(), 'access', 'extension/'.$this->codename.'/category');
+            $this->model_user_user_group->addPermission($this->model_extension_module_d_blog_module->getGroupId(), 'modify', 'extension/'.$this->codename.'/category');
+            $this->model_user_user_group->addPermission($this->model_extension_module_d_blog_module->getGroupId(), 'access', 'extension/'.$this->codename.'/post');
+            $this->model_user_user_group->addPermission($this->model_extension_module_d_blog_module->getGroupId(), 'modify', 'extension/'.$this->codename.'/post');
+            $this->model_user_user_group->addPermission($this->model_extension_module_d_blog_module->getGroupId(), 'access', 'extension/'.$this->codename.'/review');
+            $this->model_user_user_group->addPermission($this->model_extension_module_d_blog_module->getGroupId(), 'modify', 'extension/'.$this->codename.'/review');
+            $this->model_user_user_group->addPermission($this->model_extension_module_d_blog_module->getGroupId(), 'access', 'extension/'.$this->codename.'/author');
+            $this->model_user_user_group->addPermission($this->model_extension_module_d_blog_module->getGroupId(), 'modify', 'extension/'.$this->codename.'/author');
+            $this->model_user_user_group->addPermission($this->model_extension_module_d_blog_module->getGroupId(), 'access', 'extension/'.$this->codename.'/author_group');
+            $this->model_user_user_group->addPermission($this->model_extension_module_d_blog_module->getGroupId(), 'modify', 'extension/'.$this->codename.'/author_group');
+        }
+    }
+
+    public function installEvents()
+    {
         $this->load->model('extension/module/d_event_manager');
         $this->model_extension_module_d_event_manager->addEvent($this->codename, 'admin/view/common/column_left/before', 'extension/event/d_blog_module/view_common_column_left_before');
         $this->model_extension_module_d_event_manager->addEvent($this->codename, 'admin/view/setting/setting/before', 'extension/event/d_blog_module/view_setting_setting_captcha_before');
@@ -458,18 +471,21 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $this->model_extension_module_d_event_manager->addEvent($this->codename, 'admin/model/localisation/language/addLanguage/after', 'extension/event/d_blog_module/model_localisation_language_addLanguage_after');
         $this->model_extension_module_d_event_manager->addEvent($this->codename, 'admin/model/localisation/language/deleteLanguage/after', 'extension/event/d_blog_module/model_localisation_language_deleteLanguage_after');
         $this->model_extension_module_d_event_manager->addEvent($this->codename, 'catalog/model/design/layout/getLayout/after', 'extension/event/d_blog_module/model_design_layout_getLayout_after');
+
     }
 
-    public function uninstallEvents(){
+    public function uninstallEvents()
+    {
         $this->load->model('extension/module/d_event_manager');
         $this->model_extension_module_d_event_manager->deleteEvent($this->codename);
     }
 
+
     /*
     *   Ajax: install demo data
     */
-
-    public function installDemoData(){
+    public function installDemoData()
+    {
         $config = 'd_blog_module';
         if(isset($this->request->get['config'])){
             $config = $this->request->get['config'];
@@ -481,7 +497,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $this->load->language($this->route);
         $this->load->model('extension/module/d_blog_module');
         $setting = $this->model_extension_module_d_blog_module->getConfigData($this->codename, $this->codename.'_setting', $this->store_id, $this->config_file);
-        
+
         $result = $this->model_extension_module_d_blog_module->installDemoData(DIR_CONFIG.'d_blog_module_demo/'.$data['sql']);
 
         if(!empty($data['permission']) && is_array($data['permission'])){
@@ -502,7 +518,8 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function enabledSslUrl(){
+    public function enabledSslUrl()
+    {
         $this->load->language($this->route);
         $json = array();
         if(isset($this->request->post['ssl_url'])){
@@ -512,7 +529,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         if (!$this->user->hasPermission('modify', $this->route) || !isset($ssl_url)) {
             $json['error'] = $this->language->get('error_permission');
         } else {
-            
+
             $this->model_extension_module_d_blog_module->enabledSSLUrl($ssl_url);
 
             $json['success'] = 'success';
@@ -522,8 +539,8 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function install_twig_support(){
-
+    public function install_twig_support()
+    {
         if (!$this->user->hasPermission('modify', $this->route)) {
             $this->session->data['error'] = $this->language->get('error_permission');
             $this->response->redirect($this->model_extension_d_opencart_patch_url->link($this->route));
@@ -535,11 +552,11 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         }
 
         $this->response->redirect($this->model_extension_d_opencart_patch_url->link($this->route));
-        
+
     }
 
-    public function install_event_support(){
-
+    public function install_event_support()
+    {
         if (!$this->user->hasPermission('modify', $this->route)) {
             $this->session->data['error'] = $this->language->get('error_permission');
             $this->response->redirect($this->model_extension_d_opencart_patch_url->link($this->route));
@@ -551,7 +568,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         }
 
         $this->response->redirect($this->model_extension_d_opencart_patch_url->link($this->route));
-        
+
     }
 
 }

@@ -1,6 +1,6 @@
 {
     "codename": "d_blog_module",
-    "version": "3.0.4",
+    "version": "3.0.5",
     "name": "Blog module",
     "description": "A blog module based on twig and events. Huge functionality packed in one great solution. ",
     "index": "extension/module/d_blog_module",
@@ -75,7 +75,7 @@
         "system/config/d_visual_designer_route/d_blog_module_category.php",
         "system/config/d_visual_designer_route/d_blog_module_post.php",
         "system/config/d_visual_designer_route/d_blog_module_author.php",
-        
+
         "system/config/d_blog_module_layout/grid.php",
         "system/config/d_blog_module_demo/d_blog_module.php",
         "system/config/d_blog_module_demo/d_blog_module.sql",
@@ -88,7 +88,7 @@
         "catalog/view/theme/default/template/d_blog_module/review.twig",
         "catalog/view/theme/default/template/d_blog_module/review_thumb.twig",
         "catalog/view/theme/default/template/d_blog_module/search.twig",
-        
+
         "catalog/view/theme/default/javascript/d_blog_module/author.js",
         "catalog/view/theme/default/javascript/d_blog_module/category.js",
         "catalog/view/theme/default/javascript/d_blog_module/main.js",
@@ -120,6 +120,10 @@
         "image/catalog/d_blog_module/post"
     ],
     "changelog": [
+        {
+            "version":"3.0.5",
+            "change": "Fix permission issue"
+        },
         {
             "version":"3.0.4",
             "change": "1. Fix demo data installation."
