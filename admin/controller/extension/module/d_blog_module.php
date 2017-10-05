@@ -18,7 +18,6 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $this->load->model($this->route);
         $this->load->model('setting/setting');
         $this->load->model('extension/d_blog_module/category');
-        $this->load->model('extension/d_shopunity/setting');
         $this->load->model('extension/d_opencart_patch/load');
 
         $this->d_shopunity = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_shopunity.json'));
@@ -26,6 +25,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         if($this->d_opencart_patch){
             $this->load->model('extension/d_opencart_patch/url');
             $this->load->model('extension/d_opencart_patch/user');
+            $this->load->model('extension/d_opencart_patch/store');
         }
         $this->d_twig_manager = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_twig_manager.json'));
         $this->d_event_manager = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_event_manager.json'));
@@ -155,7 +155,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $data['codename'] = $this->codename;
         $data['route'] = $this->route;
         $data['store_id'] = $this->store_id;
-        $data['stores'] = $this->model_extension_d_shopunity_setting->getStores();
+        $data['stores'] = $this->model_extension_d_opencart_patch_store->getAllStores();
         $data['config'] = $this->config_file;
         $data['version'] = $this->extension['version'];
         $data['token'] = $this->model_extension_d_opencart_patch_user->getToken();
