@@ -425,11 +425,6 @@ class ControllerExtensionModuleDBlogModule extends Controller {
             $this->model_extension_d_shopunity_mbooth->installDependencies($this->codename);
         }
 
-        if(file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_twig_manager.json')){
-            $this->load->model('extension/module/d_twig_manager');
-            $this->model_extension_module_d_twig_manager->installCompatibility(); 
-        }
-
         $this->permission_handler('all');
     }
 
