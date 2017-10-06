@@ -42,12 +42,18 @@
                 {% for language in languages %}
                 <div class="tab-pane" id="language{{language.language_id}}">
                   <div class="form-group required">
-                    <label class="col-sm-2 control-label" for="input-name{{language.language_id}}">{{entry_name}}</label>
+                    <label class="col-sm-2 control-label" for="input-name{{language.language_id}}">{{entry_title}}</label>
                     <div class="col-sm-10">
-                      <input type="text" name="category_description[{{language.language_id}}][title]" value="{{ category_description[language.language_id] ? category_description[language.language_id].title : '' }}" placeholder="{{entry_name}}" id="input-name{{language.language_id}}" class="form-control" />
+                      <input type="text" name="category_description[{{language.language_id}}][title]" value="{{ category_description[language.language_id] ? category_description[language.language_id].title : '' }}" placeholder="{{entry_title}}" id="input-name{{language.language_id}}" class="form-control" />
                       {% if error_name[language.language_id] %}
                       <div class="text-danger">{{error_name[language.language_id]}}</div>
                       {% endif %}
+                    </div>
+                  </div>
+				  <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-short-description{{language.language_id}}">{{entry_short_description}}</label>
+                    <div class="col-sm-10">
+                        <textarea name="category_description[{{language.language_id}}][short_description]" placeholder="{{entry_short_description}}" class="form-control" id="input-short-description{{language.language_id}}">{{ category_description[language.language_id] ? category_description[language.language_id].short_description : ''}}</textarea>
                     </div>
                   </div>
                   <div class="form-group">

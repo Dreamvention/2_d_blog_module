@@ -15,6 +15,9 @@ class ModelExtensionDBlogModuleAuthor extends Model {
 				'name' => $result['name'],
 				'description' => $result['description'],
 				'short_description' => $result['short_description'],
+				'meta_title' => $result['meta_title'],
+				'meta_description' => $result['meta_description'],
+				'meta_keyword' => $result['meta_keyword'],
 				'image' => $result['image']
 				);
 		}

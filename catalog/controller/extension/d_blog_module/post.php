@@ -230,6 +230,7 @@ class ControllerExtensionDBlogModulePost extends Controller {
             }
             $data['image_alt'] = $post_info['image_alt'];
             $data['image_title'] = $post_info['image_title'];
+			
             if ($post_info['tag']) {
                 $tags = explode(',', $post_info['tag']);
 

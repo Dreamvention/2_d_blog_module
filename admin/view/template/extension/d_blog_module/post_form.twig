@@ -84,10 +84,15 @@
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label" for="input-meta-keyword{{language.language_id}}">{{entry_meta_keyword}}</label>
                                         <div class="col-sm-10">
-
                                             <textarea name="post_description[{{language.language_id}}][meta_keyword]" rows="5" placeholder="{{entry_meta_keyword}}" id="input-meta-keyword{{language.language_id}}" class="form-control">{{post_description[language.language_id] ? post_description[language.language_id].meta_keyword : ''}}</textarea>
                                         </div>
                                     </div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label" for="input-tag{{language.language_id}}"><span data-toggle="tooltip" title="{{help_tag}}">{{entry_tag}}</span></label>
+										<div class="col-sm-10">
+											<input type="text" name="post_description[{{language.language_id}}][tag]" data-role="tagsinput" value="{{ post_description[language.language_id] ? post_description[language.language_id].tag : ''}}" placeholder="{{entry_tag}}" id="input-tag{{language.language_id}}" class="form-control" />
+										</div>
+									</div>
                                 </div>
                                 {% endfor %}
                             </div>
@@ -123,12 +128,6 @@
                                             <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                                         </span>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="input-tag"><span data-toggle="tooltip" title="{{help_tag}}">{{entry_tag}}</span></label>
-                                <div class="col-sm-10">
-                                    <input type="text" name="tag" data-role="tagsinput" value="{{tag}}" placeholder="{{entry_tag}}" id="input-tag" class="form-control" />
                                 </div>
                             </div>
                             <div class="form-group">

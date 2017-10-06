@@ -205,7 +205,7 @@ class ControllerExtensionDBlogModuleCategory extends Controller {
         $data['text_no_results'] = $this->language->get('text_no_results');
         $data['text_confirm'] = $this->language->get('text_confirm');
 
-        $data['column_name'] = $this->language->get('column_name');
+        $data['column_title'] = $this->language->get('column_title');
         $data['column_sort_order'] = $this->language->get('column_sort_order');
         $data['column_status'] = $this->language->get('column_status');
         $data['column_action'] = $this->language->get('column_action');
@@ -248,7 +248,7 @@ class ControllerExtensionDBlogModuleCategory extends Controller {
             $data['selected'] = array();
         }
         $url = $this->getUrl();
-        $data['sort_name'] = $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/category', '&sort=title' . $url);
+        $data['sort_title'] = $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/category', '&sort=title' . $url);
         $data['sort_order'] = $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/category', '&sort=sort_order' . $url);
 
         $pagination = new Pagination();
@@ -305,7 +305,8 @@ class ControllerExtensionDBlogModuleCategory extends Controller {
         $data['text_width'] = $this->language->get('text_width');
         $data['text_height'] = $this->language->get('text_height');
 
-        $data['entry_name'] = $this->language->get('entry_name');
+        $data['entry_title'] = $this->language->get('entry_title');
+		$data['entry_short_description'] = $this->language->get('entry_short_description');
         $data['entry_description'] = $this->language->get('entry_description');
         $data['entry_meta_title'] = $this->language->get('entry_meta_title');
         $data['entry_meta_description'] = $this->language->get('entry_meta_description');
@@ -585,12 +586,12 @@ class ControllerExtensionDBlogModuleCategory extends Controller {
     public function autocomplete() {
         $json = array();
 
-        if (isset($this->request->get['filter_name'])) {
+        if (isset($this->request->get['filter_title'])) {
             $this->load->model('extension/d_blog_module/category');
 
             $filter_data = array(
-                'filter_name' => $this->request->get['filter_name'],
-                'sort' => 'name',
+                'filter_title' => $this->request->get['filter_title'],
+                'sort' => 'title',
                 'order' => 'ASC',
                 'start' => 0,
                 'limit' => 20

@@ -43,7 +43,7 @@ class ModelExtensionDBlogModuleCategory extends Model {
     
     public function getAllCategories() {
         $query = $this->db->query("SELECT c.category_id, c.parent_id, "
-            . "c.image, c.status, cd.title, cd.description, cd.meta_title, "
+            . "c.image, c.status, cd.title, cd.short_description, cd.description, cd.meta_title, "
             . "cd.meta_keyword, cd.meta_description "
             . "FROM " . DB_PREFIX . "bm_category c "
             . "LEFT JOIN " . DB_PREFIX . "bm_category_description cd "

@@ -54,7 +54,7 @@ class ModelExtensionDBlogModulePost extends Model {
         }
 
         if (!empty($data['filter_tag'])) {
-             $sql .= " AND p.tag LIKE '%" . $data['filter_tag'] . "%'";
+             $sql .= " AND pd.tag LIKE '%" . $data['filter_tag'] . "%'";
         }
          if (!empty($data['filter_date_published'])) {
             $date = preg_split("/-/", $data['filter_date_published']);
@@ -206,7 +206,7 @@ class ModelExtensionDBlogModulePost extends Model {
         }
 
         if (!empty($data['filter_tag'])) {
-            $sql .= " AND p.tag LIKE '%" . $data['filter_tag'] . "%'";
+            $sql .= " AND pd.tag LIKE '%" . $data['filter_tag'] . "%'";
         }
 
        
@@ -216,7 +216,7 @@ class ModelExtensionDBlogModulePost extends Model {
     }
 
     public function getPostsByCategoryId($category_id = 0) {
-        $sql = "SELECT p.post_id, p.image, p.tag, pd.title, pd.meta_title, p.date_added, p.date_published, "
+        $sql = "SELECT p.post_id, p.image, pd.tag, pd.title, pd.meta_title, p.date_added, p.date_published, "
         . "pd.meta_description, pd.meta_keyword, pd.description, "
         . "pd.short_description, AVG(r.rating) as rating FROM " . DB_PREFIX . "bm_post p "
         . "LEFT JOIN " . DB_PREFIX . "bm_post_description pd ON (p.post_id = pd.post_id) "
@@ -235,7 +235,7 @@ class ModelExtensionDBlogModulePost extends Model {
     }
 
     public function getPost($post_id) {
-        $sql = "SELECT p.post_id, p.user_id, p.image,p.image_title,p.image_alt, p.images_review, p.tag, pd.title, pd.meta_title, p.date_added, p.date_modified, p.date_published, p.review_display, p.viewed,   "
+        $sql = "SELECT p.post_id, p.user_id, p.image,p.image_title,p.image_alt, p.images_review, pd.tag, pd.title, pd.meta_title, p.date_added, p.date_modified, p.date_published, p.review_display, p.viewed,   "
         . "pd.meta_description, pd.meta_keyword, pd.description, "
         . "pd.short_description, COUNT(DISTINCT r.review_id) as review, ROUND(AVG(r.rating)) as rating "
         . "FROM " . DB_PREFIX . "bm_post AS p "
@@ -274,7 +274,7 @@ class ModelExtensionDBlogModulePost extends Model {
     }
 
     public function getNextPost($post_id, $category_id = 0){
-        $sql = "SELECT p.post_id, p.user_id, p.image, p.tag, pd.title, pd.meta_title, p.date_added, p.date_modified, p.review_display, p.viewed,   "
+        $sql = "SELECT p.post_id, p.user_id, p.image, pd.tag, pd.title, pd.meta_title, p.date_added, p.date_modified, p.review_display, p.viewed,   "
         . "pd.meta_description, pd.meta_keyword, pd.description, "
         . "pd.short_description, COUNT(DISTINCT r.review_id) as review, ROUND(AVG(r.rating)) as rating ";
         if ($category_id) {
@@ -330,7 +330,7 @@ class ModelExtensionDBlogModulePost extends Model {
     }
 
     public function getPrevPost($post_id, $category_id = 0){
-        $sql = "SELECT p.post_id, p.user_id, p.image, p.tag, pd.title, pd.meta_title, p.date_added, p.date_modified, p.review_display, p.viewed,   "
+        $sql = "SELECT p.post_id, p.user_id, p.image, pd.tag, pd.title, pd.meta_title, p.date_added, p.date_modified, p.review_display, p.viewed,   "
         . "pd.meta_description, pd.meta_keyword, pd.description, "
         . "pd.short_description, COUNT(DISTINCT r.review_id) as review, ROUND(AVG(r.rating)) as rating ";
         if ($category_id) {
