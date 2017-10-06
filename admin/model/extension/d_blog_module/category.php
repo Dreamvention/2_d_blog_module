@@ -26,6 +26,7 @@ class ModelExtensionDBlogModuleCategory extends Model {
                 . "SET category_id = '" . (int) $category_id
                 . "', language_id = '" . (int) $language_id
                 . "', title = '" . $this->db->escape($value['title'])
+				. "', short_description = '" . $this->db->escape($value['short_description'])
                 . "', description = '" . $this->db->escape($value['description'])
                 . "', meta_title = '" . $this->db->escape($value['meta_title'])
                 . "', meta_description = '" . $this->db->escape($value['meta_description'])
@@ -127,6 +128,7 @@ class ModelExtensionDBlogModuleCategory extends Model {
                 . "SET category_id = '" . (int) $category_id . "', "
                 . "language_id = '" . (int) $language_id . "', "
                 . "title = '" . $this->db->escape($value['title']) . "', "
+				. "short_description = '" . $this->db->escape($value['short_description']) . "', "
                 . "description = '" . $this->db->escape($value['description']) . "', "
                 . "meta_title = '" . $this->db->escape($value['meta_title']) . "', "
                 . "meta_description = '" . $this->db->escape($value['meta_description']) . "', "
@@ -291,6 +293,7 @@ class ModelExtensionDBlogModuleCategory extends Model {
                 'meta_title' => $result['meta_title'],
                 'meta_description' => $result['meta_description'],
                 'meta_keyword' => $result['meta_keyword'],
+				'short_description' => $result['short_description'],
                 'description' => $result['description']
                 );
         }

@@ -137,12 +137,11 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
         }
 
         if(!empty($author)) {
-            $this->document->setTitle($author['name']);
             $data['heading_title'] = $author['name'];
-            $data['breadcrumbs'][] = array(
+           
+		    $data['breadcrumbs'][] = array(
                 'text' => $author['name']
-                );
-
+            );
 
             $data['short_description'] =  strip_tags(html_entity_decode($author['short_description'], ENT_QUOTES, 'UTF-8'));
 
@@ -262,7 +261,12 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
                     $this->document->addScript('catalog/view/theme/default/javascript/'.$script);
                 }
             }
-
+			
+			//metas
+            $this->document->setTitle($author['meta_title']);
+            $this->document->setDescription($author['meta_description']);
+            $this->document->setKeywords($author['meta_keyword']);
+            
             $data['column_left'] = $this->load->controller('common/column_left');
             $data['column_right'] = $this->load->controller('common/column_right');
             $data['content_top'] = $this->load->controller('common/content_top');

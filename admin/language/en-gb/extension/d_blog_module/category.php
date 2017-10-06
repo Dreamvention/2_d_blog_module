@@ -16,13 +16,14 @@ $_['text_width']                = 'Width';
 $_['text_height']               = 'Height';
 
 // Column
-$_['column_name']               = 'Category Name';
+$_['column_title']              = 'Category Title';
 $_['column_sort_order']         = 'Sort Order';
 $_['column_action']             = 'Action';
 $_['column_status']             = 'Status';
 
 // Entry
-$_['entry_name']                = 'Category Name';
+$_['entry_title']               = 'Category Title';
+$_['entry_short_description']   = 'Short Description';
 $_['entry_description']         = 'Description';
 $_['entry_meta_title']          = 'Meta Tag Title';
 $_['entry_meta_keyword']        = 'Meta Tag Keywords';
@@ -60,5 +61,5 @@ $_['help_layout']                               = '<h4>What is layout?</h4><p>A 
 // Error
 $_['error_warning']             = 'Warning: Please check the form carefully for errors!';
 $_['error_permission']          = 'Warning: You do not have permission to modify categories!';
-$_['error_name']                = 'Category Name must be between 2 and 32 characters!';
+$_['error_title']               = 'Category Title must be between 2 and 32 characters!';
 $_['error_meta_title']          = 'Meta Title must be greater than 3 and less than 255 characters!';

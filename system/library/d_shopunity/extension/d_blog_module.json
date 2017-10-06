@@ -1,6 +1,6 @@
 {
     "codename": "d_blog_module",
-    "version": "3.0.6",
+    "version": "3.0.7",
     "name": "Blog module",
     "description": "A blog module based on twig and events. Huge functionality packed in one great solution. ",
     "index": "extension/module/d_blog_module",
@@ -121,6 +121,10 @@
     ],
     "changelog": [
         {
+            "version":"3.0.7",
+            "change": "short_description in category, multy languages tags in post and bug fix."
+        },
+		{
             "version":"3.0.6",
             "change": "d_shopunity bug fix."
         },

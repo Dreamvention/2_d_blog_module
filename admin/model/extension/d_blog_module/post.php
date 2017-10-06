@@ -5,7 +5,6 @@ class ModelExtensionDBlogModulePost extends Model {
     public function addPost($data) {
         $this->db->query("INSERT INTO " . DB_PREFIX . "bm_post
             SET user_id = '" . (int)$data['current_author'] . "',
-            tag = '" . $this->db->escape($data['tag']) . "',
             review_display = '" .(int)$data['review_display'] . "',
             images_review = '" .(int)$data['images_review'] . "',
             status = '" . $this->db->escape($data['status']) . "',
@@ -31,7 +30,8 @@ class ModelExtensionDBlogModulePost extends Model {
                 description = '" . $this->db->escape($value['description']) . "',
                 meta_title = '" . $this->db->escape($value['meta_title']) . "',
                 meta_description = '" . $this->db->escape($value['meta_description']) . "',
-                meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "'"
+                meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "',
+				tag = '" . $this->db->escape($value['tag']) . "'"
                 );
         }
 
@@ -101,7 +101,6 @@ class ModelExtensionDBlogModulePost extends Model {
             status = '" . (int) $data['status'] . "',
             review_display ='".(int)$data['review_display']."',
             images_review ='".(int)$data['images_review']."',
-            tag = '" . $this->db->escape($data['tag']) . "',
             date_published = '" . $data['date_published'] . "',
             date_modified = NOW() WHERE post_id = '" . (int) $post_id . "'");
 
@@ -122,7 +121,8 @@ class ModelExtensionDBlogModulePost extends Model {
                 description = '" . $this->db->escape($value['description']) . "',
                 meta_title = '" . $this->db->escape($value['meta_title']) . "',
                 meta_description = '" . $this->db->escape($value['meta_description']) . "',
-                meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "'"
+                meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "',
+				tag = '" . $this->db->escape($value['tag']) . "'"
                 );
         }
 
@@ -278,15 +278,16 @@ class ModelExtensionDBlogModulePost extends Model {
                 'meta_title' => $result['meta_title'],
                 'meta_description' => $result['meta_description'],
                 'meta_keyword' => $result['meta_keyword'],
+				'tag' => $result['tag']
                 );
         }
         return $post_description_data;
     }
 
     public function getPosts($data = array()) {
-        $sql = "SELECT p.post_id AS post_id, p.image AS image, p.tag AS tag,
+        $sql = "SELECT p.post_id AS post_id, p.image AS image,
         p.`status` AS `status`, p.date_added AS `date_added`, p.date_modified AS `date_modified`, p.date_published AS `date_published`,
-        pd.language_id AS language_id, pd.title AS title
+        pd.language_id AS language_id, pd.title AS title, pd.tag AS tag
         FROM " . DB_PREFIX . "bm_post p
         LEFT JOIN " . DB_PREFIX . "bm_post_description pd ON (p.post_id = pd.post_id)
         LEFT JOIN " . DB_PREFIX . "bm_post_to_category p2c ON (p.post_id = p2c.post_id)
@@ -296,13 +297,13 @@ class ModelExtensionDBlogModulePost extends Model {
         if (!empty($data['filter_title'])) {
             $sql .= " AND pd.title LIKE '" . $this->db->escape($data['filter_title']) . "%'";
         }
-
+		
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
             $sql .= " AND p.status = '" . (int) $data['filter_status'] . "'";
         }
-
-        if (isset($data['filter_tag']) && !is_null($data['filter_tag'])) {
-            $sql .= " AND p.tag  LIKE '" . $this->db->escape($data['filter_tag']) . "%'";
+		
+		if (isset($data['filter_tag']) && !is_null($data['filter_tag'])) {
+            $sql .= " AND pd.tag  LIKE '" . $this->db->escape($data['filter_tag']) . "%'";
         }
 
         if (isset($data['filter_category']) && !is_null($data['filter_category'])) {
@@ -326,7 +327,7 @@ class ModelExtensionDBlogModulePost extends Model {
         $sort_data = array(
             'pd.title',
             'p.status',
-            'p.tag',
+            'pd.tag',
             'category',
             'p.date_added',
             'p.date_modified',
@@ -508,7 +509,7 @@ class ModelExtensionDBlogModulePost extends Model {
         }
 
         if (isset($data['filter_tag']) && !is_null($data['filter_tag'])) {
-            $sql .= " AND p.tag  LIKE '" . $this->db->escape($data['filter_tag']) . "%'";
+            $sql .= " AND pd.tag  LIKE '" . $this->db->escape($data['filter_tag']) . "%'";
         }
 
         if (isset($data['filter_category']) && !is_null($data['filter_category'])) {
@@ -553,6 +554,7 @@ class ModelExtensionDBlogModulePost extends Model {
                 'meta_title' => $result['meta_title'],
                 'meta_description' => $result['meta_description'],
                 'meta_keyword' => $result['meta_keyword'],
+				'tag' => $result['tag']
                 );
         }
 

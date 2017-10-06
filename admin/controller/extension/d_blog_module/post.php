@@ -122,7 +122,7 @@ class ControllerExtensionDBlogModulePost extends Controller {
 
             $url = $this->getUrl();
 
-            $this->response->redirect($this->model_extension_d_opencart_patch_url->link('d_blog_module/post'));
+            $this->response->redirect($this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/post'));
         }
 
         $this->getList();
@@ -249,13 +249,11 @@ class ControllerExtensionDBlogModulePost extends Controller {
 
 
         foreach ($results as $result) {
-
-
             $data['posts'][] = array(
                 'post_id' => $result['post_id'],
                 'title' => $result['title'],
+				'tag' => $result['tag'],
                 'image' => is_file(DIR_IMAGE . $result['image']) ? $this->model_tool_image->resize($result['image'], 40, 40) : $this->model_tool_image->resize('no_image.png', 40, 40),
-                'tag' => $result['tag'],
                 'category' => $this->model_extension_d_blog_module_post->getPostCategories($result['post_id']),
                 'status' => ($result['status']) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
                 'date_added' => $result['date_added'],
@@ -507,7 +505,7 @@ class ControllerExtensionDBlogModulePost extends Controller {
             $data['action'] = $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/post/edit', '&post_id=' . $this->request->get['post_id'] . $url);
         }
 
-        $data['cancel'] = $this->model_extension_d_opencart_patch_url->getExtensionLink('extension/d_blog_module/post', $url);
+        $data['cancel'] = $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/post', $url);
 
         if (isset($this->request->get['post_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
             $post_info = $this->model_extension_d_blog_module_post->getPost($this->request->get['post_id']);

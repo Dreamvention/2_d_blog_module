@@ -200,13 +200,39 @@ class ModelExtensionModuleDBlogModule extends Model {
         foreach($result as $column){
             $columns[] = $column['COLUMN_NAME'];
         }
-
+		
         if(!in_array('custom', $columns)){
             $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_post ADD custom INT( 1 ) DEFAULT 0");
         }
 
         if(!in_array('setting', $columns)){
             $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_post ADD setting TEXT NOT NULL");
+        }
+		
+		if(in_array('tag', $columns)){
+            $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_post DROP COLUMN tag");
+        }
+		
+        $query = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '".DB_DATABASE."' AND TABLE_NAME = '" . DB_PREFIX . "bm_post_description' ORDER BY ORDINAL_POSITION");
+        $result = $query->rows;
+        $columns = array();
+        foreach($result as $column){
+            $columns[] = $column['COLUMN_NAME'];
+        }
+		
+        if(!in_array('tag', $columns)){
+            $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_post_description ADD tag TEXT NOT NULL");
+        }
+		
+		$query = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '".DB_DATABASE."' AND TABLE_NAME = '" . DB_PREFIX . "bm_category_description' ORDER BY ORDINAL_POSITION");
+        $result = $query->rows;
+        $columns = array();
+        foreach($result as $column){
+            $columns[] = $column['COLUMN_NAME'];
+        }
+		
+        if(!in_array('short_description', $columns)){
+            $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_category_description ADD short_description TEXT NOT NULL");
         }
 
         $query = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '".DB_DATABASE."' AND TABLE_NAME = '" . DB_PREFIX . "bm_author' ORDER BY ORDINAL_POSITION");
@@ -222,6 +248,25 @@ class ModelExtensionModuleDBlogModule extends Model {
 
         if(!in_array('setting', $columns)){
             $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_author ADD setting TEXT NOT NULL");
+        }
+		
+		$query = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '".DB_DATABASE."' AND TABLE_NAME = '" . DB_PREFIX . "bm_author_description' ORDER BY ORDINAL_POSITION");
+        $result = $query->rows;
+        $columns = array();
+        foreach($result as $column){
+            $columns[] = $column['COLUMN_NAME'];
+        }
+		
+		if(!in_array('meta_title', $columns)){
+            $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_author_description ADD meta_title VARCHAR(255) NOT NULL");
+        }
+		
+		if(!in_array('meta_description', $columns)){
+            $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_author_description ADD meta_description TEXT NOT NULL");
+        }
+		
+		if(!in_array('meta_keyword', $columns)){
+            $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_author_description ADD meta_keyword TEXT NOT NULL");
         }
 
         $query = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '".DB_DATABASE."' AND TABLE_NAME = '" . DB_PREFIX . "bm_category' ORDER BY ORDINAL_POSITION");
@@ -249,7 +294,6 @@ class ModelExtensionModuleDBlogModule extends Model {
             image VARCHAR(255) DEFAULT NULL,
             image_title VARCHAR(255) DEFAULT NULL,
             image_alt VARCHAR(255) DEFAULT NULL,
-            tag TEXT NOT NULL,
             review_display INT(1) DEFAULT 0,
             images_review INT(1) DEFAULT 0,
             viewed INT(11) DEFAULT 1,
@@ -317,6 +361,9 @@ class ModelExtensionModuleDBlogModule extends Model {
             name varchar(64) NOT NULL,
             description text NOT NULL,
             short_description text NOT NULL,
+			meta_title VARCHAR(255) NOT NULL,
+            meta_description TEXT NOT NULL,
+            meta_keyword TEXT NOT NULL,
             author_description_id int(11) NOT NULL AUTO_INCREMENT,
             PRIMARY KEY (author_description_id)
         )
@@ -387,6 +434,7 @@ class ModelExtensionModuleDBlogModule extends Model {
             category_id INT(11) NOT NULL,
             language_id INT(11) NOT NULL,
             title VARCHAR(255) NOT NULL,
+			short_description TEXT NOT NULL,
             description TEXT NOT NULL,
             meta_title VARCHAR(255) NOT NULL,
             meta_keyword TEXT NOT NULL,
@@ -406,6 +454,7 @@ class ModelExtensionModuleDBlogModule extends Model {
             meta_title VARCHAR(255) NOT NULL,
             meta_description TEXT NOT NULL,
             meta_keyword TEXT NOT NULL,
+			tag TEXT NOT NULL,
             PRIMARY KEY (post_description_id)
         )
         COLLATE='utf8_general_ci'
@@ -461,9 +510,9 @@ class ModelExtensionModuleDBlogModule extends Model {
 
         //add author
         $this->db->query(" INSERT IGNORE INTO `" . DB_PREFIX . "bm_author` (`author_id`, `user_id`, `author_group_id`) VALUES ('1', '" . $this->user->getId() . "', '1') ");
-        $this->db->query(" INSERT IGNORE INTO `" . DB_PREFIX . "bm_author_description` (`author_id`, `language_id`, `name`, `description`, `short_description`, `author_description_id`) VALUES ('1', '1', 'Author', '&lt;p&gt;Lorem ipsum dolor sit amet, justo aliquid reformidans ea vel, vim porro dictas et, ut elit partem invidunt vis. Saepe melius complectitur eum ea. Zril delenit vis ut. His suavitate rationibus in, tale discere ceteros eu nec. Vel ut utamur laoreet vituperata, in discere contentiones definitionem ius.&lt;/p&gt;&lt;p&gt;Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.&lt;/p&gt;&lt;p&gt;It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using \'Content here, content here\', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for \'lorem ipsum\' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).&lt;/p&gt;', 'Lorem ipsum dolor sit amet, justo aliquid reformidans ea vel, vim porro dictas et, ut elit partem invidunt vis. Saepe melius complectitur eum ea. Zril delenit vis ut. His suavitate rationibus in, tale discere ceteros eu nec. Vel ut utamur laoreet vituperata, in discere contentiones definitionem ius.', '3')");
+        $this->db->query(" INSERT IGNORE INTO `" . DB_PREFIX . "bm_author_description` (`author_id`, `language_id`, `name`, `description`, `short_description`, `meta_title`, `author_description_id`) VALUES ('1', '1', 'Author', '&lt;p&gt;Lorem ipsum dolor sit amet, justo aliquid reformidans ea vel, vim porro dictas et, ut elit partem invidunt vis. Saepe melius complectitur eum ea. Zril delenit vis ut. His suavitate rationibus in, tale discere ceteros eu nec. Vel ut utamur laoreet vituperata, in discere contentiones definitionem ius.&lt;/p&gt;&lt;p&gt;Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.&lt;/p&gt;&lt;p&gt;It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using \'Content here, content here\', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for \'lorem ipsum\' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).&lt;/p&gt;', 'Lorem ipsum dolor sit amet, justo aliquid reformidans ea vel, vim porro dictas et, ut elit partem invidunt vis. Saepe melius complectitur eum ea. Zril delenit vis ut. His suavitate rationibus in, tale discere ceteros eu nec. Vel ut utamur laoreet vituperata, in discere contentiones definitionem ius.', 'Author', '3')");
         if($this->config->get('config_language_id')!=1){
-            $this->db->query(" INSERT IGNORE INTO `" . DB_PREFIX . "bm_author_description` (`author_id`, `language_id`, `name`, `description`, `short_description`, `author_description_id`) VALUES ('1', '".(int)$this->config->get('config_language_id')."', 'Author', '&lt;p&gt;Lorem ipsum dolor sit amet, justo aliquid reformidans ea vel, vim porro dictas et, ut elit partem invidunt vis. Saepe melius complectitur eum ea. Zril delenit vis ut. His suavitate rationibus in, tale discere ceteros eu nec. Vel ut utamur laoreet vituperata, in discere contentiones definitionem ius.&lt;/p&gt;&lt;p&gt;Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.&lt;/p&gt;&lt;p&gt;It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using \'Content here, content here\', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for \'lorem ipsum\' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).&lt;/p&gt;', 'Lorem ipsum dolor sit amet, justo aliquid reformidans ea vel, vim porro dictas et, ut elit partem invidunt vis. Saepe melius complectitur eum ea. Zril delenit vis ut. His suavitate rationibus in, tale discere ceteros eu nec. Vel ut utamur laoreet vituperata, in discere contentiones definitionem ius.', '4')");
+            $this->db->query(" INSERT IGNORE INTO `" . DB_PREFIX . "bm_author_description` (`author_id`, `language_id`, `name`, `description`, `short_description`, `meta_title`, `author_description_id`) VALUES ('1', '".(int)$this->config->get('config_language_id')."', 'Author', '&lt;p&gt;Lorem ipsum dolor sit amet, justo aliquid reformidans ea vel, vim porro dictas et, ut elit partem invidunt vis. Saepe melius complectitur eum ea. Zril delenit vis ut. His suavitate rationibus in, tale discere ceteros eu nec. Vel ut utamur laoreet vituperata, in discere contentiones definitionem ius.&lt;/p&gt;&lt;p&gt;Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.&lt;/p&gt;&lt;p&gt;It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using \'Content here, content here\', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for \'lorem ipsum\' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).&lt;/p&gt;', 'Lorem ipsum dolor sit amet, justo aliquid reformidans ea vel, vim porro dictas et, ut elit partem invidunt vis. Saepe melius complectitur eum ea. Zril delenit vis ut. His suavitate rationibus in, tale discere ceteros eu nec. Vel ut utamur laoreet vituperata, in discere contentiones definitionem ius.', 'Author', '4')");
         }
 
         //add author groups
@@ -482,12 +531,12 @@ class ModelExtensionModuleDBlogModule extends Model {
         //add category
         $query = $this->db->query(" INSERT IGNORE INTO `" . DB_PREFIX . "bm_category` (`category_id`, `parent_id`, `sort_order`, `image`, `status`, `date_added`, `date_modified`) VALUES ('1', '0', '1', 'catalog/d_blog_module/category/Photo_blog_17.jpg', '1', '2016-04-09 11:28:15', '2016-04-18 18:16:48')");
         if($query){
-            $this->db->query(" INSERT IGNORE INTO `" . DB_PREFIX . "bm_category_description` (`category_description_id`, `category_id`, `language_id`, `title`, `description`, `meta_title`, `meta_keyword`, `meta_description`) VALUES ('1', '1', '1', 'Blog', '&lt;p&gt;&lt;span style=&quot;line-height: 1.42857;&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas, soluta! Non magnam ex, illo maxime maiores, quia perspiciatis sed voluptate quaerat dolorum enim veritatis recusandae qui ad voluptates aspernatur beatae.&amp;nbsp;&lt;/span&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;line-height: 1.42857;&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas, soluta! Non magnam ex, illo maxime maiores, quia perspiciatis sed voluptate quaerat dolorum enim veritatis recusandae qui ad voluptates aspernatur beatae.&lt;/span&gt;&lt;br&gt;&lt;/p&gt;', 'Blog', '', '')");
+            $this->db->query(" INSERT IGNORE INTO `" . DB_PREFIX . "bm_category_description` (`category_description_id`, `category_id`, `language_id`, `title`, `description`, `short_description`, `meta_title`, `meta_keyword`, `meta_description`) VALUES ('1', '1', '1', 'Blog', '&lt;p&gt;&lt;span style=&quot;line-height: 1.42857;&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas, soluta! Non magnam ex, illo maxime maiores, quia perspiciatis sed voluptate quaerat dolorum enim veritatis recusandae qui ad voluptates aspernatur beatae.&amp;nbsp;&lt;/span&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;line-height: 1.42857;&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas, soluta! Non magnam ex, illo maxime maiores, quia perspiciatis sed voluptate quaerat dolorum enim veritatis recusandae qui ad voluptates aspernatur beatae.&lt;/span&gt;&lt;br&gt;&lt;/p&gt;', 'Lorem ipsum dolor sit amet, justo aliquid reformidans ea vel, vim porro dictas et, ut elit partem invidunt vis. Saepe melius complectitur eum ea. Zril delenit vis ut. His suavitate rationibus in, tale discere ceteros eu nec. Vel ut utamur laoreet vituperata, in discere contentiones definitionem ius.', 'Blog', '', '')");
             $this->db->query(" INSERT IGNORE INTO `" . DB_PREFIX . "bm_category_path` (`category_id`, `path_id`, `level`) VALUES ('1', '1', '0')");
             $this->db->query(" INSERT IGNORE INTO `" . DB_PREFIX . "bm_category_to_layout` (`category_id`, `store_id`, `layout_id`) VALUES ('1', '0', '0')");
             $this->db->query(" INSERT IGNORE INTO `" . DB_PREFIX . "bm_category_to_store` (`category_id`, `store_id`) VALUES ('1', '0')");
             if($this->config->get('config_language_id')!=1){
-              $this->db->query(" INSERT IGNORE INTO `" . DB_PREFIX . "bm_category_description` (`category_description_id`, `category_id`, `language_id`, `title`, `description`, `meta_title`, `meta_keyword`, `meta_description`) VALUES ('2', '1', '".$this->config->get('config_language_id')."', 'Blog', '&lt;p&gt;&lt;span style=&quot;line-height: 1.42857;&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas, soluta! Non magnam ex, illo maxime maiores, quia perspiciatis sed voluptate quaerat dolorum enim veritatis recusandae qui ad voluptates aspernatur beatae.&amp;nbsp;&lt;/span&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;line-height: 1.42857;&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas, soluta! Non magnam ex, illo maxime maiores, quia perspiciatis sed voluptate quaerat dolorum enim veritatis recusandae qui ad voluptates aspernatur beatae.&lt;/span&gt;&lt;br&gt;&lt;/p&gt;', 'Blog', '', '')");
+              $this->db->query(" INSERT IGNORE INTO `" . DB_PREFIX . "bm_category_description` (`category_description_id`, `category_id`, `language_id`, `title`, `description`, `short_description`, `meta_title`, `meta_keyword`, `meta_description`) VALUES ('2', '1', '".$this->config->get('config_language_id')."', 'Blog', '&lt;p&gt;&lt;span style=&quot;line-height: 1.42857;&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas, soluta! Non magnam ex, illo maxime maiores, quia perspiciatis sed voluptate quaerat dolorum enim veritatis recusandae qui ad voluptates aspernatur beatae.&amp;nbsp;&lt;/span&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;line-height: 1.42857;&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas, soluta! Non magnam ex, illo maxime maiores, quia perspiciatis sed voluptate quaerat dolorum enim veritatis recusandae qui ad voluptates aspernatur beatae.&lt;/span&gt;&lt;br&gt;&lt;/p&gt;', 'Lorem ipsum dolor sit amet, justo aliquid reformidans ea vel, vim porro dictas et, ut elit partem invidunt vis. Saepe melius complectitur eum ea. Zril delenit vis ut. His suavitate rationibus in, tale discere ceteros eu nec. Vel ut utamur laoreet vituperata, in discere contentiones definitionem ius.', 'Blog', '', '')");
             }
         }
         
@@ -581,14 +630,14 @@ class ModelExtensionModuleDBlogModule extends Model {
             foreach($languages as $language){
                 if($language['language_id'] != 1 ){
                     $sql = "INSERT INTO ".DB_PREFIX."bm_post_description
-                        (`post_id`, `language_id`, `title`, `short_description`, `description`, `meta_title`, `meta_description`, `meta_keyword`)
-                        SELECT `post_id`, '".$language['language_id']."', `title`, `short_description`, `description`, `meta_title`, `meta_description`, `meta_keyword`
+                        (`post_id`, `language_id`, `title`, `short_description`, `description`, `meta_title`, `meta_description`, `meta_keyword`, `tag`)
+                        SELECT `post_id`, '".$language['language_id']."', `title`, `short_description`, `description`, `meta_title`, `meta_description`, `meta_keyword`, `tag`
                         FROM ".DB_PREFIX."bm_post_description";
                     $this->db->query($sql);
 
                     $sql = "INSERT INTO ".DB_PREFIX."bm_category_description
-                        (`category_id`, `language_id`, `title`, `description`, `meta_title`, `meta_keyword`, `meta_description`)
-                        SELECT `category_id`, '".$language['language_id']."', `title`, `description`, `meta_title`, `meta_keyword`, `meta_description`
+                        (`category_id`, `language_id`, `title`, `short_description`, `description`, `meta_title`, `meta_keyword`, `meta_description`)
+                        SELECT `category_id`, '".$language['language_id']."', `title`, `short_description`, `description`, `meta_title`, `meta_keyword`, `meta_description`
                         FROM ".DB_PREFIX."bm_category_description";
                     $this->db->query($sql);
                 }
@@ -614,7 +663,8 @@ class ModelExtensionModuleDBlogModule extends Model {
                 title = '" . $this->db->escape($post['title']) . "', 
                 description = '" . $this->db->escape($post['description']) . "', 
                 short_description = '" . $this->db->escape($post['short_description']) . "', 
-                meta_title = '" . $this->db->escape($post['meta_title']) . "'");
+                meta_title = '" . $this->db->escape($post['meta_title']) . "',
+				tag = '" . $this->db->escape($post['tag']) . "'");
         }
 
         $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "bm_category_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
@@ -625,6 +675,7 @@ class ModelExtensionModuleDBlogModule extends Model {
                 language_id = '" . (int)$data['language_id'] . "',  
                 title = '" . $this->db->escape($category['title']) . "', 
                 description = '" . $this->db->escape($category['description']) . "', 
+				short_description = '" . $this->db->escape($category['short_description']) . "', 
                 meta_title = '" . $this->db->escape($category['meta_title']) . "'");
         }
 

@@ -47,7 +47,10 @@ class ModelExtensionDBlogModuleAuthor extends Model {
                 . "', language_id = '" . (int) $language_id
                 . "', name = '" . $this->db->escape($value['name'])
                 . "', description = '" . $this->db->escape($value['description'])
-                . "', short_description = '" . $this->db->escape($value['short_description']) . "'");
+                . "', short_description = '" . $this->db->escape($value['short_description'])
+				. "', meta_title = '" . $this->db->escape($value['meta_title'])
+				. "', meta_description = '" . $this->db->escape($value['meta_description'])
+				. "', meta_keyword = '" . $this->db->escape($value['meta_keyword'])	. "'");
         }
 
         // if (!empty($data['keyword'])) {
@@ -107,7 +110,10 @@ class ModelExtensionDBlogModuleAuthor extends Model {
                 name = '" . $this->db->escape($value['name']) . "', 
                 author_id = '" . (int) $author_id . "', 
                 description = '" . $this->db->escape($value['description']) . "', 
-                short_description = '" . $this->db->escape($value['short_description']) . "'");
+                short_description = '" . $this->db->escape($value['short_description']) . "',
+				meta_title = '" . $this->db->escape($value['meta_title']) . "',
+				meta_description = '" . $this->db->escape($value['meta_description']) . "',
+				meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "'");
         }
 
         // if (!empty($data['keyword'])) {
@@ -147,7 +153,10 @@ class ModelExtensionDBlogModuleAuthor extends Model {
             $author_description_data[$result['language_id']] = array(
                 'name' => $result['name'],
                 'description' => $result['description'],
-                'short_description' => $result['short_description']
+                'short_description' => $result['short_description'],
+				'meta_title' => $result['meta_title'],
+				'meta_description' => $result['meta_description'],
+				'meta_keyword' => $result['meta_keyword']
                 );
         }
 
