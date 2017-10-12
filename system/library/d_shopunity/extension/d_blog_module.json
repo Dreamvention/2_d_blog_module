@@ -43,7 +43,7 @@
     "required": {
         "d_opencart_patch": ">= 1.0.0",
         "d_event_manager": ">=1.1.0",
-        "d_twig_manager": ">= 1.5.4",
+        "d_twig_manager": ">= 1.5.5",
         "d_simple_html_dom": ">= 1.0.3",
         "d_bootstrap_rating": ">= 1.0.0",
         "d_fileinput": ">= 1.0.0",
