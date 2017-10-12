@@ -284,7 +284,7 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
         $data['text_select'] = $this->language->get('text_select');
 
         $data['help_user_editing'] = sprintf($this->language->get('help_user_editing'), $this->model_extension_d_opencart_patch_url->link('user/user'));
-        $data['entry_name'] = $this->language->get('entry_name');
+        $data['entry_author_name'] = $this->language->get('entry_author_name');
         $data['entry_description'] = $this->language->get('entry_description');
         $data['entry_meta_title'] = $this->language->get('entry_meta_title');
         $data['entry_meta_description'] = $this->language->get('entry_meta_description');

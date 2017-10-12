@@ -121,7 +121,7 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
 
         $data['custom_style'] = $this->setting['design']['custom_style'];
 
-        $author = $this->model_extension_d_blog_module_author->getAuthorDescriptions($user_id);
+        $author = $this->model_extension_d_blog_module_author->getAuthor($user_id);
 
         $layout_type = $this->setting['author']['layout_type'];
         $this->load->config('d_blog_module_layout/'.$layout_type);

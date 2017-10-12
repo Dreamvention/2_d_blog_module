@@ -1,7 +1,7 @@
 <?php
 
 class ModelExtensionDBlogModuleAuthor extends Model {
-	public function getAuthorDescriptions($user_id) {
+	public function getAuthor($user_id) {
 		$author_description_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "bm_author a"
@@ -12,6 +12,7 @@ class ModelExtensionDBlogModuleAuthor extends Model {
 
 		foreach ($query->rows as $result) {
 			$author_description_data= array(
+				'author_id' => $result['author_id'],
 				'name' => $result['name'],
 				'description' => $result['description'],
 				'short_description' => $result['short_description'],
@@ -19,7 +20,7 @@ class ModelExtensionDBlogModuleAuthor extends Model {
 				'meta_description' => $result['meta_description'],
 				'meta_keyword' => $result['meta_keyword'],
 				'image' => $result['image']
-				);
+			);
 		}
  
 		return $author_description_data;

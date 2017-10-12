@@ -119,7 +119,7 @@ class ControllerExtensionDBlogModulePost extends Controller {
             $data['post_id'] = (int)$post_id;
             $data['setting'] = $this->setting;
 
-            $author = $this->model_extension_d_blog_module_author->getAuthorDescriptions($post_info['user_id']);
+            $author = $this->model_extension_d_blog_module_author->getAuthor($post_info['user_id']);
             $data['author'] = (!empty($author['name'])) ? $author['name'] : $this->language->get('text_anonymous');
             $data['author_link'] = $this->url->link('extension/d_blog_module/author', 'user_id='.$post_info['user_id'], 'SSL');
 
@@ -418,7 +418,7 @@ class ControllerExtensionDBlogModulePost extends Controller {
                 $data['description'] = utf8_substr(strip_tags(html_entity_decode($post['description'], ENT_QUOTES, 'UTF-8')), 0,  $this->setting['post_thumb']['description_length']) . '...';
                 $data['rating'] = $rating;
 
-                $author = $this->model_extension_d_blog_module_author->getAuthorDescriptions($post['user_id']);
+                $author = $this->model_extension_d_blog_module_author->getAuthor($post['user_id']);
                 $data['author'] = (!empty($author['name'])) ? $author['name'] : $this->language->get('text_anonymous');
                 $data['author_link'] = $this->url->link('extension/d_blog_module/author', 'user_id='.$post['user_id'], 'SSL');
 

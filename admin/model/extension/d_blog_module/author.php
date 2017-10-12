@@ -53,13 +53,6 @@ class ModelExtensionDBlogModuleAuthor extends Model {
 				. "', meta_keyword = '" . $this->db->escape($value['meta_keyword'])	. "'");
         }
 
-        // if (!empty($data['keyword'])) {
-        //         $this->db->query("INSERT INTO " . DB_PREFIX . "url_alias
-        //             SET query = 'bm_author_id=" . (int) $data['user_id'] . "',
-        //             keyword   = '". $this->db->escape($data['keyword']) . "'");
-            
-        // }
-
         return $author_id;
     }
 
@@ -115,13 +108,6 @@ class ModelExtensionDBlogModuleAuthor extends Model {
 				meta_description = '" . $this->db->escape($value['meta_description']) . "',
 				meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "'");
         }
-
-        // if (!empty($data['keyword'])) {
-        //     $this->db->query("INSERT INTO " . DB_PREFIX . "url_alias
-        //             SET query = 'bm_author_id=" . (int) $data['user_id'] . "',
-        //             keyword   = '". $this->db->escape($data['keyword']) . "'");
-        // }
-
     }
 
     public function getNewUser($filter_data = array()) {
@@ -136,10 +122,8 @@ class ModelExtensionDBlogModuleAuthor extends Model {
     }
 
     public function deleteAuthor($author_id) {
-
         $this->db->query("DELETE FROM " . DB_PREFIX . "bm_author WHERE author_id = '" . (int) $author_id . "'");
         $this->db->query("DELETE FROM " . DB_PREFIX . "bm_author_description WHERE author_id = '" . (int) $author_id . "'");
-        //$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'bm_author_id=" . (int)$author_id. "'");
     }
 
     public function getAuthorDescriptions($author_id) {
@@ -164,22 +148,18 @@ class ModelExtensionDBlogModuleAuthor extends Model {
     }
 
     public function getAuthor($author_id) {
-
-        $query = $this->db->query("SELECT a.author_id, a.author_group_id, a.user_id, u.image "
-            // . ", (SELECT DISTINCT keyword FROM " . DB_PREFIX . "url_alias "
-            // . "WHERE query = 'bm_author_id=" . (int) $author_id . "') AS keyword "
+        $query = $this->db->query("SELECT a.author_id, a.author_group_id, a.user_id, u.image " 
         . "FROM " . DB_PREFIX . "bm_author a LEFT JOIN " . DB_PREFIX . "user u "
         . "ON (a.user_id = u.user_id) WHERE author_id = '" . (int) $author_id . "'");
 
         $author_data = array(
             'user_id' => $query->rows[0]['user_id']
-            );
+        );
 
         return $query->row;
     }
 
     public function getAuthors($data = array()) {
-
         $sql = "SELECT a.author_id, ad.name, ad.description, ad.short_description, a.user_id "
         . "FROM " . DB_PREFIX . "bm_author a "
         . "LEFT JOIN " . DB_PREFIX . "bm_author_description ad "
@@ -242,18 +222,6 @@ class ModelExtensionDBlogModuleAuthor extends Model {
             return false;
         }
     }
-
-    // public function getKeywordForAuthor($author_id, $multi_lang){
-    //     $query = $this->db->query("SELECT keyword, query FROM " . DB_PREFIX . "url_alias WHERE query LIKE 'bm_author_id=" . (int) $author_id . "%'");
-
-    //     $keyword_data = array();
-    //     if($query->num_rows > 0) {
-    //         $keyword_data = $query->row['keyword'];
-    //     } else {
-    //         $keyword_data = '';
-    //     }
-    //     return $keyword_data;
-    // }
 
     public function getTotalAuthors($data = array()) {
         $sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . "bm_author a "
