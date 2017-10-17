@@ -1,6 +1,6 @@
 {
     "codename": "d_blog_module",
-    "version": "3.0.9",
+    "version": "3.0.10",
     "name": "Blog module",
     "description": "A blog module based on twig and events. Huge functionality packed in one great solution. ",
     "index": "extension/module/d_blog_module",
@@ -120,6 +120,10 @@
         "image/catalog/d_blog_module/post"
     ],
     "changelog": [
+        {
+            "version":"3.0.10",
+            "change": "Fix d_fileinput load path."
+        },
         {
             "version":"3.0.9",
             "change": "Bug fix of category link in post."

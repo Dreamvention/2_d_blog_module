@@ -41,9 +41,9 @@ class ControllerExtensionDBlogModuleReview extends Controller {
 
     public function index() {
 
-        $this->document->addStyle('catalog/view/javascript/library/d_fileinput/fileinput.css');
-        $this->document->addScript('catalog/view/javascript/library/d_fileinput/fileinput.js');
-        $this->document->addScript('catalog/view/javascript/library/d_fileinput/canvas-to-blob.js');
+        $this->document->addStyle('catalog/view/javascript/d_fileinput/fileinput.css');
+        $this->document->addScript('catalog/view/javascript/d_fileinput/fileinput.js');
+        $this->document->addScript('catalog/view/javascript/d_fileinput/canvas-to-blob.js');
 
         $this->document->addStyle('catalog/view/javascript/d_bootstrap_rating/bootstrap-rating.css');
         $this->document->addScript('catalog/view/javascript/d_bootstrap_rating/bootstrap-rating.js');
