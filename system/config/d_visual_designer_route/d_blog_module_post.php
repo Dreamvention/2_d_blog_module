@@ -17,5 +17,6 @@ $_['edit_url']        = 'index.php?route=d_blog_module/post/editPost';
 
 $_['events']          = array(
     'admin/view/d_blog_module/post_form/after' => 'event/d_blog_module/view_post_after',
-    'catalog/view/d_blog_module/post/before' => 'event/d_blog_module/view_post_before'
+    'catalog/view/d_blog_module/post/before' => 'event/d_blog_module/view_post_before',
+    'catalog/model/d_blog_module/post/getPost/after' => 'event/d_blog_module/model_post_getPost_after'
 );
