@@ -132,16 +132,8 @@ class ControllerExtensionEventDBlogModule extends Controller {
     {
 
         if(isset($output['description']) && isset($this->request->get['format'])){
-      
-            $designer_data = array(
-                'config' => 'd_blog_module_post',
-                'content' => $output['description'],
-                'field_name' => 'description['.(int)$this->config->get('config_language_id').'][description]',
-                'id' => $output['post_id']
-                );
             $this->load->model('extension/module/d_visual_designer');
-            $output['description'] = $this->model_extension_module_d_visual_designer->parseDescription($designer_data);
-            $output['description'] = html_entity_decode($output['description'], ENT_QUOTES, 'UTF-8');
+            $output['description'] = $this->model_extension_module_d_visual_designer->getText($output['description']);
         }
     }
     
