@@ -305,11 +305,18 @@ class ControllerExtensionDBlogModuleCategory extends Controller
     }
 
     public function format($format, $json){
-        if($format == 'json'){
+        if ($format == 'json') {
             $this->response->addHeader('Content-Type: application/json');
-            $this->response->setOutput(json_encode($json));
+			
+			if (isset($this->request->get['callback'])) {
+				$this->response->setOutput($this->request->get['callback'] . '(' . json_encode($json) . ');');
+			} else {
+				$this->response->setOutput(json_encode($json));
+			}
+   
             return true;
         }
+		
         return false;
     }
 
