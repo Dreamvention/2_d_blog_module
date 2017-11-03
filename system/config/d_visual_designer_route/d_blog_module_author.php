@@ -16,6 +16,6 @@ $_['frontend_param']  = 'user_id';
 $_['edit_url']        = 'index.php?route=d_blog_module/author/editAuthor';
 
 $_['events']          = array(
-    'admin/view/d_blog_module/author_form/after' => 'event/d_blog_module/view_author_after',
-    'catalog/view/d_blog_module/author/before' => 'event/d_blog_module/view_author_before'
+    'admin/view/extension/d_blog_module/author_form/after' => 'extension/event/d_blog_module/view_author_after',
+    'catalog/view/extension/d_blog_module/author/before' => 'extension/event/d_blog_module/view_author_before'
 );

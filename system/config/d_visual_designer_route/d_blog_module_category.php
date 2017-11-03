@@ -16,6 +16,6 @@ $_['frontend_param']  = 'category_id';
 $_['edit_url']        = 'index.php?route=d_blog_module/category/editCategory';
 
 $_['events']          = array(
-    'admin/view/d_blog_module/category_form/after' => 'event/d_blog_module/view_category_after',
-    'catalog/view/d_blog_module/category/before' => 'event/d_blog_module/view_category_before'
+    'admin/view/extension/d_blog_module/category_form/after' => 'extension/event/d_blog_module/view_category_after',
+    'catalog/view/extension/d_blog_module/category/before' => 'extension/event/d_blog_module/view_category_before'
 );
