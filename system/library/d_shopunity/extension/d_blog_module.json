@@ -1,6 +1,6 @@
 {
     "codename": "d_blog_module",
-    "version": "3.0.11",
+    "version": "3.0.12",
     "name": "Blog module",
     "description": "A blog module based on twig and events. Huge functionality packed in one great solution. ",
     "index": "extension/module/d_blog_module",
@@ -59,6 +59,7 @@
         "system/config/d_blog_module.php",
 
         "admin/controller/extension/module/d_blog_module.php",
+        "admin/controller/extension/d_ajax_search/blog.php",
         "admin/controller/extension/event/d_blog_module.php",
         "admin/language/en-gb/extension/event/d_blog_module.php",
         "admin/model/extension/module/d_blog_module.php",
@@ -73,6 +74,7 @@
         "image/catalog/d_blog_module/review/index.html",
 
         "system/config/d_visual_designer_route/d_blog_module_category.php",
+        "system/config/d_ajax_search/blog.php",
         "system/config/d_visual_designer_route/d_blog_module_post.php",
         "system/config/d_visual_designer_route/d_blog_module_author.php",
 
@@ -120,6 +122,10 @@
         "image/catalog/d_blog_module/post"
     ],
     "changelog": [
+        {
+            "version":"3.0.12",
+            "change": "Add support live ajax search."
+        },
         {
             "version":"3.0.11",
             "change": "Add JSON Callback."
