@@ -81,6 +81,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         }
 
         // styles and scripts
+
         $this->document->addStyle('view/stylesheet/d_bootstrap_extra/bootstrap.css');
         // sortable
         $this->document->addScript('view/javascript/d_rubaxa_sortable/sortable.js');
@@ -176,8 +177,12 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $data['tab_support'] = $this->language->get('tab_support');
         $data['text_support'] = $this->language->get('text_support');
         $data['entry_support'] = $this->language->get('entry_support');
+     //   $data['entry_admin_style'] = $this->language->get('entry_admin_style');
         $data['button_support'] = $this->language->get('button_support');
         $data['support_url'] = $this->extension['support']['url'];
+
+        //admin_style
+       // $data['admin_style'] = 'admin_style';
 
         // Button
         $data['button_save'] = $this->language->get('button_save');
@@ -331,6 +336,9 @@ class ControllerExtensionModuleDBlogModule extends Controller {
 
         //get setting
         $data['setting'] = $this->model_extension_module_d_blog_module->getConfigData($this->codename, $this->codename.'_setting', $this->store_id, $this->config_file);
+        //d admin style we want to load the theme which we want so need to wit setting
+        $this->document->addStyle('view/stylesheet/d_admin_style/core/normalize/normalize.css');
+        $this->document->addStyle('view/stylesheet/d_admin_style/themes/'. $data['setting']['admin_theme'] .'/styles.css');
 
         //demo
         $data['demos'] = $this->model_extension_module_d_blog_module->getDemos();
@@ -378,6 +386,9 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         //     $this->load->model('extension/d_opencart_patch/modification');
         //     $data['event_support'] = $this->model_extension_d_opencart_patch_modification->getModificationByName('d_event_manager');
         // }
+        //admin_styles
+        //        $data['admin_styles'] = $this->model_extension_module_d_blog_module->getAdminStyles();
+
 
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');

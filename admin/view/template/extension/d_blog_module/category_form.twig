@@ -401,7 +401,7 @@ $('#input-description{{language.language_id}}').summernote({
 $('input[name=\'path\']').autocomplete({
 	'source': function(request, response) {
 		$.ajax({
-			url: '{{category_autocomplete}}&filter_name=' +  encodeURIComponent(request),
+			url: '{{category_autocomplete}}&filter_title=' +  encodeURIComponent(request),
 			dataType: 'json',
 			success: function(json) {
 				json.unshift({
