@@ -113,12 +113,6 @@ class ModelExtensionModuleDBlogModule extends Model
      *  Get file contents, usualy for debug log files.
      */
 
-    public function getAdminStyles()
-    {
-        $dir = DIR_APPLICATION . 'view/stylesheet/d_admin_style/themes';
-        $name_dirs = scandir($dir);
-        return  array_diff($name_dirs, array('.', '..'));
-    }
 
     /*
      *  Return name of config file.

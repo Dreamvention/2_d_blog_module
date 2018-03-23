@@ -1,12 +1,6 @@
 {{ header }}{{ column_left }}
 <div id="content">
     <div class="page-header">
-        <style>
-            .tile {
-                background-color: #383a4b;
-                color: #fff;
-            }
-        </style>
         <div class="container-fluid">
             <div class="form-inline pull-right">
                 {% if stores %}
@@ -218,22 +212,21 @@
                                                 </a>
                                             </div>
                                         </div><!-- //support_email -->
-                                        {#<div class="form-group">#}
-                                            {#<label class="col-sm-2 control-label"#}
-                                                   {#for="input_admin_style">{{ entry_admin_style }}</label>#}
-                                            {#<div class="col-sm-10">#}
-                                                {#<select name="{{ codename }}_setting[admin_style]"#}
-                                                        {#id="input_select_admin_side" class="form-control m-b">#}
-                                                    {#{{ admin_styles |json_encode}}#}
-                                                    {#{% for style in admin_styles %}#}
-                                                        {#<option value="{{ style }}"#}
-                                                            {#{% if style == setting.style %} selected="selected" {% endif %}>#}
-                                                            {#{{ style }}</option>#}
-                                                    {#{% endfor %}#}
-                                                {#</select>#}
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label"
+                                                   for="input_admin_style">{{ entry_admin_style }}</label>
+                                            <div class="col-sm-10">
+                                                <select name="{{ codename }}_setting[admin_style]"
+                                                        id="input_select_admin_side" class="form-control m-b">
+                                                    {% for style in admin_styles %}
+                                                        <option value="{{ style }}"
+                                                            {% if style == setting.style %} selected="selected" {% endif %}>
+                                                            {{ style }}</option>
+                                                    {% endfor %}
+                                                </select>
 
-                                            {#</div>#}
-                                        {#</div><!-- //admin_style -->#}
+                                            </div>
+                                        </div><!-- //admin_style -->
                                     </div>
                                 </div>
                                 <div class="tab-pane " id="tab_category">
@@ -578,9 +571,12 @@
                                             <label class="col-sm-2 control-label"
                                                    for="input_checkbox">{{ entry_post_date_format }}</label>
                                             <div class="col-sm-10">
-                                                <input type="text" name="{{ codename }}_setting[post][date_format]"
-                                                       value="{{ setting.post.date_format }}"
-                                                       placeholder="{{ entry_post_date_format }}" class="form-control"/>
+                                                {% for language in languages %}
+                                                    <div id="post_date_format{{ language.language_id }}" class="input-group">
+                                                        <label class="input-group-addon"  title="{{ language.name }}"><img src="{{ language.flag }}" title="{{ language.name }}" /></label>
+                                                        <input type="text" name="{{ codename }}_setting[post][date_format][{{ language.language_id }}]" value="{{ setting.post.date_format[language.language_id] }}  " class="form-control" >
+                                                    </div>
+                                                {% endfor %}
                                             </div>
                                         </div><!-- //checkbox -->
 
@@ -804,11 +800,12 @@
                                             <label class="col-sm-2 control-label"
                                                    for="input_checkbox">{{ entry_post_thumb_date_format }}</label>
                                             <div class="col-sm-10">
-                                                <input type="text"
-                                                       name="{{ codename }}_setting[post_thumb][date_format]"
-                                                       value="{{ setting.post_thumb.date_format }}"
-                                                       placeholder="{{ entry_post_thumb_date_format }}"
-                                                       class="form-control"/>
+                                                {% for language in languages %}
+                                                    <div id="post_thumb_date_format{{ language.language_id }}" class="input-group">
+                                                        <label class="input-group-addon"  title="{{ language.name }}"><img src="{{ language.flag }}" title="{{ language.name }}" /></label>
+                                                        <input type="text" name="{{ codename }}_setting[post_thumb][date_format][{{ language.language_id }}]" value="{{ setting.post_thumb.date_format[language.language_id] }}  " class="form-control" >
+                                                    </div>
+                                                {% endfor %}
                                             </div>
                                         </div><!-- //checkbox -->
 

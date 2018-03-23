@@ -138,7 +138,6 @@ class ControllerExtensionDBlogModulePost extends Controller {
             $data['date_published_utc'] = date($this->setting['utc_datetime_format'], strtotime($post_info['date_published']));
             $data['date_modified_utc'] = date($this->setting['utc_datetime_format'], strtotime($post_info['date_modified']));
             $data['custom_style'] = $this->setting['design']['custom_style'];
-
             $data['text_posted_by'] = $this->language->get('text_posted_by');
             $data['text_on'] = $this->language->get('text_on');
             $data['text_product_group_name'] = $this->language->get('text_product_group_name');

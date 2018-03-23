@@ -29,6 +29,11 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         }
         $this->d_twig_manager = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_twig_manager.json'));
         $this->d_event_manager = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_event_manager.json'));
+        $this->d_admin_style = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_admin_style.json'));
+        if ($this->d_admin_style){
+            $this->load->model('extension/d_admin_style/style');
+
+        }
         $this->extension = json_decode(file_get_contents(DIR_SYSTEM.'library/d_shopunity/extension/d_blog_module.json'), true);
 
         if (isset($this->request->get['store_id'])) {
@@ -57,6 +62,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
 
         //save post
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+
             if($this->d_event_manager){
                 $this->load->model('extension/module/d_event_manager');
                 if(!$this->model_extension_module_d_event_manager->isCompatible()){
@@ -177,12 +183,9 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $data['tab_support'] = $this->language->get('tab_support');
         $data['text_support'] = $this->language->get('text_support');
         $data['entry_support'] = $this->language->get('entry_support');
-     //   $data['entry_admin_style'] = $this->language->get('entry_admin_style');
+
         $data['button_support'] = $this->language->get('button_support');
         $data['support_url'] = $this->extension['support']['url'];
-
-        //admin_style
-       // $data['admin_style'] = 'admin_style';
 
         // Button
         $data['button_save'] = $this->language->get('button_save');
@@ -336,9 +339,8 @@ class ControllerExtensionModuleDBlogModule extends Controller {
 
         //get setting
         $data['setting'] = $this->model_extension_module_d_blog_module->getConfigData($this->codename, $this->codename.'_setting', $this->store_id, $this->config_file);
-        //d admin style we want to load the theme which we want so need to wit setting
-        $this->document->addStyle('view/stylesheet/d_admin_style/core/normalize/normalize.css');
-        $this->document->addStyle('view/stylesheet/d_admin_style/themes/'. $data['setting']['admin_theme'] .'/styles.css');
+
+
 
         //demo
         $data['demos'] = $this->model_extension_module_d_blog_module->getDemos();
@@ -387,18 +389,29 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         //     $data['event_support'] = $this->model_extension_d_opencart_patch_modification->getModificationByName('d_event_manager');
         // }
         //admin_styles
-        //        $data['admin_styles'] = $this->model_extension_module_d_blog_module->getAdminStyles();
+        $data = $this->model_extension_d_admin_style_style->getLanguageText($data);
+        $data['admin_styles'] = $this->model_extension_d_admin_style_style->getAvailableThemes();
+        $this->model_extension_d_admin_style_style->getStyles($data['setting']['admin_style']);
 
-
+        //languages
+        $this->load->model('localisation/language');
+        $data['languages'] = $this->model_localisation_language->getLanguages();
+        foreach ($data['languages'] as $key =>  $language){
+            if(VERSION >= '2.2.0.0'){
+                $data['languages'][$key]['flag'] = 'language/'.$language['code'].'/'.$language['code'].'.png';
+            }else{
+                $data['languages'][$key]['flag'] = 'view/image/flags/'.$language['image'];
+            }
+        }
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
-
+        //d admin style we want to load the theme which we want so need to wit setting
         $this->response->setOutput($this->model_extension_d_opencart_patch_load->view($this->route, $data));
     }
 
     /**
-
+`
     Add Assisting functions here
 
      **/
