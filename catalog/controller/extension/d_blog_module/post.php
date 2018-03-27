@@ -1,6 +1,7 @@
 <?php
 
-class ControllerExtensionDBlogModulePost extends Controller {
+class ControllerExtensionDBlogModulePost extends Controller
+{
     private $id = 'd_blog_module';
     private $route = 'extension/d_blog_module/post';
     private $sub_versions = array('lite', 'light', 'free');
@@ -12,15 +13,16 @@ class ControllerExtensionDBlogModulePost extends Controller {
     private $setting = array();
     private $theme = 'default';
 
-    public function __construct($registry) {
+    public function __construct($registry)
+    {
         parent::__construct($registry);
-        if(!isset($this->user)){
-            if(VERSION >= '2.2.0.0'){
+        if (!isset($this->user)) {
+            if (VERSION >= '2.2.0.0') {
                 $this->user = new Cart\User($registry);
-            }else{
+            } else {
                 $this->user = new User($registry);
             }
-            $this->theme = $this->config->get($this->config->get('config_theme').'_directory');
+            $this->theme = $this->config->get($this->config->get('config_theme') . '_directory');
         }
         $this->load->model('extension/d_opencart_patch/load');
         $this->load->language('extension/d_blog_module/post');
@@ -37,13 +39,24 @@ class ControllerExtensionDBlogModulePost extends Controller {
 
         $this->config_file = $this->model_extension_module_d_blog_module->getConfigFile($this->id, $this->sub_versions);
 
-        $this->setting = $this->model_extension_module_d_blog_module->getConfigData($this->id, $this->id.'_setting', $this->config->get('config_store_id'),$this->config_file);
+        $this->setting = $this->model_extension_module_d_blog_module->getConfigData($this->id, $this->id . '_setting', $this->config->get('config_store_id'), $this->config_file);
 
+//        print_r($this->language->get('code'));
+        $this->load->model('localisation/language');
+        $lang=$this->model_localisation_language->getLanguage($this->config->get('config_language_id'));
+        foreach (explode(',',$lang['locale'])  as $l){
+            setlocale(LC_ALL, $l);
+        }
+//        $data['date_published'] =    strftime("%A %d %B %Y  %H:%M:%S", time());
+//        print_r(setlocale(LC_ALL, 'az'));
+//        print_r($data['date_published']);
+//exit;
     }
 
-    public function index() {
+    public function index()
+    {
 
-        if(!$this->config->get('d_blog_module_status')){
+        if (!$this->config->get('d_blog_module_status')) {
             $this->response->redirect($this->url->link('error/not_found'));
         }
 
@@ -52,10 +65,10 @@ class ControllerExtensionDBlogModulePost extends Controller {
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_home'),
             'href' => $this->url->link('common/home', '', 'SSL')
-            );
+        );
 
         if (isset($this->request->get['post_id'])) {
-            $post_id = (int) $this->request->get['post_id'];
+            $post_id = (int)$this->request->get['post_id'];
         } else {
             $post_id = 0;
         }
@@ -70,11 +83,11 @@ class ControllerExtensionDBlogModulePost extends Controller {
 
             $this->document->addScript('catalog/view/javascript/jquery/magnific/jquery.magnific-popup.min.js');
             $this->document->addStyle('catalog/view/javascript/jquery/magnific/magnific-popup.css');
-            if(file_exists(DIR_APPLICATION.'view/javascript/jquery/datetimepicker/moment/moment.min.js')){
+            if (file_exists(DIR_APPLICATION . 'view/javascript/jquery/datetimepicker/moment/moment.min.js')) {
                 $this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment/moment.min.js');
-            } elseif (file_exists(DIR_APPLICATION.'view/javascript/jquery/datetimepicker/moment.js')){
+            } elseif (file_exists(DIR_APPLICATION . 'view/javascript/jquery/datetimepicker/moment.js')) {
                 $this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment.js');
-            }else{
+            } else {
                 $this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment.min.js');
             }
             $this->document->addScript('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js');
@@ -83,14 +96,14 @@ class ControllerExtensionDBlogModulePost extends Controller {
             $styles = array(
                 'd_blog_module/d_blog_module.css',
                 'd_blog_module/bootstrap.css',
-                'd_blog_module/theme/'.$this->setting['theme'].'.css'
+                'd_blog_module/theme/' . $this->setting['theme'] . '.css'
             );
 
-            foreach($styles as $style){
-                if (file_exists(DIR_TEMPLATE . $this->theme . '/stylesheet/'.$style)) {
-                    $this->document->addStyle('catalog/view/theme/'.$this->theme.'/stylesheet/'.$style);
+            foreach ($styles as $style) {
+                if (file_exists(DIR_TEMPLATE . $this->theme . '/stylesheet/' . $style)) {
+                    $this->document->addStyle('catalog/view/theme/' . $this->theme . '/stylesheet/' . $style);
                 } else {
-                    $this->document->addStyle('catalog/view/theme/default/stylesheet/'.$style);
+                    $this->document->addStyle('catalog/view/theme/default/stylesheet/' . $style);
                 }
             }
 
@@ -99,17 +112,17 @@ class ControllerExtensionDBlogModulePost extends Controller {
                 'd_blog_module/post.js'
             );
 
-            foreach($scripts as $script){
-                if (file_exists(DIR_TEMPLATE . $this->theme . '/javascript/'.$script)) {
-                    $this->document->addScript('catalog/view/theme/'.$this->theme.'/javascript/'.$script);
+            foreach ($scripts as $script) {
+                if (file_exists(DIR_TEMPLATE . $this->theme . '/javascript/' . $script)) {
+                    $this->document->addScript('catalog/view/theme/' . $this->theme . '/javascript/' . $script);
                 } else {
-                    $this->document->addScript('catalog/view/theme/default/javascript/'.$script);
+                    $this->document->addScript('catalog/view/theme/default/javascript/' . $script);
                 }
             }
 
-            if($this->user->isLogged()){
+            if ($this->user->isLogged()) {
                 $data['user'] = true;
-            }else{
+            } else {
                 $data['user'] = false;
             }
 
@@ -121,20 +134,23 @@ class ControllerExtensionDBlogModulePost extends Controller {
 
             $author = $this->model_extension_d_blog_module_author->getAuthor($post_info['user_id']);
             $data['author'] = (!empty($author['name'])) ? $author['name'] : $this->language->get('text_anonymous');
-            $data['author_link'] = $this->url->link('extension/d_blog_module/author', 'user_id='.$post_info['user_id'], 'SSL');
+            $data['author_link'] = $this->url->link('extension/d_blog_module/author', 'user_id=' . $post_info['user_id'], 'SSL');
 
             if (isset($author['image'])) {
                 $data['author_image'] = $this->model_tool_image->resize($author['image'], $this->setting['author']['image_width'], $this->setting['author']['image_height']);
             } else {
                 $data['author_image'] = $this->model_tool_image->resize('placeholder.png', $this->setting['author']['image_width'], $this->setting['author']['image_height']);
             }
+
             $data['author_name'] = (isset($author['name'])) ? $author['name'] : '';
             $data['author_description'] = (isset($author['short_description'])) ? strip_tags(html_entity_decode($author['short_description'], ENT_QUOTES, 'UTF-8')) : '';
-
             $data['description'] = html_entity_decode($post_info['description'], ENT_QUOTES, 'UTF-8');
-            $data['date_published'] = date($this->setting['post']['date_format'], strtotime($post_info['date_published']));
-            $data['date_published_link'] = $this->url->link('extension/d_blog_module/search', 'date_published=' . date("m", strtotime($post_info['date_published'])) .'-'. date("Y", strtotime($post_info['date_published'])), 'SSL');
-            $data['date_modified'] = date($this->setting['post']['date_format'], strtotime($post_info['date_modified']));
+
+            $data['date_published'] =    utf8_encode(strftime("%A %d %B %Y @ %H:%M:%S", strtotime($post_info['date_published'])));
+
+
+            $data['date_published_link'] = $this->url->link('extension/d_blog_module/search', 'date_published=' . date("m", strtotime($post_info['date_published'])) . '-' . date("Y", strtotime($post_info['date_published'])), 'SSL');
+            $data['date_modified'] = date($this->setting['post']['date_format'][$this->config->get('config_language_id')], strtotime($post_info['date_modified']));
             $data['date_published_utc'] = date($this->setting['utc_datetime_format'], strtotime($post_info['date_published']));
             $data['date_modified_utc'] = date($this->setting['utc_datetime_format'], strtotime($post_info['date_modified']));
             $data['custom_style'] = $this->setting['design']['custom_style'];
@@ -157,14 +173,18 @@ class ControllerExtensionDBlogModulePost extends Controller {
             $data['tab_description'] = $this->language->get('tab_description');
             $data['tab_attribute'] = $this->language->get('tab_attribute');
             $data['tab_review'] = $this->language->get('tab_review');
+            $data['entry_limit_access_user'] = $this->language->get('entry_limit_access_user');
+            $data['entry_limit_access_user_group'] = $this->language->get('entry_limit_access_user_group');
+            $data['entry_user'] = $this->language->get('entry_user');
+            $data['entry_user_group'] = $this->language->get('entry_user_group`');
 
             $data['text_edit'] = $this->language->get('text_edit');
             $data['edit'] = false;
-            if($this->user->isLogged()){
-                if(VERSION >= '3.0.0.0'){
-                    $data['edit'] = $this->config->get('config_url').$this->setting['dir_admin'].'/index.php?route=extension/d_blog_module/post/edit&post_id='.$post_id . '&user_token='.$this->session->data['user_token'];
+            if ($this->user->isLogged()) {
+                if (VERSION >= '3.0.0.0') {
+                    $data['edit'] = $this->config->get('config_url') . $this->setting['dir_admin'] . '/index.php?route=extension/d_blog_module/post/edit&post_id=' . $post_id . '&user_token=' . $this->session->data['user_token'];
                 } else {
-                    $data['edit'] = $this->config->get('config_url').$this->setting['dir_admin'].'/index.php?route=extension/d_blog_module/post/edit&post_id='.$post_id . '&token='.$this->session->data['token'];
+                    $data['edit'] = $this->config->get('config_url') . $this->setting['dir_admin'] . '/index.php?route=extension/d_blog_module/post/edit&post_id=' . $post_id . '&token=' . $this->session->data['token'];
                 }
             }
 
@@ -174,11 +194,11 @@ class ControllerExtensionDBlogModulePost extends Controller {
             foreach ($categories as $category) {
                 $data['categories'][] = array(
                     'title' => $category['title'],
-                    'href' => $this->url->link('extension/d_blog_module/category', 'category_id=' . $category['category_id'] . $url, 'SSL')
-                    );
+                    'href'  => $this->url->link('extension/d_blog_module/category', 'category_id=' . $category['category_id'] . $url, 'SSL')
+                );
             }
 
-            if(isset($categories[0])){
+            if (isset($categories[0])) {
                 $parent_category = $categories[0];
             }
 
@@ -188,48 +208,44 @@ class ControllerExtensionDBlogModulePost extends Controller {
             foreach ($post_videos as $video) {
                 $data['post_videos'][] = array(
                     'text' => $video['text'],
-                    'code' => '<iframe frameborder="0" allowfullscreen src="' . str_replace("watch?v=","embed/",$video['video']) . '" height="'.$video['height'].'" width="100%" style="max-width:'.$video['width'].'px"></iframe>'
-                    );
+                    'code' => '<iframe frameborder="0" allowfullscreen src="' . str_replace("watch?v=", "embed/", $video['video']) . '" height="' . $video['height'] . '" width="100%" style="max-width:' . $video['width'] . 'px"></iframe>'
+                );
             }
 
-            if($parent_category){
+            if ($parent_category) {
                 $parents = $this->model_extension_d_blog_module_category->getCategoryParents($parent_category['category_id']);
-                foreach($parents as $category){
+                foreach ($parents as $category) {
                     $data['breadcrumbs'][] = array(
                         'text' => $category['title'],
                         'href' => $this->url->link('extension/d_blog_module/category', 'category_id=' . $category['category_id'] . $url, 'SSL')
-                        );
+                    );
                 }
                 $data['breadcrumbs'][] = array(
                     'text' => $parent_category['title'],
                     'href' => $this->url->link('extension/d_blog_module/category', 'category_id=' . $parent_category['category_id'] . $url, 'SSL')
-                    );
+                );
             }
 
 
             $data['breadcrumbs'][] = array(
                 'text' => $post_info['title']
-                );
+            );
 
             $data['tags'] = array();
             $tags = array();
-            if(!empty($post_info['image_title'])){
+            if (!empty($post_info['image_title'])) {
                 $data['image_title'] = $post_info['image_title'];
-            }
-            else
-            {
+            } else {
                 $data['image_title'] = $data['heading_title'];
             }
-            if(!empty($post_info['image_alt'])){
+            if (!empty($post_info['image_alt'])) {
                 $data['image_alt'] = $post_info['image_alt'];
-            }
-            else
-            {
+            } else {
                 $data['image_alt'] = $data['heading_title'];
             }
             $data['image_alt'] = $post_info['image_alt'];
             $data['image_title'] = $post_info['image_title'];
-			
+
             if ($post_info['tag']) {
                 $tags = explode(',', $post_info['tag']);
 
@@ -237,67 +253,67 @@ class ControllerExtensionDBlogModulePost extends Controller {
                     $data['tags'][] = array(
                         'text' => trim($tag),
                         'href' => $this->url->link('extension/d_blog_module/search', 'tag=' . trim($tag), 'SSL')
-                        );
+                    );
                 }
             }
 
-            if ($post_info['image'] && $this->setting['post']['popup_display'] ) {
+            if ($post_info['image'] && $this->setting['post']['popup_display']) {
                 $data['popup'] = $this->model_tool_image->resize($post_info['image'], $this->setting['post']['popup_width'], $this->setting['post']['popup_height']);
             } else {
                 $data['popup'] = '';
             }
 
-            if ($post_info['image'] && $this->setting['post']['image_display'] ) {
+            if ($post_info['image'] && $this->setting['post']['image_display']) {
                 $data['thumb'] = $this->model_tool_image->resize($post_info['image'], $this->setting['post']['image_width'], $this->setting['post']['image_height']);
             } else {
                 $data['thumb'] = '';
             }
 
             $review_total_info = $this->model_extension_d_blog_module_review->getTotalReviewsByPostId($post_id);
-            $data['rating'] = (int) $review_total_info['rating'];
+            $data['rating'] = (int)$review_total_info['rating'];
 
-            if(isset($this->request->get['format'])){
+            if (isset($this->request->get['format'])) {
                 $format = $this->request->get['format'];
-                if($this->format($format, $data)){
+                if ($this->format($format, $data)) {
                     return false;
                 }
             }
 
-            if($post_info['review_display'] == 1){
+            if ($post_info['review_display'] == 1) {
                 $data['review_display'] = true;
-            }elseif($post_info['review_display'] == 2){
+            } elseif ($post_info['review_display'] == 2) {
                 $data['review_display'] = false;
-            }else{
+            } else {
                 $data['review_display'] = $this->setting['post']['review_display'];
             }
             $data['review'] = $this->load->controller('extension/d_blog_module/review');
 
             //next and prev posts
             $nav_category_id = 0;
-            if($this->setting['post']['nav_same_category'] && $parent_category){
+            if ($this->setting['post']['nav_same_category'] && $parent_category) {
                 $nav_category_id = $parent_category['category_id'];
             }
             $next_post_info = $this->model_extension_d_blog_module_post->getNextPost($post_id, $nav_category_id);
             $prev_post_info = $this->model_extension_d_blog_module_post->getPrevPost($post_id, $nav_category_id);
 
             $data['next_post'] = array();
-            if($next_post_info){
+            if ($next_post_info) {
                 $data['next_post'] = array(
-                    'text' => $next_post_info['title'],
-                    'href' => $this->url->link('extension/d_blog_module/post', 'post_id=' . $next_post_info['post_id'] . $url, 'SSL'),
-                    'short_description' =>  utf8_substr(strip_tags(html_entity_decode($next_post_info['short_description'], ENT_QUOTES, 'UTF-8')), 0, $this->setting['post']['short_description_length']).'...',
-                    'thumb' => ($next_post_info['image']) ? $this->model_tool_image->resize($next_post_info['image'], $this->setting['post_thumb']['image_width'], $this->setting['post_thumb']['image_height']) : '',
-                    );
+                    'text'              => $next_post_info['title'],
+                    'href'              => $this->url->link('extension/d_blog_module/post', 'post_id=' . $next_post_info['post_id'] . $url, 'SSL'),
+                    'short_description' => utf8_substr(strip_tags(html_entity_decode($next_post_info['short_description'], ENT_QUOTES, 'UTF-8')), 0, $this->setting['post']['short_description_length']) . '...',
+                    'thumb'             => ($next_post_info['image']) ? $this->model_tool_image->resize($next_post_info['image'], $this->setting['post_thumb']['image_width'], $this->setting['post_thumb']['image_height']) : '',
+                );
             }
 
             $data['prev_post'] = array();
-            if($prev_post_info){
+            if ($prev_post_info) {
                 $data['prev_post'] = array(
-                    'text' => $prev_post_info['title'],
-                    'href' => $this->url->link('extension/d_blog_module/post', 'post_id=' . $prev_post_info['post_id'] . $url, 'SSL'),
-                    'short_description' =>  utf8_substr(strip_tags(html_entity_decode($prev_post_info['short_description'], ENT_QUOTES, 'UTF-8')), 0, $this->setting['post']['short_description_length']).'...',
-                    'thumb' => ($prev_post_info['image']) ? $this->model_tool_image->resize($prev_post_info['image'], $this->setting['post_thumb']['image_width'], $this->setting['post_thumb']['image_height']) : '',
-                    );
+                    'text'              => $prev_post_info['title'],
+                    'href'              => $this->url->link('extension/d_blog_module/post', 'post_id=' . $prev_post_info['post_id'] . $url, 'SSL'),
+                    'short_description' => utf8_substr(strip_tags(html_entity_decode($prev_post_info['short_description'], ENT_QUOTES, 'UTF-8')), 0, $this->setting['post']['short_description_length']) . '...',
+                    'thumb'             => ($prev_post_info['image']) ? $this->model_tool_image->resize($prev_post_info['image'], $this->setting['post_thumb']['image_width'], $this->setting['post_thumb']['image_height']) : '',
+                );
             }
 
 
@@ -313,7 +329,6 @@ class ControllerExtensionDBlogModulePost extends Controller {
             $data['content_bottom'] = $this->load->controller('common/content_bottom');
             $data['footer'] = $this->load->controller('common/footer');
             $data['header'] = $this->load->controller('common/header');
-
             $this->response->setOutput($this->model_extension_d_opencart_patch_load->view('d_blog_module/post', $data));
 
         } else {
@@ -322,7 +337,7 @@ class ControllerExtensionDBlogModulePost extends Controller {
             $data['breadcrumbs'][] = array(
                 'text' => $this->language->get('text_error'),
                 'href' => $this->url->link('extension/d_blog_module/post', $url . '&post_id=' . $post_id, 'SSL')
-                );
+            );
 
             $this->document->setTitle($this->language->get('text_error'));
 
@@ -347,24 +362,26 @@ class ControllerExtensionDBlogModulePost extends Controller {
         }
     }
 
-    public function format($format, $json){
+    public function format($format, $json)
+    {
         if ($format == 'json') {
             $this->response->addHeader('Content-Type: application/json');
-			
-			if (isset($this->request->get['callback'])) {
-				$this->response->setOutput($this->request->get['callback'] . '(' . json_encode($json) . ');');
-			} else {
-				$this->response->setOutput(json_encode($json));
-			}
-   
+
+            if (isset($this->request->get['callback'])) {
+                $this->response->setOutput($this->request->get['callback'] . '(' . json_encode($json) . ');');
+            } else {
+                $this->response->setOutput(json_encode($json));
+            }
+
             return true;
         }
-		
+
         return false;
     }
 
-    public function thumb($post_id) {
-        if($post_id){
+    public function thumb($post_id)
+    {
+        if ($post_id) {
 
             $data['setting'] = $this->setting;
 
@@ -374,7 +391,7 @@ class ControllerExtensionDBlogModulePost extends Controller {
                 $url = '';
 
                 if (file_exists(DIR_TEMPLATE . $this->theme . '/stylesheet/d_blog_module/d_blog_module.css')) {
-                    $this->document->addStyle('catalog/view/theme/'.$this->theme.'/stylesheet/d_blog_module/d_blog_module.css');
+                    $this->document->addStyle('catalog/view/theme/' . $this->theme . '/stylesheet/d_blog_module/d_blog_module.css');
                 } else {
                     $this->document->addStyle('catalog/view/theme/default/stylesheet/d_blog_module/d_blog_module.css');
                 }
@@ -398,41 +415,41 @@ class ControllerExtensionDBlogModulePost extends Controller {
                 foreach ($post_categories as $category) {
                     $category_info[] = array(
                         'title' => $category['title'],
-                        'href' => $this->url->link('extension/d_blog_module/category', 'category_id=' . $category['category_id'], 'SSL')
-                        );
+                        'href'  => $this->url->link('extension/d_blog_module/category', 'category_id=' . $category['category_id'], 'SSL')
+                    );
                 }
 
 
                 $rating = (isset($post['rating'])) ? $post['rating'] : FALSE;
 
-                $tags = explode(',',$post['tag']);
+                $tags = explode(',', $post['tag']);
                 $data['tags'] = array();
-                foreach($tags as $tag){
-                    if($tag){
+                foreach ($tags as $tag) {
+                    if ($tag) {
                         $data['tags'][] = array(
                             'text' => trim($tag),
                             'href' => $this->url->link('extension/d_blog_module/search', 'tag=' . trim($tag), 'SSL')
-                            );
+                        );
                     }
                 }
 
                 $data['post_id'] = $post_id;
                 $data['thumb'] = $image;
-                $data['title'] = utf8_substr($post['title'], 0,  $this->setting['post_thumb']['title_length']);
+                $data['title'] = utf8_substr($post['title'], 0, $this->setting['post_thumb']['title_length']);
                 $data['categories'] = $category_info;
-                $data['short_description'] = $this->setting['post']['style_short_description_display'] ? html_entity_decode($post['short_description'], ENT_QUOTES, 'UTF-8') : utf8_substr(strip_tags(html_entity_decode($post['short_description'], ENT_QUOTES, 'UTF-8')), 0, $this->setting['post_thumb']['short_description_length']).'...';
-                $data['description'] = utf8_substr(strip_tags(html_entity_decode($post['description'], ENT_QUOTES, 'UTF-8')), 0,  $this->setting['post_thumb']['description_length']) . '...';
+                $data['short_description'] = $this->setting['post']['style_short_description_display'] ? html_entity_decode($post['short_description'], ENT_QUOTES, 'UTF-8') : utf8_substr(strip_tags(html_entity_decode($post['short_description'], ENT_QUOTES, 'UTF-8')), 0, $this->setting['post_thumb']['short_description_length']) . '...';
+                $data['description'] = utf8_substr(strip_tags(html_entity_decode($post['description'], ENT_QUOTES, 'UTF-8')), 0, $this->setting['post_thumb']['description_length']) . '...';
                 $data['rating'] = $rating;
 
                 $author = $this->model_extension_d_blog_module_author->getAuthor($post['user_id']);
                 $data['author'] = (!empty($author['name'])) ? $author['name'] : $this->language->get('text_anonymous');
-                $data['author_link'] = $this->url->link('extension/d_blog_module/author', 'user_id='.$post['user_id'], 'SSL');
+                $data['author_link'] = $this->url->link('extension/d_blog_module/author', 'user_id=' . $post['user_id'], 'SSL');
 
                 $data['views'] = $post['viewed'];
                 $data['review'] = $post['review'];
-                $data['image_title'] = (!empty($post['image_title'])) ?  $post['image_title'] : $data['title'];
-                $data['image_alt'] = (!empty($post['image_alt'])) ?  $post['image_title'] : $data['title'];
-                $data['date_published'] = date($this->setting['post_thumb']['date_format'], strtotime($post['date_published']));
+                $data['image_title'] = (!empty($post['image_title'])) ? $post['image_title'] : $data['title'];
+                $data['image_alt'] = (!empty($post['image_alt'])) ? $post['image_title'] : $data['title'];
+                $data['date_published'] = date($this->setting['post_thumb']['date_format'][$this->config->get('config_language_id')], strtotime($post['date_published']));
                 $data['date_published_short'] = date($this->language->get('date_format_short'), strtotime($post['date_published']));
                 $data['date_published_day'] = date($this->setting['post_thumb']['date_format_day'], strtotime($post['date_published']));
                 $data['date_published_month'] = date($this->setting['post_thumb']['date_format_month'], strtotime($post['date_published']));
@@ -440,30 +457,31 @@ class ControllerExtensionDBlogModulePost extends Controller {
                 $data['href'] = $this->url->link('extension/d_blog_module/post', 'post_id=' . $post_id, 'SSL');
 
                 return $data;
-            }else{
+            } else {
 
                 return false;
             }
         }
     }
-    public function editPost() {
+
+    public function editPost()
+    {
         $json = array();
 
-        if(!empty($this->request->post['description'])){
+        if (!empty($this->request->post['description'])) {
             $description = $this->request->post['description'];
         }
 
-        if(!empty($this->request->get['id'])){
+        if (!empty($this->request->get['id'])) {
             $post_id = $this->request->get['id'];
         }
 
-        if(isset($description)&&isset($post_id)){
+        if (isset($description) && isset($post_id)) {
 
             $this->model_extension_d_blog_module_post->editPost($post_id, array('description' => $description));
 
             $json['success'] = 'success';
-        }
-        else{
+        } else {
             $json['error'] = 'error';
         }
 

@@ -384,7 +384,10 @@ class ControllerExtensionDBlogModulePost extends Controller
     protected function getForm()
     {
 
+
+        $this->document->addScript('view/javascript/d_bootstrap_switch/js/bootstrap-switch.min.js');
         $this->document->addScript('view/javascript/shopunity/bootstrap-tagsinput/bootstrap-tagsinput.js');
+        $this->document->addStyle('view/javascript/d_bootstrap_switch/css/bootstrap-switch.min.css');
         $this->document->addStyle('view/stylesheet/shopunity/bootstrap-tagsinput/bootstrap-tagsinput.css');
 
         if (VERSION >= '2.2.0.0') {

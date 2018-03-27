@@ -36,12 +36,10 @@
                         {% if setting.post.date_display %}
                             {{text_on}}
                             <a href="{{date_published_link}}" rel="bookmark">
-                                <time class="entry-date published" datetime="">{{date_published_utc}} {{date_published}}</time>
-                                <time class="updated hidden" datetime="{{date_modified_utc}}">{{date_modified}}</time>
+                                {{date_published}}
                             </a>
                         {% endif %}
                     </div>
-
                 </div>
                 {% if (thumb or popup) %}
                     <div class="image">
