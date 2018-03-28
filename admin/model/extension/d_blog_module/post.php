@@ -17,7 +17,6 @@ class ModelExtensionDBlogModulePost extends Model
                 AND COLUMN_NAME = 'limit_access_user_group'
                 AND TABLE_SCHEMA = '" . DB_DATABASE . "'
                 ";
-        print_r(empty($this->db->query($sql)->rows));
         if (empty($this->db->query($sql)->rows)) {
             $this->db->query("ALTER TABLE `" . DB_PREFIX . "bm_post`
             ADD COLUMN `limit_access_user` INT(1) DEFAULT 0  NOT NULL AFTER `status`,
