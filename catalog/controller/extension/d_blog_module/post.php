@@ -43,8 +43,8 @@ class ControllerExtensionDBlogModulePost extends Controller
 
 //        print_r($this->language->get('code'));
         $this->load->model('localisation/language');
-        $lang=$this->model_localisation_language->getLanguage($this->config->get('config_language_id'));
-        foreach (explode(',',$lang['locale'])  as $l){
+        $lang = $this->model_localisation_language->getLanguage($this->config->get('config_language_id'));
+        foreach (explode(',', $lang['locale']) as $l) {
             setlocale(LC_ALL, $l);
         }
 //        $data['date_published'] =    strftime("%A %d %B %Y  %H:%M:%S", time());
@@ -76,17 +76,23 @@ class ControllerExtensionDBlogModulePost extends Controller
         $post_info = $this->model_extension_d_blog_module_post->getPost($post_id);
 
         if ($post_info) {
-            if (isset($post_info['limit_access_user'])&&$post_info['limit_access_user']){
-                if ($this->customer->isLogged()){
-                    $allowed_users=explode(',',$post_info['limit_users']);
-                    if (!in_array($this->customer->getId(),$allowed_users)){
-                        print "blocked_content for user ".$this->customer->getFirstName();
+            if (isset($post_info['limit_access_user']) && $post_info['limit_access_user']) {
+                if ($this->customer->isLogged()) {
+                    $allowed_users = explode(',', $post_info['limit_users']);
+                    if (!in_array($this->customer->getId(), $allowed_users)) {
+                        print "blocked_content for user " . $this->customer->getFirstName();
                         exit;
                     }
-                }else{
-                    print "blocked_content";
-                        exit;
+                } else {
+                    print "blocked_content register";
+                    exit;
+
                 }
+            }
+            if (isset($post_info['limit_access_user_group']) && $post_info['limit_access_user_group']){
+
+                print "blocked_content register group";
+                exit;
             }
             $this->model_extension_d_blog_module_post->updateViewed($post_id);
             $url = '';
@@ -157,7 +163,7 @@ class ControllerExtensionDBlogModulePost extends Controller
             $data['author_description'] = (isset($author['short_description'])) ? strip_tags(html_entity_decode($author['short_description'], ENT_QUOTES, 'UTF-8')) : '';
             $data['description'] = html_entity_decode($post_info['description'], ENT_QUOTES, 'UTF-8');
 
-            $data['date_published'] =    utf8_encode(strftime("%A %d %B %Y @ %H:%M:%S", strtotime($post_info['date_published'])));
+            $data['date_published'] = utf8_encode(strftime("%A %d %B %Y @ %H:%M:%S", strtotime($post_info['date_published'])));
 
 
             $data['date_published_link'] = $this->url->link('extension/d_blog_module/search', 'date_published=' . date("m", strtotime($post_info['date_published'])) . '-' . date("Y", strtotime($post_info['date_published'])), 'SSL');

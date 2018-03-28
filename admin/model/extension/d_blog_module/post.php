@@ -25,29 +25,18 @@ class ModelExtensionDBlogModulePost extends Model
             ADD COLUMN `limit_user_groups` TEXT(255) NULL AFTER `limit_access_user_group`;
         ");
         }
-        if (isset($data['access_user'])) {
-            $this->db->query("UPDATE " . DB_PREFIX . "bm_post
+        $this->db->query("UPDATE " . DB_PREFIX . "bm_post
             SET
             user_id = '" . (int)$data['current_author'] . "',
             status = '" . (int)$data['status'] . "',
             review_display ='" . (int)$data['review_display'] . "',
             images_review ='" . (int)$data['images_review'] . "', 
             limit_access_user ='" . (int)$data['limit_access_user'] . "',
-            limit_users ='" . implode(",", $data['access_user']) . "',
+            limit_users ='" . implode(",", isset($data['access_user']) ? $data['access_user'] : array()) . "',
+            limit_access_user_group ='" . (int)$data['limit_access_user_group'] . "',
+            limit_user_groups ='" . implode(",", isset($data['access_user_group']) ? $data['access_user_group'] : array()) . "',
             date_published = '" . $data['date_published'] . "',
             date_modified = NOW() WHERE post_id = '" . (int)$post_id . "'");
-
-        } else {
-            $this->db->query("UPDATE " . DB_PREFIX . "bm_post
-            SET
-            user_id = '" . (int)$data['current_author'] . "',
-            status = '" . (int)$data['status'] . "',
-            review_display ='" . (int)$data['review_display'] . "',
-            images_review ='" . (int)$data['images_review'] . "', 
-            date_published = '" . $data['date_published'] . "',
-            date_modified = NOW() WHERE post_id = '" . (int)$post_id . "'");
-
-        }
         if (isset($data['image'])) {
             $this->db->query("UPDATE " . DB_PREFIX . "bm_post
                 SET image = '" . $this->db->escape($data['image'])

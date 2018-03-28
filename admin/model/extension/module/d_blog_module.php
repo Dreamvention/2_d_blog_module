@@ -712,6 +712,28 @@ class ModelExtensionModuleDBlogModule extends Model
         }
     }
 
+    public function getCustomerGroups($data)
+    {
+        $sql = "SELECT * FROM " . DB_PREFIX . "customer_group cg LEFT JOIN " . DB_PREFIX . "customer_group_description cgd ON (cg.customer_group_id = cgd.customer_group_id) WHERE cgd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+
+        if (!empty($filter_data['filter_name'])) {
+            $sql .= " AND name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+        }
+        return $this->db->query($sql)->rows;
+    }
+
     /*
     *   Delete Language.
     */
@@ -743,4 +765,5 @@ class ModelExtensionModuleDBlogModule extends Model
         }
         return $language_id;
     }
+
 }

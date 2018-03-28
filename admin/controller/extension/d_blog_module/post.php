@@ -27,109 +27,6 @@ class ControllerExtensionDBlogModulePost extends Controller
         $this->getList();
     }
 
-    public function add()
-    {
-        $this->load->language('extension/d_blog_module/post');
-        $this->load->model('extension/d_blog_module/post');
-        $this->load->model('extension/d_blog_module/author');
-        $this->document->addStyle('view/javascript/summernote/summernote.css');
-        $this->document->addScript('view/javascript/summernote/summernote.js');
-        $this->document->setTitle($this->language->get('heading_title'));
-
-
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_extension_d_blog_module_post->addPost($this->request->post);
-
-            $this->session->data['success'] = $this->language->get('text_success');
-
-            $url = $this->getUrl();
-
-            $this->response->redirect($this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/post'));
-        }
-
-        $author = $this->model_extension_d_blog_module_author->getAuthorByUserId($this->user->getId());
-
-        if (!empty($author)) {
-            $this->getForm();
-        } else {
-            $this->response->redirect($this->model_extension_d_opencart_patch_url->link('error/permission'));
-        }
-    }
-
-    public function edit()
-    {
-        $this->load->language('extension/d_blog_module/post');
-        $this->document->setTitle($this->language->get('heading_title'));
-        $this->load->model('extension/d_blog_module/post');
-        $this->document->addStyle('view/javascript/summernote/summernote.css');
-        $this->document->addScript('view/javascript/summernote/summernote.js');
-
-
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-
-            $this->model_extension_d_blog_module_post->editPost($this->request->get['post_id'], $this->request->post);
-            $this->session->data['success'] = $this->language->get('text_success');
-
-            $url = $this->getUrl();
-
-            $this->response->redirect($this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/post'));
-        }
-        $this->load->model('extension/d_blog_module/author');
-
-
-        $author = $this->model_extension_d_blog_module_author->getAuthorByUserId($this->user->getId());
-        if (!empty($author)) {
-            $this->getForm();
-        } else {
-            $this->response->redirect($this->model_extension_d_opencart_patch_url->link('error/permission'));
-        }
-    }
-
-    public function delete()
-    {
-        $this->load->language('extension/d_blog_module/post');
-
-        $this->document->setTitle($this->language->get('heading_title'));
-
-        $this->load->model('extension/d_blog_module/post');
-
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $post_id) {
-                $this->model_extension_d_blog_module_post->deletePost($post_id);
-            }
-
-            $url = $this->getUrl();
-
-            $this->response->redirect($this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/post'));
-        }
-
-        $this->getList();
-    }
-
-    public function copy()
-    {
-        $this->load->language('extension/d_blog_module/post');
-
-        $this->document->setTitle($this->language->get('heading_title'));
-
-        $this->load->model('extension/d_blog_module/post');
-
-        if (isset($this->request->post['selected']) && $this->validateCopyPost()) {
-
-            foreach ($this->request->post['selected'] as $post_id) {
-                $this->model_extension_d_blog_module_post->copyPost($post_id);
-            }
-
-            $this->session->data['success'] = $this->language->get('text_success');
-
-            $url = $this->getUrl();
-
-            $this->response->redirect($this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/post'));
-        }
-
-        $this->getList();
-    }
-
     protected function getList()
     {
 
@@ -377,6 +274,124 @@ class ControllerExtensionDBlogModulePost extends Controller
         $data['footer'] = $this->load->controller('common/footer');
 
         $this->response->setOutput($this->load->view('extension/d_blog_module/post_list', $data));
+    }
+
+    protected function getUrl($page = true)
+    {
+
+        $url = '';
+
+        if (isset($this->request->get['filter_title'])) {
+            $url .= '&filter_title=' . urlencode(html_entity_decode($this->request->get['filter_title'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_tag'])) {
+            $url .= '&filter_tag=' . urlencode(html_entity_decode($this->request->get['filter_tag'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_category'])) {
+            $url .= '&filter_category=' . urlencode(html_entity_decode($this->request->get['filter_category'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_status'])) {
+            $url .= '&filter_status=' . $this->request->get['filter_status'];
+        }
+
+        if (isset($this->request->get['filter_date_added'])) {
+            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+        }
+
+        if (isset($this->request->get['filter_date_modified'])) {
+            $url .= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
+        }
+
+        if (isset($this->request->get['filter_date_published'])) {
+            $url .= '&filter_date_published=' . $this->request->get['filter_date_published'];
+        }
+
+        if (isset($this->request->get['page']) && $page) {
+            $url .= '&page=' . $this->request->get['page'];
+        }
+        return $url;
+    }
+
+    public function add()
+    {
+        $this->load->language('extension/d_blog_module/post');
+        $this->load->model('extension/d_blog_module/post');
+        $this->load->model('extension/d_blog_module/author');
+        $this->document->addStyle('view/javascript/summernote/summernote.css');
+        $this->document->addScript('view/javascript/summernote/summernote.js');
+        $this->document->setTitle($this->language->get('heading_title'));
+
+
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            $this->model_extension_d_blog_module_post->addPost($this->request->post);
+
+            $this->session->data['success'] = $this->language->get('text_success');
+
+            $url = $this->getUrl();
+
+            $this->response->redirect($this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/post'));
+        }
+
+        $author = $this->model_extension_d_blog_module_author->getAuthorByUserId($this->user->getId());
+
+        if (!empty($author)) {
+            $this->getForm();
+        } else {
+            $this->response->redirect($this->model_extension_d_opencart_patch_url->link('error/permission'));
+        }
+    }
+
+    protected function validateForm()
+    {
+
+        if (!$this->user->hasPermission('modify', 'extension/d_blog_module/post')) {
+            $this->error['warning'] = $this->language->get('error_permission');
+        }
+
+        $this->load->model('extension/d_blog_module/author');
+
+        $current_author = $this->model_extension_d_blog_module_author->getAuthorByUserId($this->user->getId());
+        if (isset($this->request->get['post_id'])) {
+            $post_author = $this->model_extension_d_blog_module_post->getAuthorByPost($this->request->get['post_id']);
+            if ($post_author['author_id'] != $current_author['author_id']) {
+                if (!$this->model_extension_d_blog_module_author->hasPermission('edit_others_posts')) {
+                    $this->error['warning'] = $this->language->get('error_permission');
+                }
+            } else {
+                if (!$this->model_extension_d_blog_module_author->hasPermission('edit_posts')) {
+                    $this->error['warning'] = $this->language->get('error_permission');
+                }
+            }
+        } else {
+            if (!$this->model_extension_d_blog_module_author->hasPermission('add_posts')) {
+                $this->error['warning'] = $this->language->get('error_permission');
+            }
+        }
+
+        foreach ($this->request->post['post_description'] as $language_id => $value) {
+
+            if ((utf8_strlen($value['title']) < 3) || (utf8_strlen($value['title']) > 255)) {
+                $this->error['title'][$language_id] = $this->language->get('error_title');
+            }
+
+
+            if ((utf8_strlen($value['meta_title']) < 3) || (utf8_strlen($value['meta_title']) > 255)) {
+                $this->error['meta_title'][$language_id] = $this->language->get('error_meta_title');
+            }
+        }
+
+        if (empty($this->request->post['post_category'])) {
+            $this->error['post_category'][$language_id] = $this->language->get('error_post_category');
+        }
+
+        if ($this->error && !isset($this->error['warning'])) {
+            $this->error['warning'] = $this->language->get('error_warning');
+        }
+
+        return !$this->error;
     }
 
     protected function getForm()
@@ -660,32 +675,41 @@ class ControllerExtensionDBlogModulePost extends Controller
         } else {
             $data['post_store'] = array(0);
         }
+
+        // access allow
         if (isset($this->request->post['limit_access_user'])) {
             $data['limit_access_user'] = $this->request->post['limit_access_user'];
-        } elseif (isset($this->request->get['post_id'])) {
-            $data['limit_access_user'] = $this->model_extension_d_blog_module_post->getPostStores($this->request->get['post_id']);
+        } elseif (!empty($post_info)) {
+            $data['limit_access_user'] = $post_info['limit_access_user'];
         } else {
-            $data['limit_access_user'] = array(0);
+            $data['limit_access_user'] = 0;
         }
-        // access
+        if (isset($this->request->post['limit_access_user_group'])) {
+            $data['limit_access_user_group'] = $this->request->post['limit_access_user_group'];
+        } elseif (!empty($post_info)) {
+            $data['limit_access_user_group'] = $post_info['limit_access_user_group'];
+        } else {
+            $data['limit_access_user_group'] = 0;
+        }
+
         $this->load->model('customer/customer');//todo add support 2.x
 
         $data['users'] = array();
         if (!empty($post_info['limit_users'])) {
-            foreach (explode(',',$post_info['limit_users']) as $user_id) {
+            foreach (explode(',', $post_info['limit_users']) as $user_id) {
                 $user_info = $this->model_customer_customer->getCustomer($user_id);
                 $data['users'][$user_info['customer_id']] = $user_info['firstname'];
             }
         }
-//        $this->load->model('customer/customer_group');
 
-//        $data['user_groups'] = array();
-//        if (!empty($this->setting['access_user_group'])) {
-//            foreach ($data['setting']['access_user_group'] as $user_group_id) {
-//                $user_group_info = $this->model_customer_customer_group->getCustomerGroup($user_group_id);
-//                $data['user_groups'][$user_group_id] = $user_group_info['name'];
-//            }
-//        }
+        $this->load->model('customer/customer_group');//todo add support 2.x
+        $data['user_groups'] = array();
+        if (!empty($post_info['limit_user_groups'])) {
+            foreach (explode(',', $post_info['limit_user_groups']) as $user_group_id) {
+                $user_group_info = $this->model_customer_customer_group->getCustomerGroup($user_group_id);
+                $data['user_groups'][$user_group_id] = $user_group_info['name'];
+            }
+        }
 
         // Categories
         $this->load->model('extension/d_blog_module/category');
@@ -755,54 +779,53 @@ class ControllerExtensionDBlogModulePost extends Controller
         $this->response->setOutput($this->load->view('extension/d_blog_module/post_form', $data));
     }
 
-    protected function validateForm()
+    public function edit()
     {
+        $this->load->language('extension/d_blog_module/post');
+        $this->document->setTitle($this->language->get('heading_title'));
+        $this->load->model('extension/d_blog_module/post');
+        $this->document->addStyle('view/javascript/summernote/summernote.css');
+        $this->document->addScript('view/javascript/summernote/summernote.js');
 
-        if (!$this->user->hasPermission('modify', 'extension/d_blog_module/post')) {
-            $this->error['warning'] = $this->language->get('error_permission');
+
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+
+            $this->model_extension_d_blog_module_post->editPost($this->request->get['post_id'], $this->request->post);
+            $this->session->data['success'] = $this->language->get('text_success');
+            $url = $this->getUrl();
+
+            $this->response->redirect($this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/post'));
         }
-
         $this->load->model('extension/d_blog_module/author');
 
-        $current_author = $this->model_extension_d_blog_module_author->getAuthorByUserId($this->user->getId());
-        if (isset($this->request->get['post_id'])) {
-            $post_author = $this->model_extension_d_blog_module_post->getAuthorByPost($this->request->get['post_id']);
-            if ($post_author['author_id'] != $current_author['author_id']) {
-                if (!$this->model_extension_d_blog_module_author->hasPermission('edit_others_posts')) {
-                    $this->error['warning'] = $this->language->get('error_permission');
-                }
-            } else {
-                if (!$this->model_extension_d_blog_module_author->hasPermission('edit_posts')) {
-                    $this->error['warning'] = $this->language->get('error_permission');
-                }
-            }
+
+        $author = $this->model_extension_d_blog_module_author->getAuthorByUserId($this->user->getId());
+        if (!empty($author)) {
+            $this->getForm();
         } else {
-            if (!$this->model_extension_d_blog_module_author->hasPermission('add_posts')) {
-                $this->error['warning'] = $this->language->get('error_permission');
+            $this->response->redirect($this->model_extension_d_opencart_patch_url->link('error/permission'));
+        }
+    }
+
+    public function delete()
+    {
+        $this->load->language('extension/d_blog_module/post');
+
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        $this->load->model('extension/d_blog_module/post');
+
+        if (isset($this->request->post['selected']) && $this->validateDelete()) {
+            foreach ($this->request->post['selected'] as $post_id) {
+                $this->model_extension_d_blog_module_post->deletePost($post_id);
             }
+
+            $url = $this->getUrl();
+
+            $this->response->redirect($this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/post'));
         }
 
-        foreach ($this->request->post['post_description'] as $language_id => $value) {
-
-            if ((utf8_strlen($value['title']) < 3) || (utf8_strlen($value['title']) > 255)) {
-                $this->error['title'][$language_id] = $this->language->get('error_title');
-            }
-
-
-            if ((utf8_strlen($value['meta_title']) < 3) || (utf8_strlen($value['meta_title']) > 255)) {
-                $this->error['meta_title'][$language_id] = $this->language->get('error_meta_title');
-            }
-        }
-
-        if (empty($this->request->post['post_category'])) {
-            $this->error['post_category'][$language_id] = $this->language->get('error_post_category');
-        }
-
-        if ($this->error && !isset($this->error['warning'])) {
-            $this->error['warning'] = $this->language->get('error_warning');
-        }
-
-        return !$this->error;
+        $this->getList();
     }
 
     protected function validateDelete()
@@ -827,6 +850,30 @@ class ControllerExtensionDBlogModulePost extends Controller
             }
         }
         return !$this->error;
+    }
+
+    public function copy()
+    {
+        $this->load->language('extension/d_blog_module/post');
+
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        $this->load->model('extension/d_blog_module/post');
+
+        if (isset($this->request->post['selected']) && $this->validateCopyPost()) {
+
+            foreach ($this->request->post['selected'] as $post_id) {
+                $this->model_extension_d_blog_module_post->copyPost($post_id);
+            }
+
+            $this->session->data['success'] = $this->language->get('text_success');
+
+            $url = $this->getUrl();
+
+            $this->response->redirect($this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/post'));
+        }
+
+        $this->getList();
     }
 
     protected function validateCopyPost()
@@ -890,49 +937,24 @@ class ControllerExtensionDBlogModulePost extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    protected function getUrl($page = true)
+    public function autocompleteUserGroup()
     {
-
-        $url = '';
-
-        if (isset($this->request->get['filter_title'])) {
-            $url .= '&filter_title=' . urlencode(html_entity_decode($this->request->get['filter_title'], ENT_QUOTES, 'UTF-8'));
+        $json = array();
+        if (isset($this->request->get['filter_name'])) {
+            $filter_data = array(
+                'filter_name' => $this->request->get['filter_name'],
+                'start'       => 0,
+                'limit'       => 5
+            );
+            $this->load->model('extension/module/d_blog_module');
+            $results = $this->model_extension_module_d_blog_module->getCustomerGroups($filter_data);
+            foreach ($results as $result) {
+                $json[] = array(
+                    'customer_group_id' => $result['customer_group_id'],
+                    'name'              => $result['name'] . (($result['customer_group_id'] == $this->config->get('config_customer_group_id')) ? $this->language->get('text_default') : null),
+                );
+            }
         }
-
-        if (isset($this->request->get['filter_tag'])) {
-            $url .= '&filter_tag=' . urlencode(html_entity_decode($this->request->get['filter_tag'], ENT_QUOTES, 'UTF-8'));
-        }
-
-        if (isset($this->request->get['filter_category'])) {
-            $url .= '&filter_category=' . urlencode(html_entity_decode($this->request->get['filter_category'], ENT_QUOTES, 'UTF-8'));
-        }
-
-        if (isset($this->request->get['filter_status'])) {
-            $url .= '&filter_status=' . $this->request->get['filter_status'];
-        }
-
-        if (isset($this->request->get['filter_date_added'])) {
-            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-        }
-
-        if (isset($this->request->get['filter_date_modified'])) {
-            $url .= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
-        }
-
-        if (isset($this->request->get['filter_date_published'])) {
-            $url .= '&filter_date_published=' . $this->request->get['filter_date_published'];
-        }
-
-        if (isset($this->request->get['page']) && $page) {
-            $url .= '&page=' . $this->request->get['page'];
-        }
-        return $url;
-    }
-
-    public function autocompleteCustomerGroup()
-    {
-
-
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }

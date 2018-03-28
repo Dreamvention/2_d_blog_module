@@ -77,7 +77,7 @@ $_['help_date_published']       = 'You can set the date when you want the post t
 
 $_['entry_limit_access_user']       = 'Allow used for only selected users';
 $_['entry_limit_access_user_group'] = 'Allow used for only selected user groups';
-$_['entry_user']                    = 'User';
+$_['entry_user']                    = 'Allowed Users';
 $_['entry_user_group']              = 'User Group';
 
 
