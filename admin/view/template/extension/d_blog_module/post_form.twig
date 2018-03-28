@@ -240,6 +240,7 @@
                         <div class="tab-pane" id="tab-links">
                             <script type="application/javascript">
                                 $(document).ready(function() {
+                                    console.log('{{ url_token }}')
                                     $(".switcher[type='checkbox']").bootstrapSwitch({
                                         'onColor': 'success',
                                         'onText': '{{ text_yes }}',
@@ -268,13 +269,13 @@
                                     $('input[name=\'user\']').autocomplete({
                                         'source': function (request, response) {
                                             $.ajax({
-                                                url: 'index.php?route=extension/d_visual_designer/setting/autocompleteUser&token={{ token }}&filter_name=' + encodeURIComponent(request),
+                                                url: 'index.php?route=customer/customer/autocomplete&{{ url_token }}&filter_name=' + encodeURIComponent(request),
                                                 dataType: 'json',
                                                 success: function (json) {
                                                     response($.map(json, function (item) {
                                                         return {
-                                                            label: item['username'],
-                                                            value: item['user_id']
+                                                            label: item['firstname'],
+                                                            value: item['customer_id']
                                                         }
                                                     }));
                                                 }
@@ -285,7 +286,7 @@
 
                                             $('#access-user' + item['value']).remove();
 
-                                            $('#access-user').append('<div id="access-user' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="{{ codename }}_setting[access_user][]" value="' + item['value'] + '" /></div>');
+                                            $('#access-user').append('<div id="access-user' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="access_user[]" value="' + item['value'] + '" /></div>');
                                         }
                                     });
                                     $('#access-user').delegate('.fa-minus-circle', 'click', function () {
@@ -311,7 +312,7 @@
 
                                             $('#access-user-group' + item['value']).remove();
 
-                                            $('#access-user-group').append('<div id="access-user-group' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="{{ codename }}_setting[access_user_group][]" value="' + item['value'] + '" /></div>');
+                                            $('#access-user-group').append('<div id="access-user-group' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="access_user_group[]" value="' + item['value'] + '" /></div>');
                                         }
                                     });
                                     $('#access-user-group').delegate('.fa-minus-circle', 'click', function () {
@@ -371,8 +372,8 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-limit-access-user">{{entry_limit_access_user}}</label>
                                 <div class="col-sm-10">
-                                    <input type="hidden" name="{{codename}}_setting[limit_access_user]" value="0" />
-                                    <input type="checkbox" name="{{codename}}_setting[limit_access_user]" class="switcher" data-label-text="{{text_enabled}}" id="input-limit-access-user" {{ setting.limit_access_user ? 'checked="checked"' }} value="1" />
+                                    <input type="hidden" name="limit_access_user" value="0" />
+                                    <input type="checkbox" name="limit_access_user" class="switcher" data-label-text="{{text_enabled}}" id="input-limit-access-user" {{ limit_access_user ? 'checked="checked"' }} value="1" />
                                 </div>
                             </div>
                             <div class="form-group" id="users">
@@ -384,34 +385,34 @@
                                             <div id="access-user{{key}}">
                                                 <i class="fa fa-minus-circle"></i>
                                                 {{value}}
-                                                <input type="hidden" name="{{codename}}_setting[access_user][]" value="{{key}}" />
+                                                <input type="hidden" name="access_user[]" value="{{key}}" />
                                             </div>
                                         {% endfor %}
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="input-limit-access-user-group">{{entry_limit_access_user_group}}</label>
-                                <div class="col-sm-10">
-                                    <input type="hidden" name="{{codename}}_setting[limit_access_user_group]" value="0" />
-                                    <input type="checkbox" name="{{codename}}_setting[limit_access_user_group]" class="switcher" data-label-text="{{text_enabled}}" id="input-limit-access-user-group" {{ setting.limit_access_user_group ? 'checked="checked"' }} value="1" />
-                                </div>
-                            </div>
-                            <div class="form-group" id="user_groups">
-                                <label class="col-sm-2 control-label" for="input-user-group">{{entry_user_group}}</label>
-                                <div class="col-sm-10">
-                                    <input type="text" name="user_group" value="" placeholder="{{entry_user_group}}" id="input-user-group" class="form-control" />
-                                    <div id="access-user-group" class="well well-sm" style="height: 150px; overflow: auto;">
-                                        {% for key, value in user_groups %}
-                                            <div id="access-user-group{{key}}">
-                                                <i class="fa fa-minus-circle"></i>
-                                                {{value}}
-                                                <input type="hidden" name="{{codename}}_setting[access_user_group][]" value="{{key}}" />
-                                            </div>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            </div>
+                            {#<div class="form-group">#}
+                                {#<label class="col-sm-2 control-label" for="input-limit-access-user-group">{{entry_limit_access_user_group}}</label>#}
+                                {#<div class="col-sm-10">#}
+                                    {#<input type="hidden" name="{{codename}}_setting[limit_access_user_group]" value="0" />#}
+                                    {#<input type="checkbox" name="{{codename}}_setting[limit_access_user_group]" class="switcher" data-label-text="{{text_enabled}}" id="input-limit-access-user-group" {{ setting.limit_access_user_group ? 'checked="checked"' }} value="1" />#}
+                                {#</div>#}
+                            {#</div>#}
+                            {#<div class="form-group" id="user_groups">#}
+                                {#<label class="col-sm-2 control-label" for="input-user-group">{{entry_user_group}}</label>#}
+                                {#<div class="col-sm-10">#}
+                                    {#<input type="text" name="user_group" value="" placeholder="{{entry_user_group}}" id="input-user-group" class="form-control" />#}
+                                    {#<div id="access-user-group" class="well well-sm" style="height: 150px; overflow: auto;">#}
+                                        {#{% for key, value in user_groups %}#}
+                                            {#<div id="access-user-group{{key}}">#}
+                                                {#<i class="fa fa-minus-circle"></i>#}
+                                                {#{{value}}#}
+                                                {#<input type="hidden" name="{{codename}}_setting[access_user_group][]" value="{{key}}" />#}
+                                            {#</div>#}
+                                        {#{% endfor %}#}
+                                    {#</div>#}
+                                {#</div>#}
+                            {#</div>#}
 
                         </div>
                         <div class="tab-pane" id="tab-related">

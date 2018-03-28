@@ -60,6 +60,12 @@ $_['d_blog_module_setting'] = array(
         'style_short_description_display' => 0,
         'nav_display' => 1,
         'nav_same_category' => 0,
+
+        'limit_access_user' => 0,
+        'limit_access_user_group' => 0,
+        'access_user' => array(),
+        'access_user_group' => array()
+
     ),
     'review' => array(
         'guest' => 1,

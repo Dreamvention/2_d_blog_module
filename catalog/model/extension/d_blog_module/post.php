@@ -157,7 +157,7 @@ class ModelExtensionDBlogModulePost extends Model {
     }
 
     public function getPost($post_id) {
-        $sql = "SELECT p.post_id, p.user_id, p.image,p.image_title,p.image_alt, p.images_review, pd.tag, pd.title, pd.meta_title, p.date_added, p.date_modified, p.date_published, p.review_display, p.viewed,   "
+        $sql = "SELECT p.post_id, p.user_id,p.limit_access_user,p.limit_users,p.user_id, p.image,p.image_title,p.image_alt, p.images_review, pd.tag, pd.title, pd.meta_title, p.date_added, p.date_modified, p.date_published, p.review_display, p.viewed,   "
         . "pd.meta_description, pd.meta_keyword, pd.description, "
         . "pd.short_description, COUNT(DISTINCT r.review_id) as review, ROUND(AVG(r.rating)) as rating "
         . "FROM " . DB_PREFIX . "bm_post AS p "
@@ -167,7 +167,6 @@ class ModelExtensionDBlogModulePost extends Model {
         . "WHERE p.post_id = '" . $post_id . "' "
         . "AND p.status = '1' "
         . "AND pd.language_id = '" . (int) $this->config->get('config_language_id') . "' ";
-        
         $sql .= "GROUP BY p.post_id ";
         
         $query = $this->db->query($sql);

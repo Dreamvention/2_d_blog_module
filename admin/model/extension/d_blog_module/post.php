@@ -3,114 +3,39 @@
 class ModelExtensionDBlogModulePost extends Model
 {
 
-    public function addPost($data)
+    public function updateTableAccess()
     {
-        $this->db->query("INSERT INTO " . DB_PREFIX . "bm_post
-            SET user_id = '" . (int)$data['current_author'] . "',
-            review_display = '" . (int)$data['review_display'] . "',
-            images_review = '" . (int)$data['images_review'] . "',
-            status = '" . $this->db->escape($data['status']) . "',
-            date_added = NOW(),
-            date_published = '" . $data['date_published'] . "',
-            date_modified = NOW()");
-
-        $post_id = $this->db->getLastId();
-
-        if (isset($data['image'])) {
-            $this->db->query("UPDATE " . DB_PREFIX . "bm_post
-                SET image = '" . $this->db->escape($data['image'])
-                . "' WHERE post_id = '" . (int)$post_id . "'");
-        }
-
-
-        foreach ($data['post_description'] as $language_id => $value) {
-            $this->db->query("INSERT INTO " . DB_PREFIX . "bm_post_description
-                SET post_id = '" . (int)$post_id . "',
-                language_id = '" . (int)$language_id . "',
-                title = '" . $this->db->escape($value['title']) . "',
-                short_description = '" . $this->db->escape($value['short_description']) . "',
-                description = '" . $this->db->escape($value['description']) . "',
-                meta_title = '" . $this->db->escape($value['meta_title']) . "',
-                meta_description = '" . $this->db->escape($value['meta_description']) . "',
-                meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "',
-				tag = '" . $this->db->escape($value['tag']) . "'"
-            );
-        }
-
-        if (isset($data['post_store'])) {
-            foreach ($data['post_store'] as $store_id) {
-                $this->db->query("INSERT INTO " . DB_PREFIX . "bm_post_to_store SET post_id = '" . (int)$post_id . "', store_id = '" . (int)$store_id . "'");
-            }
-        }
-
-        if (isset($data['post_category'])) {
-            foreach ($data['post_category'] as $category_id) {
-                $this->db->query("INSERT INTO " . DB_PREFIX . "bm_post_to_category
-                    SET post_id = '" . (int)$post_id . "',
-                    category_id = '" . (int)$category_id . "'");
-            }
-        }
-
-        if (isset($data['post_product'])) {
-            foreach ($data['post_product'] as $product_id) {
-                //removes duplicates  # FIX form pavel
-                $this->db->query("DELETE FROM " . DB_PREFIX . "bm_post_to_product WHERE post_id = '" . (int)$post_id . "' AND product_id = '" . (int)$product_id . "'");
-
-                //remove
-                $this->db->query("INSERT INTO " . DB_PREFIX . "bm_post_to_product
-                    SET post_id = '" . (int)$post_id . "',
-                    product_id = '" . (int)$product_id . "'");
-            }
-        }
-
-        if (isset($data['related_post'])) {
-            foreach ($data['related_post'] as $post_related_id) {
-                $this->db->query("INSERT INTO " . DB_PREFIX . "bm_post_related
-                    SET post_id = '" . (int)$post_id . "',
-                    post_related_id = '" . (int)$post_related_id['post_id'] . "'");
-            }
-        }
-
-        if (isset($data['post_video'])) {
-            foreach ($data['post_video'] as $video) {
-                $this->db->query("INSERT INTO " . DB_PREFIX . "bm_post_video
-                    SET post_id = '" . (int)$post_id . "',
-                    text = '" . serialize($video['text']) . "',
-                    width = '" . (int)$video['width'] . "',
-                    height = '" . (int)$video['height'] . "',
-                    sort_order = '" . (int)$video['sort_order'] . "',
-                    video = '" . $video['video'] . "'");
-            }
-        }
-
-        if (isset($data['post_layout'])) {
-            foreach ($data['post_layout'] as $store_id => $layout_id) {
-                $this->db->query("INSERT INTO " . DB_PREFIX . "bm_post_to_layout SET post_id = '" . (int)$post_id . "', store_id = '" . (int)$store_id . "', layout_id = '" . (int)$layout_id . "'");
-            }
-        }
-
-        // if (!empty($data['keyword'])) {
-        //     $this->db->query("INSERT INTO " . DB_PREFIX . "url_alias
-        //         SET query = 'bm_post_id=" . (int) $post_id . "',
-        //         keyword = '". $this->db->escape($data['keyword']) . "'");
-        // }
-
-        $this->cache->delete('bm_post');
-
-        return $post_id;
+        $this->db->query("ALTER TABLE `" . DB_PREFIX . "bm_post`   
+  ADD COLUMN `limit_access_user` INT(1) DEFAULT 0  NOT NULL AFTER `status`,
+  ADD COLUMN `limit_users` TEXT(255) NULL AFTER `limit_access_user`;
+");
     }
 
     public function editPost($post_id, $data)
     {
-        $this->db->query("UPDATE " . DB_PREFIX . "bm_post
+        if (isset($data['access_user'])){
+            $this->db->query("UPDATE " . DB_PREFIX . "bm_post
             SET
             user_id = '" . (int)$data['current_author'] . "',
             status = '" . (int)$data['status'] . "',
             review_display ='" . (int)$data['review_display'] . "',
-            images_review ='" . (int)$data['images_review'] . "',
+            images_review ='" . (int)$data['images_review'] . "', 
+            limit_access_user ='" . (int)$data['limit_access_user'] . "',
+            limit_users ='" . implode(",", $data['access_user']) . "',
             date_published = '" . $data['date_published'] . "',
             date_modified = NOW() WHERE post_id = '" . (int)$post_id . "'");
 
+        }else{
+            $this->db->query("UPDATE " . DB_PREFIX . "bm_post
+            SET
+            user_id = '" . (int)$data['current_author'] . "',
+            status = '" . (int)$data['status'] . "',
+            review_display ='" . (int)$data['review_display'] . "',
+            images_review ='" . (int)$data['images_review'] . "', 
+            date_published = '" . $data['date_published'] . "',
+            date_modified = NOW() WHERE post_id = '" . (int)$post_id . "'");
+
+        }
         if (isset($data['image'])) {
             $this->db->query("UPDATE " . DB_PREFIX . "bm_post
                 SET image = '" . $this->db->escape($data['image'])
@@ -230,31 +155,46 @@ class ModelExtensionDBlogModulePost extends Model
         }
     }
 
-    public function deletePost($post_id)
+    public function getPostDescriptions($post_id)
     {
+        $post_description_data = array();
 
-        $this->db->query("DELETE FROM " . DB_PREFIX . "bm_post WHERE post_id = '" . (int)$post_id . "'");
-        $this->db->query("DELETE FROM " . DB_PREFIX . "bm_post_description WHERE post_id = '" . (int)$post_id . "'");
-        $this->db->query("DELETE FROM " . DB_PREFIX . "bm_post_to_category WHERE post_id = '" . (int)$post_id . "'");
-        $this->db->query("DELETE FROM " . DB_PREFIX . "bm_post_to_product WHERE post_id = '" . (int)$post_id . "'");
-        $this->db->query("DELETE FROM " . DB_PREFIX . "bm_post_related WHERE post_id = '" . (int)$post_id . "'");
-        $this->db->query("DELETE FROM " . DB_PREFIX . "bm_post_video WHERE post_id = '" . (int)$post_id . "'");
-        $this->db->query("DELETE FROM " . DB_PREFIX . "bm_post_to_store WHERE post_id = '" . (int)$post_id . "'");
-        $this->db->query("DELETE FROM " . DB_PREFIX . "bm_review WHERE post_id = '" . (int)$post_id . "'");
-        //$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'bm_post_id=" . (int) $post_id . "'");
-        $this->db->query("DELETE FROM " . DB_PREFIX . "bm_post_to_layout WHERE post_id = '" . (int)$post_id . "'");
-        $this->cache->delete('bm_post');
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "bm_post_description WHERE post_id = '" . (int)$post_id . "'");
+
+        foreach ($query->rows as $result) {
+            $post_description_data[$result['language_id']] = array(
+                'title'             => $result['title'],
+                'short_description' => $result['short_description'],
+                'description'       => $result['description'],
+                'meta_title'        => $result['meta_title'],
+                'meta_description'  => $result['meta_description'],
+                'meta_keyword'      => $result['meta_keyword'],
+                'tag'               => $result['tag']
+            );
+        }
+
+        return $post_description_data;
     }
 
-    public function getPost($post_id)
+    public function getPostImages($post_id)
     {
-        $query = $this->db->query("SELECT DISTINCT *
-            FROM " . DB_PREFIX . "bm_post p
-            LEFT JOIN " . DB_PREFIX . "bm_post_description pd ON (p.post_id = pd.post_id)
-            WHERE p.post_id = '" . (int)$post_id . "'
-            AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+        $query = $this->db->query("SELECT post_id, image FROM " . DB_PREFIX . "bm_post WHERE post_id = '" . (int)$post_id . "'");
 
-        return $query->row;
+        return $query->rows;
+    }
+
+    public function getPostCategoriesId($post_id)
+    {
+
+
+        $query = $this->db->query("SELECT p2c.category_id AS category_id
+            FROM " . DB_PREFIX . "bm_post_to_category p2c WHERE p2c.post_id = '" . (int)$post_id . "'");
+
+        $post_category_data = array();
+        foreach ($query->rows as $result) {
+            $post_category_data[] = $result['category_id'];
+        }
+        return $post_category_data;
     }
 
     // public function getKeywordForPost($post_id) {
@@ -275,6 +215,217 @@ class ModelExtensionDBlogModulePost extends Model
     //     return $keyword_data;
     // }
 
+    public function getPostRelateds($post_id)
+    {
+        $query = $this->db->query("SELECT pr.post_related_id AS post_id, pd.title AS title
+            FROM " . DB_PREFIX . "bm_post_related pr
+            LEFT JOIN " . DB_PREFIX . "bm_post_description pd ON (pr.post_related_id = pd.post_id)
+            WHERE pr.post_id = '" . (int)$post_id . "' AND pd.language_id='" . (int)$this->config->get('config_language_id') . "'");
+
+        $post_related_data = $query->rows;
+        return $post_related_data;
+    }
+
+    public function getPostVideos($post_id)
+    {
+        $query = $this->db->query("SELECT pv.post_id AS post_id, pv.text AS text, pv.width as width, pv.height as  height, pv.sort_order as  sort_order, pv.video as  video
+            FROM " . DB_PREFIX . "bm_post_video pv WHERE pv.post_id = '" . (int)$post_id . "'  ORDER BY pv.sort_order");
+
+        $post_video_data = array();
+        if (!empty($query->rows)) {
+            foreach ($query->rows as $video) {
+
+                $post_video_data[] = array(
+                    'post_id'    => $video['post_id'],
+                    'video'      => $video['video'],
+                    'text'       => unserialize($video['text']),
+                    'width'      => $video['width'],
+                    'sort_order' => $video['sort_order'],
+                    'height'     => $video['height']
+                );
+            }
+        }
+        return $post_video_data;
+    }
+
+    public function getPostProducts($post_id)
+    {
+
+        $query = $this->db->query("SELECT p2p.product_id AS product_id, pd.name AS product_title
+            FROM " . DB_PREFIX . "bm_post_to_product p2p
+            LEFT JOIN " . DB_PREFIX . "product_description pd ON (p2p.product_id = pd.product_id)
+            WHERE p2p.post_id = '" . (int)$post_id . "' AND pd.language_id='" . (int)$this->config->get('config_language_id') . "'");
+
+        $post_product_data = $query->rows;
+        return $post_product_data;
+    }
+
+    public function getPostStores($post_id)
+    {
+        $post_store_data = array();
+
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "bm_post_to_store WHERE post_id = '" . (int)$post_id . "'");
+
+        foreach ($query->rows as $result) {
+            $post_store_data[] = $result['store_id'];
+        }
+
+        return $post_store_data;
+    }
+
+    public function getPostLayouts($post_id)
+    {
+        $layout_data = array();
+
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "bm_post_to_layout WHERE post_id = '" . (int)$post_id . "'");
+
+        foreach ($query->rows as $result) {
+            $layout_data[$result['store_id']] = $result['layout_id'];
+        }
+
+        return $layout_data;
+    }
+
+    public function getAuthorByPost($post_id)
+    {
+        $post_info = $this->getPost($post_id);
+        if (!empty($post_info)) {
+            $this->load->model('extension/d_blog_module/author');
+            $author_info = $this->model_extension_d_blog_module_author->getAuthorByUserId($post_info['user_id']);
+            if (!empty($author_info)) {
+                return $author_info;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public function getPost($post_id)
+    {
+        $query = $this->db->query("SELECT DISTINCT *
+            FROM " . DB_PREFIX . "bm_post p
+            LEFT JOIN " . DB_PREFIX . "bm_post_description pd ON (p.post_id = pd.post_id)
+            WHERE p.post_id = '" . (int)$post_id . "'
+            AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+
+        return $query->row;
+    }
+
+    public function addPost($data)
+    {
+        $this->db->query("INSERT INTO " . DB_PREFIX . "bm_post
+            SET user_id = '" . (int)$data['current_author'] . "',
+            review_display = '" . (int)$data['review_display'] . "',
+            images_review = '" . (int)$data['images_review'] . "',
+            status = '" . $this->db->escape($data['status']) . "',
+            date_added = NOW(),
+            date_published = '" . $data['date_published'] . "',
+            date_modified = NOW()");
+
+        $post_id = $this->db->getLastId();
+
+        if (isset($data['image'])) {
+            $this->db->query("UPDATE " . DB_PREFIX . "bm_post
+                SET image = '" . $this->db->escape($data['image'])
+                . "' WHERE post_id = '" . (int)$post_id . "'");
+        }
+
+
+        foreach ($data['post_description'] as $language_id => $value) {
+            $this->db->query("INSERT INTO " . DB_PREFIX . "bm_post_description
+                SET post_id = '" . (int)$post_id . "',
+                language_id = '" . (int)$language_id . "',
+                title = '" . $this->db->escape($value['title']) . "',
+                short_description = '" . $this->db->escape($value['short_description']) . "',
+                description = '" . $this->db->escape($value['description']) . "',
+                meta_title = '" . $this->db->escape($value['meta_title']) . "',
+                meta_description = '" . $this->db->escape($value['meta_description']) . "',
+                meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "',
+				tag = '" . $this->db->escape($value['tag']) . "'"
+            );
+        }
+
+        if (isset($data['post_store'])) {
+            foreach ($data['post_store'] as $store_id) {
+                $this->db->query("INSERT INTO " . DB_PREFIX . "bm_post_to_store SET post_id = '" . (int)$post_id . "', store_id = '" . (int)$store_id . "'");
+            }
+        }
+
+        if (isset($data['post_category'])) {
+            foreach ($data['post_category'] as $category_id) {
+                $this->db->query("INSERT INTO " . DB_PREFIX . "bm_post_to_category
+                    SET post_id = '" . (int)$post_id . "',
+                    category_id = '" . (int)$category_id . "'");
+            }
+        }
+
+        if (isset($data['post_product'])) {
+            foreach ($data['post_product'] as $product_id) {
+                //removes duplicates  # FIX form pavel
+                $this->db->query("DELETE FROM " . DB_PREFIX . "bm_post_to_product WHERE post_id = '" . (int)$post_id . "' AND product_id = '" . (int)$product_id . "'");
+
+                //remove
+                $this->db->query("INSERT INTO " . DB_PREFIX . "bm_post_to_product
+                    SET post_id = '" . (int)$post_id . "',
+                    product_id = '" . (int)$product_id . "'");
+            }
+        }
+
+        if (isset($data['related_post'])) {
+            foreach ($data['related_post'] as $post_related_id) {
+                $this->db->query("INSERT INTO " . DB_PREFIX . "bm_post_related
+                    SET post_id = '" . (int)$post_id . "',
+                    post_related_id = '" . (int)$post_related_id['post_id'] . "'");
+            }
+        }
+
+        if (isset($data['post_video'])) {
+            foreach ($data['post_video'] as $video) {
+                $this->db->query("INSERT INTO " . DB_PREFIX . "bm_post_video
+                    SET post_id = '" . (int)$post_id . "',
+                    text = '" . serialize($video['text']) . "',
+                    width = '" . (int)$video['width'] . "',
+                    height = '" . (int)$video['height'] . "',
+                    sort_order = '" . (int)$video['sort_order'] . "',
+                    video = '" . $video['video'] . "'");
+            }
+        }
+
+        if (isset($data['post_layout'])) {
+            foreach ($data['post_layout'] as $store_id => $layout_id) {
+                $this->db->query("INSERT INTO " . DB_PREFIX . "bm_post_to_layout SET post_id = '" . (int)$post_id . "', store_id = '" . (int)$store_id . "', layout_id = '" . (int)$layout_id . "'");
+            }
+        }
+
+        // if (!empty($data['keyword'])) {
+        //     $this->db->query("INSERT INTO " . DB_PREFIX . "url_alias
+        //         SET query = 'bm_post_id=" . (int) $post_id . "',
+        //         keyword = '". $this->db->escape($data['keyword']) . "'");
+        // }
+
+        $this->cache->delete('bm_post');
+
+        return $post_id;
+    }
+
+    public function deletePost($post_id)
+    {
+
+        $this->db->query("DELETE FROM " . DB_PREFIX . "bm_post WHERE post_id = '" . (int)$post_id . "'");
+        $this->db->query("DELETE FROM " . DB_PREFIX . "bm_post_description WHERE post_id = '" . (int)$post_id . "'");
+        $this->db->query("DELETE FROM " . DB_PREFIX . "bm_post_to_category WHERE post_id = '" . (int)$post_id . "'");
+        $this->db->query("DELETE FROM " . DB_PREFIX . "bm_post_to_product WHERE post_id = '" . (int)$post_id . "'");
+        $this->db->query("DELETE FROM " . DB_PREFIX . "bm_post_related WHERE post_id = '" . (int)$post_id . "'");
+        $this->db->query("DELETE FROM " . DB_PREFIX . "bm_post_video WHERE post_id = '" . (int)$post_id . "'");
+        $this->db->query("DELETE FROM " . DB_PREFIX . "bm_post_to_store WHERE post_id = '" . (int)$post_id . "'");
+        $this->db->query("DELETE FROM " . DB_PREFIX . "bm_review WHERE post_id = '" . (int)$post_id . "'");
+        //$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'bm_post_id=" . (int) $post_id . "'");
+        $this->db->query("DELETE FROM " . DB_PREFIX . "bm_post_to_layout WHERE post_id = '" . (int)$post_id . "'");
+        $this->cache->delete('bm_post');
+    }
+
     public function getPostDescription($post_id)
     {
         $post_description_data = array();
@@ -283,13 +434,13 @@ class ModelExtensionDBlogModulePost extends Model
 
         foreach ($query->rows as $result) {
             $post_description_data[$result['language_id']] = array(
-                'title' => $result['title'],
+                'title'             => $result['title'],
                 'short_description' => $result['short_description'],
-                'description' => $result['description'],
-                'meta_title' => $result['meta_title'],
-                'meta_description' => $result['meta_description'],
-                'meta_keyword' => $result['meta_keyword'],
-                'tag' => $result['tag']
+                'description'       => $result['description'],
+                'meta_title'        => $result['meta_title'],
+                'meta_description'  => $result['meta_description'],
+                'meta_keyword'      => $result['meta_keyword'],
+                'tag'               => $result['tag']
             );
         }
         return $post_description_data;
@@ -418,13 +569,6 @@ class ModelExtensionDBlogModulePost extends Model
         return $query->row['total'];
     }
 
-    public function getPostImages($post_id)
-    {
-        $query = $this->db->query("SELECT post_id, image FROM " . DB_PREFIX . "bm_post WHERE post_id = '" . (int)$post_id . "'");
-
-        return $query->rows;
-    }
-
     public function getPostCategories($post_id)
     {
 
@@ -435,81 +579,6 @@ class ModelExtensionDBlogModulePost extends Model
 
         $post_category_data = $query->rows;
         return $post_category_data;
-    }
-
-    public function getPostRelateds($post_id)
-    {
-        $query = $this->db->query("SELECT pr.post_related_id AS post_id, pd.title AS title
-            FROM " . DB_PREFIX . "bm_post_related pr
-            LEFT JOIN " . DB_PREFIX . "bm_post_description pd ON (pr.post_related_id = pd.post_id)
-            WHERE pr.post_id = '" . (int)$post_id . "' AND pd.language_id='" . (int)$this->config->get('config_language_id') . "'");
-
-        $post_related_data = $query->rows;
-        return $post_related_data;
-    }
-
-    public function getPostVideos($post_id)
-    {
-        $query = $this->db->query("SELECT pv.post_id AS post_id, pv.text AS text, pv.width as width, pv.height as  height, pv.sort_order as  sort_order, pv.video as  video
-            FROM " . DB_PREFIX . "bm_post_video pv WHERE pv.post_id = '" . (int)$post_id . "'  ORDER BY pv.sort_order");
-
-        $post_video_data = array();
-        if (!empty($query->rows)) {
-            foreach ($query->rows as $video) {
-
-                $post_video_data[] = array(
-                    'post_id' => $video['post_id'],
-                    'video' => $video['video'],
-                    'text' => unserialize($video['text']),
-                    'width' => $video['width'],
-                    'sort_order' => $video['sort_order'],
-                    'height' => $video['height']
-                );
-            }
-        }
-        return $post_video_data;
-    }
-
-    public function getPostProducts($post_id)
-    {
-
-        $query = $this->db->query("SELECT p2p.product_id AS product_id, pd.name AS product_title
-            FROM " . DB_PREFIX . "bm_post_to_product p2p
-            LEFT JOIN " . DB_PREFIX . "product_description pd ON (p2p.product_id = pd.product_id)
-            WHERE p2p.post_id = '" . (int)$post_id . "' AND pd.language_id='" . (int)$this->config->get('config_language_id') . "'");
-
-        $post_product_data = $query->rows;
-        return $post_product_data;
-    }
-
-    public function getPostCategoriesId($post_id)
-    {
-
-
-        $query = $this->db->query("SELECT p2c.category_id AS category_id
-            FROM " . DB_PREFIX . "bm_post_to_category p2c WHERE p2c.post_id = '" . (int)$post_id . "'");
-
-        $post_category_data = array();
-        foreach ($query->rows as $result) {
-            $post_category_data[] = $result['category_id'];
-        }
-        return $post_category_data;
-    }
-
-    public function getAuthorByPost($post_id)
-    {
-        $post_info = $this->getPost($post_id);
-        if (!empty($post_info)) {
-            $this->load->model('extension/d_blog_module/author');
-            $author_info = $this->model_extension_d_blog_module_author->getAuthorByUserId($post_info['user_id']);
-            if (!empty($author_info)) {
-                return $author_info;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
     }
 
     public function getTotalPosts($data = array())
@@ -548,53 +617,6 @@ class ModelExtensionDBlogModulePost extends Model
         $query = $this->db->query($sql);
 
         return $query->row['total'];
-    }
-
-    public function getPostStores($post_id)
-    {
-        $post_store_data = array();
-
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "bm_post_to_store WHERE post_id = '" . (int)$post_id . "'");
-
-        foreach ($query->rows as $result) {
-            $post_store_data[] = $result['store_id'];
-        }
-
-        return $post_store_data;
-    }
-
-    public function getPostDescriptions($post_id)
-    {
-        $post_description_data = array();
-
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "bm_post_description WHERE post_id = '" . (int)$post_id . "'");
-
-        foreach ($query->rows as $result) {
-            $post_description_data[$result['language_id']] = array(
-                'title' => $result['title'],
-                'short_description' => $result['short_description'],
-                'description' => $result['description'],
-                'meta_title' => $result['meta_title'],
-                'meta_description' => $result['meta_description'],
-                'meta_keyword' => $result['meta_keyword'],
-                'tag' => $result['tag']
-            );
-        }
-
-        return $post_description_data;
-    }
-
-    public function getPostLayouts($post_id)
-    {
-        $layout_data = array();
-
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "bm_post_to_layout WHERE post_id = '" . (int)$post_id . "'");
-
-        foreach ($query->rows as $result) {
-            $layout_data[$result['store_id']] = $result['layout_id'];
-        }
-
-        return $layout_data;
     }
 
 }

@@ -76,7 +76,18 @@ class ControllerExtensionDBlogModulePost extends Controller
         $post_info = $this->model_extension_d_blog_module_post->getPost($post_id);
 
         if ($post_info) {
-
+            if (isset($post_info['limit_access_user'])&&$post_info['limit_access_user']){
+                if ($this->customer->isLogged()){
+                    $allowed_users=explode(',',$post_info['limit_users']);
+                    if (!in_array($this->customer->getId(),$allowed_users)){
+                        print "blocked_content for user ".$this->customer->getFirstName();
+                        exit;
+                    }
+                }else{
+                    print "blocked_content";
+                        exit;
+                }
+            }
             $this->model_extension_d_blog_module_post->updateViewed($post_id);
             $url = '';
             $parent_category = array();
@@ -173,6 +184,7 @@ class ControllerExtensionDBlogModulePost extends Controller
             $data['tab_description'] = $this->language->get('tab_description');
             $data['tab_attribute'] = $this->language->get('tab_attribute');
             $data['tab_review'] = $this->language->get('tab_review');
+
             $data['entry_limit_access_user'] = $this->language->get('entry_limit_access_user');
             $data['entry_limit_access_user_group'] = $this->language->get('entry_limit_access_user_group');
             $data['entry_user'] = $this->language->get('entry_user');

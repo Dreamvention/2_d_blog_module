@@ -66,9 +66,8 @@ class ControllerExtensionDBlogModulePost extends Controller
 
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+
             $this->model_extension_d_blog_module_post->editPost($this->request->get['post_id'], $this->request->post);
-
-
             $this->session->data['success'] = $this->language->get('text_success');
 
             $url = $this->getUrl();
@@ -232,18 +231,18 @@ class ControllerExtensionDBlogModulePost extends Controller
 
         $data['posts'] = array();
         $filter_data = array(
-            'filter_title' => $filter_title,
-            'filter_tag' => $filter_tag,
-            'filter_category' => $filter_category,
-            'filter_date_added' => $filter_date_added,
-            'filter_date_modified' => $filter_date_modified,
+            'filter_title'          => $filter_title,
+            'filter_tag'            => $filter_tag,
+            'filter_category'       => $filter_category,
+            'filter_date_added'     => $filter_date_added,
+            'filter_date_modified'  => $filter_date_modified,
             'filter_date_published' => $filter_date_published,
-            'filter_status' => $filter_status,
-            'sort' => $sort,
-            'order' => $order,
-            'limit' => $this->config->get('config_limit_admin'),
-            'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'filter_status'         => $filter_status,
+            'sort'                  => $sort,
+            'order'                 => $order,
+            'limit'                 => $this->config->get('config_limit_admin'),
+            'start'                 => ($page - 1) * $this->config->get('config_limit_admin'),
+            'limit'                 => $this->config->get('config_limit_admin')
         );
         $this->load->model('tool/image');
 
@@ -253,16 +252,16 @@ class ControllerExtensionDBlogModulePost extends Controller
 
         foreach ($results as $result) {
             $data['posts'][] = array(
-                'post_id' => $result['post_id'],
-                'title' => $result['title'],
-                'tag' => $result['tag'],
-                'image' => is_file(DIR_IMAGE . $result['image']) ? $this->model_tool_image->resize($result['image'], 40, 40) : $this->model_tool_image->resize('no_image.png', 40, 40),
-                'category' => $this->model_extension_d_blog_module_post->getPostCategories($result['post_id']),
-                'status' => ($result['status']) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
-                'date_added' => $result['date_added'],
-                'date_modified' => $result['date_modified'],
+                'post_id'        => $result['post_id'],
+                'title'          => $result['title'],
+                'tag'            => $result['tag'],
+                'image'          => is_file(DIR_IMAGE . $result['image']) ? $this->model_tool_image->resize($result['image'], 40, 40) : $this->model_tool_image->resize('no_image.png', 40, 40),
+                'category'       => $this->model_extension_d_blog_module_post->getPostCategories($result['post_id']),
+                'status'         => ($result['status']) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
+                'date_added'     => $result['date_added'],
+                'date_modified'  => $result['date_modified'],
                 'date_published' => $result['date_published'],
-                'edit' => $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/post/edit', '&post_id=' . $result['post_id'] . $url)
+                'edit'           => $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/post/edit', '&post_id=' . $result['post_id'] . $url)
             );
         }
 
@@ -305,7 +304,6 @@ class ControllerExtensionDBlogModulePost extends Controller
         $data['without_categorty'] = $this->language->get('without_categorty');
 
         $data['token'] = $this->model_extension_d_opencart_patch_user->getToken();
-
         $data['post_search'] = $this->model_extension_d_opencart_patch_url->ajax('extension/d_blog_module/post');
         $data['post_autocomplete'] = $this->model_extension_d_opencart_patch_url->ajax('extension/d_blog_module/post/autocomplete');
         $data['category_autocomplete'] = $this->model_extension_d_opencart_patch_url->ajax('extension/d_blog_module/category/autocomplete');
@@ -526,6 +524,7 @@ class ControllerExtensionDBlogModulePost extends Controller
         }
 
         $data['token'] = $this->model_extension_d_opencart_patch_user->getToken();
+        $data['url_token'] = $this->model_extension_d_opencart_patch_user->getUrlToken();
 
         $data['category_autocomplete'] = $this->model_extension_d_opencart_patch_url->ajax('extension/d_blog_module/category/autocomplete');
         $data['product_autocomplete'] = $this->model_extension_d_opencart_patch_url->ajax('catalog/product/autocomplete');
@@ -661,9 +660,34 @@ class ControllerExtensionDBlogModulePost extends Controller
         } else {
             $data['post_store'] = array(0);
         }
+        if (isset($this->request->post['limit_access_user'])) {
+            $data['limit_access_user'] = $this->request->post['limit_access_user'];
+        } elseif (isset($this->request->get['post_id'])) {
+            $data['limit_access_user'] = $this->model_extension_d_blog_module_post->getPostStores($this->request->get['post_id']);
+        } else {
+            $data['limit_access_user'] = array(0);
+        }
+        // access
+        $this->load->model('customer/customer');//todo add support 2.x
 
+        $data['users'] = array();
+        if (!empty($post_info['limit_users'])) {
+            foreach (explode(',',$post_info['limit_users']) as $user_id) {
+                $user_info = $this->model_customer_customer->getCustomer($user_id);
+                $data['users'][$user_info['customer_id']] = $user_info['firstname'];
+            }
+        }
+//        $this->load->model('customer/customer_group');
 
-// Categories
+//        $data['user_groups'] = array();
+//        if (!empty($this->setting['access_user_group'])) {
+//            foreach ($data['setting']['access_user_group'] as $user_group_id) {
+//                $user_group_info = $this->model_customer_customer_group->getCustomerGroup($user_group_id);
+//                $data['user_groups'][$user_group_id] = $user_group_info['name'];
+//            }
+//        }
+
+        // Categories
         $this->load->model('extension/d_blog_module/category');
 
         if (isset($this->request->get['post_id'])) {
@@ -676,7 +700,7 @@ class ControllerExtensionDBlogModulePost extends Controller
         foreach ($categories as $category) {
             $data['post_categories'][] = array(
                 'category_id' => $category['category_id'],
-                'title' => $category['category_title'],
+                'title'       => $category['category_title'],
             );
         }
 
@@ -700,7 +724,7 @@ class ControllerExtensionDBlogModulePost extends Controller
         foreach ($posts as $post) {
             $data['related_posts'][] = array(
                 'post_id' => $post['post_id'],
-                'title' => $post['title'],
+                'title'   => $post['title'],
             );
         }
 
@@ -708,7 +732,7 @@ class ControllerExtensionDBlogModulePost extends Controller
         foreach ($products as $product) {
             $data['post_products'][] = array(
                 'product_id' => $product['product_id'],
-                'title' => $product['product_title'],
+                'title'      => $product['product_title'],
             );
         }
 
@@ -846,9 +870,9 @@ class ControllerExtensionDBlogModulePost extends Controller
 
             $filter_data = array(
                 'filter_title' => $filter_title,
-                'filter_tag' => $filter_tag,
-                'start' => 0,
-                'limit' => $limit
+                'filter_tag'   => $filter_tag,
+                'start'        => 0,
+                'limit'        => $limit
             );
 
             $results = $this->model_extension_d_blog_module_post->getPosts($filter_data);
@@ -856,8 +880,8 @@ class ControllerExtensionDBlogModulePost extends Controller
             foreach ($results as $result) {
                 $json[] = array(
                     'post_id' => $result['post_id'],
-                    'title' => strip_tags(html_entity_decode($result['title'], ENT_QUOTES, 'UTF-8')),
-                    'tag' => strip_tags(html_entity_decode($result['tag'], ENT_QUOTES, 'UTF-8')),
+                    'title'   => strip_tags(html_entity_decode($result['title'], ENT_QUOTES, 'UTF-8')),
+                    'tag'     => strip_tags(html_entity_decode($result['tag'], ENT_QUOTES, 'UTF-8')),
                 );
             }
         }
@@ -905,4 +929,11 @@ class ControllerExtensionDBlogModulePost extends Controller
         return $url;
     }
 
+    public function autocompleteCustomerGroup()
+    {
+
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 }
