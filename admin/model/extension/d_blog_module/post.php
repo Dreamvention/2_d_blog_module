@@ -5,15 +5,27 @@ class ModelExtensionDBlogModulePost extends Model
 
     public function updateTableAccess()
     {
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "bm_post`   
-  ADD COLUMN `limit_access_user` INT(1) DEFAULT 0  NOT NULL AFTER `status`,
-  ADD COLUMN `limit_users` TEXT(255) NULL AFTER `limit_access_user`;
-");
+        $this->db->query();
     }
 
     public function editPost($post_id, $data)
     {
-        if (isset($data['access_user'])){
+
+        $sql = "SELECT * 
+              FROM INFORMATION_SCHEMA.COLUMNS 
+                WHERE TABLE_NAME = '" . DB_PREFIX . "bm_post'
+                AND COLUMN_NAME = 'limit_access_user_group'
+                AND TABLE_SCHEMA = '" . DB_DATABASE . "'
+                ";
+        if (empty($this->db->query($sql)->row)) {
+            $this->db->query("ALTER TABLE `" . DB_PREFIX . "bm_post`
+            ADD COLUMN `limit_access_user` INT(1) DEFAULT 0  NOT NULL AFTER `date_modified`,
+            ADD COLUMN `limit_users` TEXT(255) NULL AFTER `limit_access_user_group`,
+            ADD COLUMN `limit_access_user_group` INT(1) DEFAULT 0  NOT NULL AFTER `date_modified`,
+            ADD COLUMN `limit_user_groups` TEXT(255) NULL AFTER `limit_access_user_group`;
+        ");
+        }
+        if (isset($data['access_user'])) {
             $this->db->query("UPDATE " . DB_PREFIX . "bm_post
             SET
             user_id = '" . (int)$data['current_author'] . "',
@@ -25,7 +37,7 @@ class ModelExtensionDBlogModulePost extends Model
             date_published = '" . $data['date_published'] . "',
             date_modified = NOW() WHERE post_id = '" . (int)$post_id . "'");
 
-        }else{
+        } else {
             $this->db->query("UPDATE " . DB_PREFIX . "bm_post
             SET
             user_id = '" . (int)$data['current_author'] . "',
