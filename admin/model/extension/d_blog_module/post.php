@@ -20,9 +20,9 @@ class ModelExtensionDBlogModulePost extends Model
         print_r(empty($this->db->query($sql)->rows));
         if (empty($this->db->query($sql)->rows)) {
             $this->db->query("ALTER TABLE `" . DB_PREFIX . "bm_post`
-            ADD COLUMN `limit_access_user` INT(1) DEFAULT 0  NOT NULL AFTER `date_modified`,
-            ADD COLUMN `limit_users` TEXT(255) NULL AFTER `limit_access_user_group`,
-            ADD COLUMN `limit_access_user_group` INT(1) DEFAULT 0  NOT NULL AFTER `date_modified`,
+            ADD COLUMN `limit_access_user` INT(1) DEFAULT 0  NOT NULL AFTER `status`,
+            ADD COLUMN `limit_users` TEXT(255) NULL AFTER `limit_access_user`,
+            ADD COLUMN `limit_access_user_group` INT(1) DEFAULT 0  NOT NULL AFTER `limit_users`,
             ADD COLUMN `limit_user_groups` TEXT(255) NULL AFTER `limit_access_user_group`;
         ");
         }
