@@ -675,6 +675,8 @@ class ControllerExtensionDBlogModulePost extends Controller
         } else {
             $data['post_store'] = array(0);
         }
+//vd
+        $data['post_id'] = $this->request->get['post_id'];
 
         // access allow
         if (isset($this->request->post['limit_access_user'])) {

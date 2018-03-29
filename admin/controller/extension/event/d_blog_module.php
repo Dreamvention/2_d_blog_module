@@ -1,6 +1,9 @@
 <?php
-class ControllerExtensionEventDBlogModule extends Controller {
-    public function view_common_column_left_before(&$route, &$data, &$output) {
+
+class ControllerExtensionEventDBlogModule extends Controller
+{
+    public function view_common_column_left_before(&$route, &$data, &$output)
+    {
 
         $this->load->language('extension/event/d_blog_module');
 
@@ -46,8 +49,8 @@ class ControllerExtensionEventDBlogModule extends Controller {
             'children' => $d_blog_module
         );
 
-        if(VERSION > '2.2.0.0'){
-            array_splice( $data['menus'], 2, 0, $insert['menus'] );
+        if (VERSION > '2.2.0.0') {
+            array_splice($data['menus'], 2, 0, $insert['menus']);
         } else {
             $html = $this->load->view('extension/event/d_blog_module', $insert);
 
@@ -61,17 +64,19 @@ class ControllerExtensionEventDBlogModule extends Controller {
 
     }
 
-    public function view_setting_setting_captcha_before(&$route, &$data, &$output){
+    public function view_setting_setting_captcha_before(&$route, &$data, &$output)
+    {
         $this->load->language('extension/event/d_blog_module');
 
         $data['captcha_pages'][] = array(
-                'text'  => $this->language->get('text_blog'),
-                'value' => 'blog_module'
+            'text'  => $this->language->get('text_blog'),
+            'value' => 'blog_module'
         );
     }
 
     //admin/model/localisation/language/addLanguage/after
-    public function model_localisation_language_addLanguage_after($route, $data, $output){
+    public function model_localisation_language_addLanguage_after($route, $data, $output)
+    {
         $this->load->model('extension/module/d_blog_module');
 
         $data = $data[0];
@@ -82,7 +87,8 @@ class ControllerExtensionEventDBlogModule extends Controller {
     }
 
     //admin/model/localisation/language/deleteLanguage/after
-    public function model_localisation_language_deleteLanguage_after($route, $data, $output){
+    public function model_localisation_language_deleteLanguage_after($route, $data, $output)
+    {
         $this->load->model('extension/module/d_blog_module');
 
         $language_id = $data[0];
@@ -91,7 +97,8 @@ class ControllerExtensionEventDBlogModule extends Controller {
         $this->model_extension_module_d_blog_module->deleteLanguage($data);
     }
 
-    public function view_category_after(&$route, &$data, &$output){
+    public function view_category_after(&$route, &$data, &$output)
+    {
 
         $html_dom = new d_simple_html_dom();
         $html_dom->load((string)$output, $lowercase = true, $stripRN = false, $defaultBRText = DEFAULT_BR_TEXT);
@@ -101,19 +108,50 @@ class ControllerExtensionEventDBlogModule extends Controller {
         $languages = $this->model_localisation_language->getLanguages();
 
         foreach ($languages as $language) {
-            $html_dom->find('textarea[name^="category_description['.$language['language_id'].'][description]"]', 0)->class .=' d_visual_designer';
+            $html_dom->find('textarea[name^="category_description[' . $language['language_id'] . '][description]"]', 0)->class .= ' d_visual_designer';
         }
 
+        $designer_data = array(
+            'config' => 'd_blog_module_category',
+            'id'     => $data['category_id']
+        );
+        $this->load->model('extension/module/d_visual_designer');
+        if ($this->model_extension_d_visual_designer_designer->checkPermission()) {
+            $html_dom->find('head', 0)->innertext .= $this->load->controller('extension/d_visual_designer/designer', $designer_data);
+        }
+        $output = (string)$html_dom;
+    }
+
+
+    public function view_post_after(&$route, &$data, &$output)
+    {
+
+        $html_dom = new d_simple_html_dom();
+        $html_dom->load((string)$output, $lowercase = true, $stripRN = false, $defaultBRText = DEFAULT_BR_TEXT);
+
+        $this->load->model('localisation/language');
+
+        $languages = $this->model_localisation_language->getLanguages();
+
+        foreach ($languages as $language) {
+            $html_dom->find('textarea[name^="post_description[' . $language['language_id'] . '][description]"]', 0)->class .= ' d_visual_designer';
+        }
+        $designer_data = array(
+            'config' => 'd_blog_module_post',
+            'id'     => $data['post_id']
+        );
         $this->load->model('extension/d_visual_designer/designer');
-        if($this->model_extension_d_visual_designer_designer->checkPermission()){
-            $html_dom->find('head', 0)->innertext  .= '<script src="view/javascript/d_visual_designer/d_visual_designer.js?'.$this->extension['version'].'" type="text/javascript"></script>';
+
+        if ($this->model_extension_d_visual_designer_designer->checkPermission()) {
+            $html_dom->find('head', 0)->innertext .= $this->load->controller('extension/d_visual_designer/designer', $designer_data);
         }
 
         $output = (string)$html_dom;
     }
 
 
-    public function view_post_after(&$route, &$data, &$output){
+    public function view_author_after(&$route, &$data, &$output)
+    {
 
         $html_dom = new d_simple_html_dom();
         $html_dom->load((string)$output, $lowercase = true, $stripRN = false, $defaultBRText = DEFAULT_BR_TEXT);
@@ -123,35 +161,12 @@ class ControllerExtensionEventDBlogModule extends Controller {
         $languages = $this->model_localisation_language->getLanguages();
 
         foreach ($languages as $language) {
-            $html_dom->find('textarea[name^="post_description['.$language['language_id'].'][description]"]', 0)->class .=' d_visual_designer';
+            $html_dom->find('textarea[name^="author_description[' . $language['language_id'] . '][description]"]', 0)->class .= ' d_visual_designer';
         }
 
         $this->load->model('extension/d_visual_designer/designer');
-        if($this->model_extension_d_visual_designer_designer->checkPermission()){
-            $html_dom->find('head', 0)->innertext  .= '<script src="view/javascript/d_visual_designer/d_visual_designer.js?'.$this->extension['version'].'" type="text/javascript"></script>';
-        }
-
-        $output = (string)$html_dom;
-    }
-
-
-
-    public function view_author_after(&$route, &$data, &$output){
-
-        $html_dom = new d_simple_html_dom();
-        $html_dom->load((string)$output, $lowercase = true, $stripRN = false, $defaultBRText = DEFAULT_BR_TEXT);
-
-        $this->load->model('localisation/language');
-
-        $languages = $this->model_localisation_language->getLanguages();
-
-        foreach ($languages as $language) {
-            $html_dom->find('textarea[name^="author_description['.$language['language_id'].'][description]"]', 0)->class .=' d_visual_designer';
-        }
-
-        $this->load->model('extension/d_visual_designer/designer');
-        if($this->model_extension_d_visual_designer_designer->checkPermission()){
-            $html_dom->find('head', 0)->innertext  .= '<script src="view/javascript/d_visual_designer/d_visual_designer.js?'.$this->extension['version'].'" type="text/javascript"></script>';
+        if ($this->model_extension_d_visual_designer_designer->checkPermission()) {
+            $html_dom->find('head', 0)->innertext .= '<script src="view/javascript/d_visual_designer/d_visual_designer.js?' . $this->extension['version'] . '" type="text/javascript"></script>';
         }
 
         $output = (string)$html_dom;
