@@ -102,6 +102,7 @@ class ControllerExtensionDBlogModulePost extends Controller
                         return;
                     }
                 }
+            }
                 $this->model_extension_d_blog_module_post->updateViewed($post_id);
                 $url = '';
                 $parent_category = array();
@@ -386,7 +387,6 @@ class ControllerExtensionDBlogModulePost extends Controller
 
                 $this->response->setOutput($this->load->view('error/not_found', $data));
             }
-        }
     }
 
     public function postRestrict($post_id)
