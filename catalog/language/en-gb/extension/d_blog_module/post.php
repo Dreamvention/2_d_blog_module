@@ -16,3 +16,5 @@ $_['text_week']                = 'week';
 $_['text_semi_month']          = 'half-month';
 $_['text_month']               = 'month';
 $_['text_year']                = 'year';
+$_['text_restricted_access']   = 'Restricted access';
+$_['text_contact_admin']       = 'Please contact the site administrator to receive access to this content';
