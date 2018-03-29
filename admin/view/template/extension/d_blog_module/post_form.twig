@@ -247,7 +247,7 @@
                                     });
                                     $('input[type=checkbox][name$="limit_access_user"]').on('switchChange.bootstrapSwitch', function (event, state) {
                                         if (state) {
-//                                            $('input[type=checkbox][name$="[limit_access_user_group]"]').bootstrapSwitch('state', false);
+                                            $('input[type=checkbox][name$="limit_access_user_group"]').bootstrapSwitch('state', false);
                                             $('#users').show();
                                         }
                                         else {
@@ -257,7 +257,7 @@
                                     $('input[type=checkbox][name$="limit_access_user"]').trigger('switchChange.bootstrapSwitch', {{ limit_access_user }});
                                     $('input[type=checkbox][name$="limit_access_user_group"]').on('switchChange.bootstrapSwitch', function (event, state) {
                                         if (state) {
-//                                            $('input[type=checkbox][name$="[limit_access_user]"]').bootstrapSwitch('state', false);
+                                            $('input[type=checkbox][name$="limit_access_user"]').bootstrapSwitch('state', false);
                                             $('#user_groups').show();
                                         }
                                         else {
