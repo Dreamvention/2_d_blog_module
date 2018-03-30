@@ -675,9 +675,6 @@ class ControllerExtensionDBlogModulePost extends Controller
         } else {
             $data['post_store'] = array(0);
         }
-//vd
-        $data['post_id'] = $this->request->get['post_id'];
-
         // access allow
         if (isset($this->request->post['limit_access_user'])) {
             $data['limit_access_user'] = $this->request->post['limit_access_user'];
@@ -781,6 +778,7 @@ class ControllerExtensionDBlogModulePost extends Controller
         $this->response->setOutput($this->load->view('extension/d_blog_module/post_form', $data));
     }
 
+
     public function edit()
     {
         $this->load->language('extension/d_blog_module/post');
@@ -791,7 +789,6 @@ class ControllerExtensionDBlogModulePost extends Controller
 
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-
             $this->model_extension_d_blog_module_post->editPost($this->request->get['post_id'], $this->request->post);
             $this->session->data['success'] = $this->language->get('text_success');
             $url = $this->getUrl();

@@ -309,8 +309,9 @@ class ModelExtensionDBlogModulePost extends Model
 
     public function editPost($post_id, $data)
     {
-        if (!empty($data['description'])) {
-            foreach ($data['description'] as $language_id => $value) {
+        // edited
+        if (!empty($data['post_description'])) {
+            foreach ($data['post_description'] as $language_id => $value) {
                 $implode = array();
 
                 if (isset($value['name'])) {

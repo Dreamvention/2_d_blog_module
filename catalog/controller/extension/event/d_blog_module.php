@@ -79,12 +79,13 @@ class ControllerExtensionEventDBlogModule extends Controller
 
     public function view_post_before(&$view, &$data, &$output)
     {
+        // edited
         if (isset($data['description'])) {
 
             $designer_data = array(
                 'config'     => 'd_blog_module_post',
                 'content'    => $data['description'],
-                'field_name' => 'description[' . (int)$this->config->get('config_language_id') . '][description]',
+                'field_name' => 'post_description[' . (int)$this->config->get('config_language_id') . '][description]',
                 'id'         => $data['post_id']
             );
             $this->load->model('extension/module/d_visual_designer');
