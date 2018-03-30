@@ -1,6 +1,6 @@
 {
     "codename": "d_blog_module",
-    "version": "3.0.12",
+    "version": "3.0.13",
     "name": "Blog module",
     "description": "A blog module based on twig and events. Huge functionality packed in one great solution. ",
     "index": "extension/module/d_blog_module",
