@@ -125,6 +125,10 @@
     "changelog": [
         {
             "version":"3.0.12",
+            "change": "Add support visual designer 3."
+        },
+        {
+            "version":"3.0.12",
             "change": "Add support live ajax search."
         },
         {
