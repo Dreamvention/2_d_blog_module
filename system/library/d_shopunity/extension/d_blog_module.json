@@ -1,6 +1,6 @@
 {
     "codename": "d_blog_module",
-    "version": "3.0.13",
+    "version": "3.1.0",
     "name": "Blog module",
     "description": "A blog module based on twig and events. Huge functionality packed in one great solution. ",
     "index": "extension/module/d_blog_module",
@@ -124,8 +124,8 @@
     ],
     "changelog": [
         {
-            "version":"3.0.12",
-            "change": "Add support visual designer 3."
+            "version":"3.1.0",
+            "change": "Add support visual designer 3. Strict area "
         },
         {
             "version":"3.0.12",

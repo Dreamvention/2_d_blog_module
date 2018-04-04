@@ -453,6 +453,11 @@ class ControllerExtensionDBlogModulePost extends Controller
         $data['entry_review_display'] = $this->language->get('entry_review_display');
         $data['entry_images_review'] = $this->language->get('entry_images_review');
         $data['entry_author'] = $this->language->get('entry_author');
+        $data['entry_limit_access_user'] = $this->language->get('entry_limit_access_user');
+        $data['entry_limit_access_user_group'] = $this->language->get('entry_limit_access_user_group');
+        $data['entry_user'] = $this->language->get('entry_user');
+        $data['entry_user_group'] = $this->language->get('entry_user_group');
+
 
         $data['help_category'] = $this->language->get('help_category');
         $data['help_filter'] = $this->language->get('help_filter');

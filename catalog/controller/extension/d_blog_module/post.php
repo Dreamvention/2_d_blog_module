@@ -76,6 +76,14 @@ class ControllerExtensionDBlogModulePost extends Controller
         $post_info = $this->model_extension_d_blog_module_post->getPost($post_id);
 
         if ($post_info) {
+            if(VERSION >= '2.2.0.0'){
+                $this->user = new Cart\User($this->registry);
+            }
+            else{
+                $this->user = new User($this->registry);
+            }
+
+            if (!$this->user->isLogged() ){ // loged as admin
             if ((isset($post_info['limit_access_user']) && $post_info['limit_access_user'])) {
                 //yes limit
                 if (!$this->customer->isLogged()) {
@@ -103,6 +111,8 @@ class ControllerExtensionDBlogModulePost extends Controller
                     }
                 }
             }
+            }
+
             $this->model_extension_d_blog_module_post->updateViewed($post_id);
             $url = '';
             $parent_category = array();
@@ -523,7 +533,6 @@ class ControllerExtensionDBlogModulePost extends Controller
     public function savePost($setting)
     {
         $result = false;
-// edited
         $this->load->model('extension/d_opencart_patch/user');
 
         if (!empty($setting['content']['post_description']) && !empty($setting['id'])) {

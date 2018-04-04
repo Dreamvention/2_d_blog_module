@@ -102,7 +102,7 @@ class ControllerExtensionEventDBlogModule extends Controller
                 'config'     => 'd_blog_module_author',
                 'content'    => $data['description'],
                 'field_name' => 'description[' . (int)$this->config->get('config_language_id') . '][description]',
-                'id'         => $data['user_id']
+                'id'         => $data['author_id']
             );
             $this->load->model('extension/module/d_visual_designer');
             $data['description'] = $this->load->controller('extension/d_visual_designer/designer', $designer_data);

@@ -320,6 +320,20 @@ class ControllerExtensionDBlogModuleCategory extends Controller
         return false;
     }
 
+    public function saveCategory($setting)
+    {
+        $result = false;
+        $this->load->model('extension/d_opencart_patch/user');
+
+        if (!empty($setting['content']['description']) && !empty($setting['id'])) {
+            $this->model_extension_d_blog_module_category->editCategory($setting['id'], $setting['content']);
+            $result = true;
+        }
+
+        return $result;
+    }
+
+
     public function editCategory(){
         $json = array();
         

@@ -52,12 +52,12 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
             'd_blog_module/author.js'
         );
 
-        if (isset($this->request->get['user_id'])) {
-            $user_id = (int) $this->request->get['user_id'];
+        if (isset($this->request->get['author_id'])) {
+            $author_id = (int) $this->request->get['author_id'];
         } else {
-            $user_id = 0;
+            $author_id = 0;
         }
-        $data['user_id'] = $user_id;
+        $data['author_id'] = $author_id;
         $data['breadcrumbs'] = array();
 
         $data['breadcrumbs'][] = array(
@@ -92,9 +92,9 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
         $data['edit'] = false;
         if($this->user->isLogged()){
             if(VERSION >= '3.0.0.0'){
-                $data['edit'] = $this->config->get('config_url').$this->setting['dir_admin'].'/index.php?route=extension/d_blog_module/author/edit&author_id='.$user_id . '&user_token='.$this->session->data['user_token'];
-            } else {
-                $data['edit'] = $this->config->get('config_url').$this->setting['dir_admin'].'/index.php?route=extension/d_blog_module/author/edit&author_id='.$user_id . '&token='.$this->session->data['token'];
+                $data['edit'] = $this->config->get('config_url').$this->setting['dir_admin'].'/index.php?route=extension/d_blog_module/author/edit&author_id='.$author_id . '&user_token='.$this->session->data['user_token'];
+            } else {    
+                $data['edit'] = $this->config->get('config_url').$this->setting['dir_admin'].'/index.php?route=extension/d_blog_module/author/edit&author_id='.$author_id . '&token='.$this->session->data['token'];
             }
         }
 
@@ -121,7 +121,7 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
 
         $data['custom_style'] = $this->setting['design']['custom_style'];
 
-        $author = $this->model_extension_d_blog_module_author->getAuthor($user_id);
+        $author = $this->model_extension_d_blog_module_author->getAuthor($author_id);
 
         $layout_type = $this->setting['author']['layout_type'];
         $this->load->config('d_blog_module_layout/'.$layout_type);
@@ -135,7 +135,6 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
         if(isset($layout_type['scripts'])){
            $scripts = array_merge($layout_type['scripts'], $scripts);
         }
-
         if(!empty($author)) {
             $data['heading_title'] = $author['name'];
            
@@ -180,7 +179,7 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
                 $limit = $this->setting['author']['post_page_limit'];
             }
 
-            $filter_data = array('filter_user_id' => $user_id, 'limit' => $limit, 'start' => ($page - 1) * $limit,);
+            $filter_data = array('filter_author_id' => $author_id, 'limit' => $limit, 'start' => ($page - 1) * $limit,);
 
             $post_total = $this->model_extension_d_blog_module_post->getTotalPosts($filter_data);
 
@@ -227,21 +226,21 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
             $pagination->total = $post_total;
             $pagination->page = $page;
             $pagination->limit = $limit;
-            $pagination->url = $this->url->link('extension/d_blog_module/author', 'user_id=' . $user_id . $url . '&page={page}', 'SSL');
+            $pagination->url = $this->url->link('extension/d_blog_module/author', 'author_id=' . $author_id . $url . '&page={page}', 'SSL');
 
             $data['pagination'] = $pagination->render();
             $data['results'] = sprintf($this->language->get('text_pagination'), ($post_total) ? (($page - 1) * $limit) + 1 : 0, ((($page - 1) * $limit) > ($post_total - $limit)) ? $post_total : ((($page - 1) * $limit) + $limit), $post_total, ceil($post_total / $limit));
 
             if ($page == 1) {
-                $this->document->addLink($this->url->link('extension/d_blog_module/author', 'user_id=' . $user_id, 'SSL'), 'canonical');
+                $this->document->addLink($this->url->link('extension/d_blog_module/author', 'author_id=' . $author_id, 'SSL'), 'canonical');
             } elseif ($page == 2) {
-                $this->document->addLink($this->url->link('extension/d_blog_module/author', 'user_id=' . $user_id, 'SSL'), 'prev');
+                $this->document->addLink($this->url->link('extension/d_blog_module/author', 'author_id=' . $author_id, 'SSL'), 'prev');
             } else {
-                $this->document->addLink($this->url->link('extension/d_blog_module/author', 'user_id=' . $user_id . '&page='. ($page - 1), 'SSL'), 'prev');
+                $this->document->addLink($this->url->link('extension/d_blog_module/author', 'author_id=' . $author_id . '&page='. ($page - 1), 'SSL'), 'prev');
             }
 
             if ($limit && ceil($post_total / $limit) > $page) {
-                $this->document->addLink($this->url->link('extension/d_blog_module/author', 'user_id=' . $user_id . '&page='. ($page + 1), 'SSL'), 'next');
+                $this->document->addLink($this->url->link('extension/d_blog_module/author', 'author_id=' . $author_id . '&page='. ($page + 1), 'SSL'), 'next');
             }
 
             $styles[] = 'd_blog_module/theme/'.$this->setting['theme'].'.css';
@@ -282,7 +281,7 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
 
             $data['breadcrumbs'][] = array(
                 'text' => $this->language->get('text_error'),
-                'href' => $this->url->link('extension/d_blog_module/author', $url . '&user_id=' . $user_id, 'SSL')
+                'href' => $this->url->link('extension/d_blog_module/author', $url . '&author_id=' . $author_id, 'SSL')
                 );
 
             $this->document->setTitle($this->language->get('text_error'));
@@ -324,6 +323,18 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
 		
         return false;
     }
+    public function saveauthor($setting)
+    {
+        $result = false;
+        $this->load->model('extension/d_opencart_patch/user');
+
+        if (!empty($setting['content']['description']) && !empty($setting['id'])) {
+            $this->model_extension_d_blog_module_author->editAuthor($setting['id'], $setting['content']);
+            $result = true;
+        }
+
+        return $result;
+    }
 
     public function editAuthor() {
         $json = array();
@@ -333,12 +344,12 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
         }
 
         if(!empty($this->request->get['id'])){
-            $user_id = $this->request->get['id'];
+            $author_id = $this->request->get['id'];
         }
 
-        if(isset($description)&&isset($user_id)){
+        if(isset($description)&&isset($author_id)){
 
-            $this->model_extension_d_blog_module_author->editAuthor($user_id, array('description' => $description));
+            $this->model_extension_d_blog_module_author->editAuthor($author_id, array('description' => $description));
 
             $json['success'] = 'success';
         }

@@ -9,7 +9,7 @@ $stars-color:#FC0;
 /*category*/
 .bm-category-info,
 .bm-author-info {
-    .image {
+    .image :not(.vd){
         float: left;
         max-width: 30%;
         margin-right: $margin;

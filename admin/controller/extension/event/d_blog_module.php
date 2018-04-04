@@ -120,7 +120,9 @@ class ControllerExtensionEventDBlogModule extends Controller
 
     public function model_catalog_product_addPost_before(&$route, &$data, &$output)
     {
-        echo "<pre>"; print_r('add post before ');echo "<pre>";
+        echo "<pre>";
+        print_r('add post before ');
+        echo "<pre>";
         $this->load_settings_vd();
         if ($this->setting_visual_designer['save_text']) {// todo
             $this->load->model('localisation/language');
@@ -182,6 +184,130 @@ class ControllerExtensionEventDBlogModule extends Controller
 
     }
 
+    public function model_catalog_product_addauthor_after(&$route, &$data, &$output)
+    {
+        $this->load->model('extension/' . 'd_visual_designer' . '/designer');
+        foreach ($data[0]['vd_content'] as $field_name => $setting_json) {
+            $setting = json_decode(html_entity_decode($setting_json, ENT_QUOTES, 'UTF-8'), true);
+            $content = $this->{'model_extension_' . 'd_visual_designer' . '_designer'}->parseSetting($setting);
+            $this->{'model_extension_' . 'd_visual_designer' . '_designer'}->saveContent($content, 'product', $output, rawurldecode($field_name));
+        }
+    }
+
+    public function model_catalog_product_addauthor_before(&$route, &$data)
+    {
+        echo "<pre>";
+        print_r('add author before ');
+        echo "<pre>";
+        $this->load_settings_vd();
+        if ($this->setting_visual_designer['save_text']) {// todo
+            $this->load->model('localisation/language');
+            $languages = $this->model_localisation_language->getLanguages();
+            foreach ($languages as $language) {
+                $field_name = rawurlencode("product_description[" . $language['language_id'] . "][description]");
+                if (!empty($data[0]['vd_content'][$field_name])) {
+                    $setting = json_decode(html_entity_decode($data[0]['vd_content'][$field_name], ENT_QUOTES, 'UTF-8'), true);
+                    $data[0]['product_description'][$language['language_id']]['description'] = $this->{'model_extension_' . $this->codename . '_designer'}->getText($setting);
+                }
+            }
+        }
+    }
+
+    public function model_catalog_product_editauthor_after(&$route, &$data, &$output)
+    {
+
+        $this->load->model('extension/d_visual_designer/designer');
+        foreach ($data[1]['vd_content'] as $field_name => $setting_json) {
+            $setting = json_decode(html_entity_decode($setting_json, ENT_QUOTES, 'UTF-8'), true);
+            $content = $this->{'model_extension_' . 'd_visual_designer' . '_designer'}->parseSetting($setting);
+            $this->{'model_extension_' . 'd_visual_designer' . '_designer'}->saveContent($content, 'd_blog_module_author', $data[0], rawurldecode($field_name));
+        }
+    }
+
+    public function model_catalog_product_editauthor_before(&$route, &$data) // before wont work with $output  only 3.0.2 maybe
+    {
+        $this->load_settings_vd();
+
+        if ($this->setting_visual_designer['save_text']) {
+            $this->load->model('localisation/language');
+
+            $languages = $this->model_localisation_language->getLanguages();
+
+            foreach ($languages as $language) {
+
+                $field_name = rawurlencode("author_description[" . $language['language_id'] . "][description]");
+                if (!empty($data[1]['vd_content'][$field_name])) {
+                    $setting = json_decode(html_entity_decode($data[1]['vd_content'][$field_name], ENT_QUOTES, 'UTF-8'), true);
+                    $data[1]['author_description'][$language['language_id']]['description'] = $this->{'model_extension_' . 'd_visual_designer' . '_designer'}->getText($setting);
+                }
+            }
+        }
+
+    }
+
+    public function model_catalog_product_addCategory_after(&$route, &$data, &$output)
+    {
+        echo "<pre>";
+        print_r('add');
+        echo "</pre>";
+        $this->load->model('extension/' . 'd_visual_designer' . '/designer');
+        foreach ($data[0]['vd_content'] as $field_name => $setting_json) {
+            $setting = json_decode(html_entity_decode($setting_json, ENT_QUOTES, 'UTF-8'), true);
+            $content = $this->{'model_extension_' . 'd_visual_designer' . '_designer'}->parseSetting($setting);
+            $this->{'model_extension_' . 'd_visual_designer' . '_designer'}->saveContent($content, 'product', $output, rawurldecode($field_name));
+        }
+    }
+
+    public function model_catalog_product_addCategory_before(&$route, &$data)
+    {
+        echo "<pre>";
+        print_r('add category before ');
+        echo "<pre>";
+        $this->load_settings_vd();
+        if ($this->setting_visual_designer['save_text']) {// todo
+            $this->load->model('localisation/language');
+            $languages = $this->model_localisation_language->getLanguages();
+            foreach ($languages as $language) {
+                $field_name = rawurlencode("product_description[" . $language['language_id'] . "][description]");
+                if (!empty($data[0]['vd_content'][$field_name])) {
+                    $setting = json_decode(html_entity_decode($data[0]['vd_content'][$field_name], ENT_QUOTES, 'UTF-8'), true);
+                    $data[0]['product_description'][$language['language_id']]['description'] = $this->{'model_extension_' . $this->codename . '_designer'}->getText($setting);
+                }
+            }
+        }
+    }
+
+    public function model_catalog_product_editCategory_after(&$route, &$data, &$output)
+    {
+        $this->load->model('extension/d_visual_designer/designer');
+        foreach ($data[1]['vd_content'] as $field_name => $setting_json) {
+            $setting = json_decode(html_entity_decode($setting_json, ENT_QUOTES, 'UTF-8'), true);
+            $content = $this->{'model_extension_' . 'd_visual_designer' . '_designer'}->parseSetting($setting);
+            $this->{'model_extension_' . 'd_visual_designer' . '_designer'}->saveContent($content, 'd_blog_module_category', $data[0], rawurldecode($field_name));
+        }
+    }
+
+    public function model_catalog_product_editCategory_before(&$route, &$data) // before wont work with $output  only 3.0.2 maybe
+    {
+        $this->load_settings_vd();
+
+        if ($this->setting_visual_designer['save_text']) {
+            $this->load->model('localisation/language');
+
+            $languages = $this->model_localisation_language->getLanguages();
+
+            foreach ($languages as $language) {
+
+                $field_name = rawurlencode("category_description[" . $language['language_id'] . "][description]");
+                if (!empty($data[1]['vd_content'][$field_name])) {
+                    $setting = json_decode(html_entity_decode($data[1]['vd_content'][$field_name], ENT_QUOTES, 'UTF-8'), true);
+                    $data[1]['category_description'][$language['language_id']]['description'] = $this->{'model_extension_' . 'd_visual_designer' . '_designer'}->getText($setting);
+                }
+            }
+        }
+
+    }
+
     public function view_post_after(&$route, &$data, &$output)
     {
 
@@ -212,6 +338,7 @@ class ControllerExtensionEventDBlogModule extends Controller
     public function view_author_after(&$route, &$data, &$output)
     {
 
+        $data['author_id'] = isset($this->request->get['author_id']) ? $this->request->get['author_id'] : false;
         $html_dom = new d_simple_html_dom();
         $html_dom->load((string)$output, $lowercase = true, $stripRN = false, $defaultBRText = DEFAULT_BR_TEXT);
 
@@ -222,10 +349,14 @@ class ControllerExtensionEventDBlogModule extends Controller
         foreach ($languages as $language) {
             $html_dom->find('textarea[name^="author_description[' . $language['language_id'] . '][description]"]', 0)->class .= ' d_visual_designer';
         }
-
+        $designer_data = array(
+            'config' => 'd_blog_module_author',
+            'id'     => $data['author_id']
+        );
         $this->load->model('extension/d_visual_designer/designer');
+
         if ($this->model_extension_d_visual_designer_designer->checkPermission()) {
-            $html_dom->find('head', 0)->innertext .= '<script src="view/javascript/d_visual_designer/d_visual_designer.js?' . $this->extension['version'] . '" type="text/javascript"></script>';
+            $html_dom->find('head', 0)->innertext .= $this->load->controller('extension/d_visual_designer/designer', $designer_data);
         }
 
         $output = (string)$html_dom;
@@ -233,7 +364,7 @@ class ControllerExtensionEventDBlogModule extends Controller
 
     public function view_category_after(&$route, &$data, &$output)
     {
-
+        $data['category_id'] = isset($this->request->get['category_id']) ? $this->request->get['category_id'] : false;
         $html_dom = new d_simple_html_dom();
         $html_dom->load((string)$output, $lowercase = true, $stripRN = false, $defaultBRText = DEFAULT_BR_TEXT);
 
@@ -244,15 +375,16 @@ class ControllerExtensionEventDBlogModule extends Controller
         foreach ($languages as $language) {
             $html_dom->find('textarea[name^="category_description[' . $language['language_id'] . '][description]"]', 0)->class .= ' d_visual_designer';
         }
-
         $designer_data = array(
             'config' => 'd_blog_module_category',
             'id'     => $data['category_id']
         );
-        $this->load->model('extension/module/d_visual_designer');
+        $this->load->model('extension/d_visual_designer/designer');
+
         if ($this->model_extension_d_visual_designer_designer->checkPermission()) {
             $html_dom->find('head', 0)->innertext .= $this->load->controller('extension/d_visual_designer/designer', $designer_data);
         }
+
         $output = (string)$html_dom;
     }
 }
