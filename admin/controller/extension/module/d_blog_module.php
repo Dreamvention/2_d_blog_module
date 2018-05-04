@@ -406,7 +406,6 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
-        //d admin style we want to load the theme which we want so need to wit setting
         $this->response->setOutput($this->model_extension_d_opencart_patch_load->view($this->route, $data));
     }
 

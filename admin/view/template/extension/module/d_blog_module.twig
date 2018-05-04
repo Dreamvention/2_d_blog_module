@@ -220,7 +220,7 @@
                                                         id="input_select_admin_side" class="form-control m-b">
                                                     {% for style in admin_styles %}
                                                         <option value="{{ style }}"
-                                                            {% if style == setting.style %} selected="selected" {% endif %}>
+                                                            {% if style == setting.admin_style %} selected="selected" {% endif %}>
                                                             {{ style }}</option>
                                                     {% endfor %}
                                                 </select>
