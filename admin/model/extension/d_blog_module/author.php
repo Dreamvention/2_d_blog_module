@@ -72,7 +72,6 @@ class ModelExtensionDBlogModuleAuthor extends Model {
     }
 
     public function editAuthor($author_id, $data) {
-
         $this->db->query("UPDATE `" . DB_PREFIX . "bm_author` SET 
             user_id = '" . (int) $data['user_id'] . "', 
             author_group_id = '" . (int) $data['author_group_id'] . "' 
@@ -89,10 +88,17 @@ class ModelExtensionDBlogModuleAuthor extends Model {
                 WHERE user_id = '" . $data['user_id'] . "'");
 
             if ($data['password']) {
-                $this->db->query("UPDATE `" . DB_PREFIX . "user` SET 
+                if (VERSION > '2.3.0.2'){
+                    $this->db->query("UPDATE `" . DB_PREFIX . "user` SET 
                     salt = '" . $this->db->escape($salt = token(9)) . "', 
                     password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' 
                     WHERE user_id = '" .$data['user_id'] . "'");
+                }else{
+                    $this->db->query("UPDATE `" . DB_PREFIX . "user` SET 
+                    salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', 
+                    password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' 
+                    WHERE user_id = '" .$data['user_id'] . "'");
+                }
             }
         }
 

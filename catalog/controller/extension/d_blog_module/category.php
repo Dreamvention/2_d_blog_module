@@ -1,4 +1,5 @@
 <?php
+
 class ControllerExtensionDBlogModuleCategory extends Controller
 {
     private $id = 'd_blog_module';
@@ -11,17 +12,18 @@ class ControllerExtensionDBlogModuleCategory extends Controller
     private $debug = false;
     private $setting = array();
 
-    public function __construct($registry) {
+    public function __construct($registry)
+    {
         parent::__construct($registry);
-        if(!isset($this->user)){
-            if(VERSION >= '2.2.0.0'){
+        if (!isset($this->user)) {
+            if (VERSION >= '2.2.0.0') {
                 $this->user = new Cart\User($registry);
-            }else{
+            } else {
                 $this->user = new User($registry);
             }
 
             $this->load->model('extension/d_opencart_patch/load');
-            $this->theme = $this->config->get($this->config->get('config_theme').'_directory');
+            $this->theme = $this->config->get($this->config->get('config_theme') . '_directory');
         }
 
         $this->load->language('extension/d_blog_module/category');
@@ -36,9 +38,10 @@ class ControllerExtensionDBlogModuleCategory extends Controller
         $this->setting = $this->model_extension_module_d_blog_module->getConfigData($this->id, $this->id . '_setting', $this->config->get('config_store_id'), $this->config_file);
     }
 
-    public function index() {
+    public function index()
+    {
 
-        if(!$this->config->get('d_blog_module_status')){
+        if (!$this->config->get('d_blog_module_status')) {
             $this->response->redirect($this->url->link('error/not_found'));
         }
 
@@ -53,33 +56,30 @@ class ControllerExtensionDBlogModuleCategory extends Controller
 
         if (isset($this->request->get['page'])) {
             $page = $this->request->get['page'];
-        }
-        else {
+        } else {
             $page = 1;
         }
         if (isset($this->request->get['limit'])) {
             $limit = $this->request->get['limit'];
-        }
-        else {
+        } else {
             $limit = $this->setting['category']['post_page_limit'];
         }
 
         if (!empty($this->request->get['category_id'])) {
             $category_id = $this->request->get['category_id'];
-        }
-        else {
+        } else {
             $category_id = $this->setting['category']['main_category_id'];
         }
 
         $url = '';
-        
+
         $data['category_id'] = $category_id;
 
         //category_info
         $category_info = $this->model_extension_d_blog_module_category->getCategory($category_id);
 
 
-        if(!empty($category_info['custom'])){
+        if (!empty($category_info['custom'])) {
             $this->setting['category'] = array_merge($this->setting['category'], (array)$category_info['setting']);
         }
 
@@ -90,7 +90,7 @@ class ControllerExtensionDBlogModuleCategory extends Controller
             $parents = $this->model_extension_d_blog_module_category->getCategoryParents($category_id);
             $category_info['image_width'] = (!empty($category_info['image_width'])) ? $category_info['image_width'] : $this->setting['category']['image_width'];
             $category_info['image_height'] = (!empty($category_info['image_height'])) ? $category_info['image_height'] : $this->setting['category']['image_height'];
-            $layout = (!empty($category_info['layout'])) ? $category_info['layout']: $this->setting['category']['layout'];
+            $layout = (!empty($category_info['layout'])) ? $category_info['layout'] : $this->setting['category']['layout'];
         } else {
             $category_info['category_id'] = 0;
             $category_info['title'] = $this->language->get('heading_title');
@@ -106,25 +106,27 @@ class ControllerExtensionDBlogModuleCategory extends Controller
         //edit
         $data['text_edit'] = $this->language->get('text_edit');
         $data['edit'] = false;
-        if($this->user->isLogged()){
-            if(VERSION >= '3.0.0.0'){
-                $data['edit'] = $this->config->get('config_url').$this->setting['dir_admin'].'/index.php?route=extension/d_blog_module/category/edit&category_id='.$category_id . '&user_token='.$this->session->data['user_token'];
+        if ($this->user->isLogged()) {
+            $site_link = $this->config->get('config_secure') ? $this->config->get('config_ssl') : $this->config->get('config_url');
+
+            if (VERSION >= '3.0.0.0') {
+                $data['edit'] = $site_link . $this->setting['dir_admin'] . '/index.php?route=extension/d_blog_module/category/edit&category_id=' . $category_id . '&user_token=' . $this->session->data['user_token'];
             } else {
-                $data['edit'] = $this->config->get('config_url').$this->setting['dir_admin'].'/index.php?route=extension/d_blog_module/category/edit&category_id='.$category_id . '&token='.$this->session->data['token'];
+                $data['edit'] = $site_link . $this->setting['dir_admin'] . '/index.php?route=extension/d_blog_module/category/edit&category_id=' . $category_id . '&token=' . $this->session->data['token'];
             }
         }
 
         //breadcrumbs
         $data['breadcrumbs'] = array();
-        $data['breadcrumbs'][] = array('text' => $this->language->get('text_home'), 'href' => $this->url->link('common/home'),'','SSL');
-        if($this->setting['category']['main_category_id'] == 0 && $this->setting['category']['main_category_id'] !== $category_id){
-            $data['breadcrumbs'][] = array('text' => $this->language->get('heading_title'), 'href' => $this->url->link('extension/d_blog_module/category', 'category_id='.$this->setting['category']['main_category_id'], 'SSL'));
+        $data['breadcrumbs'][] = array('text' => $this->language->get('text_home'), 'href' => $this->url->link('common/home'), '', 'SSL');
+        if ($this->setting['category']['main_category_id'] == 0 && $this->setting['category']['main_category_id'] !== $category_id) {
+            $data['breadcrumbs'][] = array('text' => $this->language->get('heading_title'), 'href' => $this->url->link('extension/d_blog_module/category', 'category_id=' . $this->setting['category']['main_category_id'], 'SSL'));
         }
-        foreach($parents as $parent){
-            $data['breadcrumbs'][] =   array(
+        foreach ($parents as $parent) {
+            $data['breadcrumbs'][] = array(
                 'text' => $parent['title'],
-                'href' => $this->url->link('extension/d_blog_module/category', 'category_id='.$parent['category_id'], 'SSL')
-                );
+                'href' => $this->url->link('extension/d_blog_module/category', 'category_id=' . $parent['category_id'], 'SSL')
+            );
         }
         $data['breadcrumbs'][] = array('text' => $category_info['title']);
 
@@ -141,16 +143,16 @@ class ControllerExtensionDBlogModuleCategory extends Controller
         $data['continue'] = $this->url->link('common/home', '', 'SSL');
 
         $layout_type = $this->setting['category']['layout_type'];
-        $this->load->config('d_blog_module_layout/'.$layout_type);
+        $this->load->config('d_blog_module_layout/' . $layout_type);
         $layout_type = $this->config->get('d_blog_module_layout');
         $data['layout_template'] = $layout_type['template'];
 
-        if(isset($layout_type['styles'])){
-           $styles = array_merge($layout_type['styles'], $styles);
+        if (isset($layout_type['styles'])) {
+            $styles = array_merge($layout_type['styles'], $styles);
         }
 
-        if(isset($layout_type['scripts'])){
-           $scripts = array_merge($layout_type['scripts'], $scripts);
+        if (isset($layout_type['scripts'])) {
+            $scripts = array_merge($layout_type['scripts'], $scripts);
         }
 
         $data['custom_style'] = $this->setting['design']['custom_style'];
@@ -158,14 +160,13 @@ class ControllerExtensionDBlogModuleCategory extends Controller
         //cateogry image
         if ($category_info['image']) {
             $data['thumb'] = $this->model_tool_image->resize($category_info['image'], $category_info['image_width'], $category_info['image_height']);
-        }
-        else {
+        } else {
             $data['thumb'] = '';
         }
 
-        if(isset($this->request->get['format'])){
+        if (isset($this->request->get['format'])) {
             $format = $this->request->get['format'];
-            if($this->format($format, $data)){
+            if ($this->format($format, $data)) {
                 return false;
             }
         }
@@ -181,25 +182,24 @@ class ControllerExtensionDBlogModuleCategory extends Controller
 
                 if ($category['image']) {
                     $thumb = $this->model_tool_image->resize($category['image'], $this->setting['category']['sub_category_image_width'], $this->setting['category']['sub_category_image_height']);
-                }
-                else {
+                } else {
                     $thumb = $this->model_tool_image->resize('placeholder.png', $this->setting['category']['sub_category_image_width'], $this->setting['category']['sub_category_image_height']);
                 }
 
                 $data['categories'][] = array(
                     'thumb' => $thumb,
                     'title' => $category['title'] . ($this->setting['category']['sub_category_post_count'] ? ' (' . $this->model_extension_d_blog_module_post->getTotalPostsByCategoryId($category['category_id']) . ')' : ''),
-                    'href' => $this->url->link('extension/d_blog_module/category', 'category_id=' . $category['category_id'] . $url, 'SSL'),
-                    'col' => ($this->setting['category']['sub_category_col']) ? round(12 / $this->setting['category']['sub_category_col']) : 12
-                    );
+                    'href'  => $this->url->link('extension/d_blog_module/category', 'category_id=' . $category['category_id'] . $url, 'SSL'),
+                    'col'   => ($this->setting['category']['sub_category_col']) ? round(12 / $this->setting['category']['sub_category_col']) : 12
+                );
             }
         }
 
         //posts
         $data['posts'] = array();
-        if($category_id == $this->setting['category']['main_category_id']){
+        if ($category_id == $this->setting['category']['main_category_id']) {
             $filter_data = array('limit' => $limit, 'start' => ($page - 1) * $limit,);
-        }else{
+        } else {
             $filter_data = array('filter_category_id' => $category_id, 'limit' => $limit, 'start' => ($page - 1) * $limit,);
         }
         $post_total = $this->model_extension_d_blog_module_post->getTotalPosts($filter_data);
@@ -217,18 +217,17 @@ class ControllerExtensionDBlogModuleCategory extends Controller
             foreach ($posts as $post) {
                 if (isset($layout[$row])) {
                     $col_count = $layout[$row];
-                }
-                else {
+                } else {
                     $row = 0;
                     $col_count = $layout[$row];
                 }
 
                 $data['posts'][] = array(
-                    'post' => $this->load->controller('extension/d_blog_module/post/thumb', $post['post_id']),
+                    'post'      => $this->load->controller('extension/d_blog_module/post/thumb', $post['post_id']),
                     'col_count' => $col_count,
-                    'animate' => $this->setting['post_thumb']['animate'],
-                    'col' => ($col_count) ? round(12 / $col_count) : 12,
-                    'row' => $new_row
+                    'animate'   => $this->setting['post_thumb']['animate'],
+                    'col'       => ($col_count) ? round(12 / $col_count) : 12,
+                    'row'       => $new_row
                 );
 
                 $col++;
@@ -240,7 +239,6 @@ class ControllerExtensionDBlogModuleCategory extends Controller
                 }
             }
         }
-
 
 
         $data['limits'] = array();
@@ -262,29 +260,29 @@ class ControllerExtensionDBlogModuleCategory extends Controller
         } elseif ($page == 2) {
             $this->document->addLink($this->url->link('extension/d_blog_module/category', 'category_id=' . $category_info['category_id'], 'SSL'), 'prev');
         } else {
-            $this->document->addLink($this->url->link('extension/d_blog_module/category', 'category_id=' . $category_info['category_id'] . '&page='. ($page - 1), 'SSL'), 'prev');
+            $this->document->addLink($this->url->link('extension/d_blog_module/category', 'category_id=' . $category_info['category_id'] . '&page=' . ($page - 1), 'SSL'), 'prev');
         }
 
         if ($limit && ceil($post_total / $limit) > $page) {
-            $this->document->addLink($this->url->link('extension/d_blog_module/category', 'category_id=' . $category_info['category_id'] . '&page='. ($page + 1), 'SSL'), 'next');
+            $this->document->addLink($this->url->link('extension/d_blog_module/category', 'category_id=' . $category_info['category_id'] . '&page=' . ($page + 1), 'SSL'), 'next');
         }
 
 
-        $styles[] = 'd_blog_module/theme/'.$this->setting['theme'].'.css';
-        
-        foreach($styles as $style){
-            if (file_exists(DIR_TEMPLATE . $this->theme . '/stylesheet/'.$style)) {
-                $this->document->addStyle('catalog/view/theme/'.$this->theme.'/stylesheet/'.$style);
+        $styles[] = 'd_blog_module/theme/' . $this->setting['theme'] . '.css';
+
+        foreach ($styles as $style) {
+            if (file_exists(DIR_TEMPLATE . $this->theme . '/stylesheet/' . $style)) {
+                $this->document->addStyle('catalog/view/theme/' . $this->theme . '/stylesheet/' . $style);
             } else {
-                $this->document->addStyle('catalog/view/theme/default/stylesheet/'.$style);
+                $this->document->addStyle('catalog/view/theme/default/stylesheet/' . $style);
             }
         }
 
-        foreach($scripts as $script){
-            if (file_exists(DIR_TEMPLATE . $this->theme . '/javascript/'.$script)) {
-                $this->document->addScript('catalog/view/theme/'.$this->theme.'/javascript/'.$script);
+        foreach ($scripts as $script) {
+            if (file_exists(DIR_TEMPLATE . $this->theme . '/javascript/' . $script)) {
+                $this->document->addScript('catalog/view/theme/' . $this->theme . '/javascript/' . $script);
             } else {
-                $this->document->addScript('catalog/view/theme/default/javascript/'.$script);
+                $this->document->addScript('catalog/view/theme/default/javascript/' . $script);
             }
         }
 
@@ -304,19 +302,20 @@ class ControllerExtensionDBlogModuleCategory extends Controller
 
     }
 
-    public function format($format, $json){
+    public function format($format, $json)
+    {
         if ($format == 'json') {
             $this->response->addHeader('Content-Type: application/json');
-			
-			if (isset($this->request->get['callback'])) {
-				$this->response->setOutput($this->request->get['callback'] . '(' . json_encode($json) . ');');
-			} else {
-				$this->response->setOutput(json_encode($json));
-			}
-   
+
+            if (isset($this->request->get['callback'])) {
+                $this->response->setOutput($this->request->get['callback'] . '(' . json_encode($json) . ');');
+            } else {
+                $this->response->setOutput(json_encode($json));
+            }
+
             return true;
         }
-		
+
         return false;
     }
 
@@ -334,24 +333,24 @@ class ControllerExtensionDBlogModuleCategory extends Controller
     }
 
 
-    public function editCategory(){
+    public function editCategory()
+    {
         $json = array();
-        
-        if(!empty($this->request->post['description'])){
+
+        if (!empty($this->request->post['description'])) {
             $description = $this->request->post['description'];
         }
 
-        if(!empty($this->request->get['id'])){
+        if (!empty($this->request->get['id'])) {
             $category_id = $this->request->get['id'];
         }
 
-        if(isset($description)&&isset($category_id)){
+        if (isset($description) && isset($category_id)) {
 
             $this->model_extension_d_blog_module_category->editCategory($category_id, array('description' => $description));
 
             $json['success'] = 'success';
-        }
-        else{
+        } else {
             $json['error'] = 'error';
         }
 

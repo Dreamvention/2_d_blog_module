@@ -29,7 +29,7 @@ class ModelExtensionDBlogModuleCategory extends Model {
             . "WHERE c.parent_id = '" . (int) $parent_id . "' "
             . "AND cd.language_id = '" . (int) $this->config->get('config_language_id')
             . "' AND c2s.store_id = '" . (int) $this->config->get('config_store_id')
-            . "'  AND c.status = '1' ORDER BY c.sort_order, LCASE(cd.title)");
+            . "'  AND c.status = '1' GROUP BY c.category_id ORDER BY c.sort_order, LCASE(cd.title)");
 
         $results = $query->rows;
         foreach($results as $key => $result){
@@ -52,7 +52,7 @@ class ModelExtensionDBlogModuleCategory extends Model {
             . "ON (c.category_id = c2s.category_id) "
             . "AND cd.language_id = '" . (int) $this->config->get('config_language_id') . "' "
             . "AND c2s.store_id = '" . (int) $this->config->get('config_store_id') . "' "
-            . "AND c.status = '1' ORDER BY c.sort_order, LCASE(cd.title)");
+            . "AND c.status = '1' GROUP BY c.category_id ORDER BY c.sort_order, LCASE(cd.title)");
 
         return $query->rows;
     }
