@@ -256,13 +256,13 @@ class ControllerExtensionDBlogModuleReview extends Controller {
         $data['text_edit'] = $this->language->get('text_edit');
         $data['edit'] = false;
         if($this->user->isLogged()){
-            $site_link = $this->config->get('config_secure') ? $this->config->get('config_ssl') : $this->config->get('config_url');
-            if (VERSION >= '3.0.0.0') {
-                $data['edit'] = $site_link . $this->setting['dir_admin'] . '/index.php?route=extension/d_blog_module/category/edit&category_id=' . $category_id . '&user_token=' . $this->session->data['user_token'];
+            if(VERSION >= '3.0.0.0'){
+                $data['edit'] = $this->config->get('config_url').$this->setting['dir_admin'].'/index.php?route=extension/d_blog_module/review/edit&review_id='.$review_id . '&user_token='.$this->session->data['user_token'];
             } else {
-                $data['edit'] = $site_link . $this->setting['dir_admin'] . '/index.php?route=extension/d_blog_module/category/edit&category_id=' . $category_id . '&token=' . $this->session->data['token'];
+                $data['edit'] = $this->config->get('config_url').$this->setting['dir_admin'].'/index.php?route=extension/d_blog_module/review/edit&review_id='.$review_id . '&token='.$this->session->data['token'];
             }
         }
+
 
         $image = '';
         $data['delete'] = false;
