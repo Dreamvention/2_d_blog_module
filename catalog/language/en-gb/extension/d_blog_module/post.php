@@ -18,3 +18,5 @@ $_['text_month']               = 'month';
 $_['text_year']                = 'year';
 $_['text_restricted_access']   = 'Restricted access';
 $_['text_contact_admin']       = 'Please contact the site administrator to receive access to this content';
+$_['restrict_access_label_group']       = 'Access only for member of group %';
+$_['restrict_access_label_user']       = 'Access only for permited users';

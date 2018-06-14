@@ -35,17 +35,15 @@ class ControllerExtensionDBlogModulePost extends Controller
 
         $this->session->data['d_blog_module_debug'] = $this->config->get('d_blog_module_debug');
 
-        //$this->mbooth = $this->model_extension_module_d_blog_module->getMboothFile($this->id, $this->sub_versions);
-
         $this->config_file = $this->model_extension_module_d_blog_module->getConfigFile($this->id, $this->sub_versions);
 
         $this->setting = $this->model_extension_module_d_blog_module->getConfigData($this->id, $this->id . '_setting', $this->config->get('config_store_id'), $this->config_file);
 
         $this->load->model('localisation/language');
         $lang = $this->model_localisation_language->getLanguage($this->config->get('config_language_id'));
-        $locales=array();
+        $locales = array();
         foreach (explode(',', $lang['locale']) as $l) {
-            $locales []= $l;
+            $locales [] = $l;
         }
         $loc_de = setlocale(LC_ALL, $locales);
 
@@ -74,41 +72,40 @@ class ControllerExtensionDBlogModulePost extends Controller
         $post_info = $this->model_extension_d_blog_module_post->getPost($post_id);
 
         if ($post_info) {
-            if(VERSION >= '2.2.0.0'){
+            if (VERSION >= '2.2.0.0') {
                 $this->user = new Cart\User($this->registry);
-            }
-            else{
+            } else {
                 $this->user = new User($this->registry);
             }
 
-            if (!$this->user->isLogged() ){ // loged as admin
-            if ((isset($post_info['limit_access_user']) && $post_info['limit_access_user'])) {
-                //yes limit
-                if (!$this->customer->isLogged()) {
-                    $this->postRestrict($post_id);
-                    return;
-                } else {
-                    //user is logged find in allowed
-                    $allowed_users = explode(',', $post_info['limit_users']);
-                    if (!in_array($this->customer->getId(), $allowed_users)) {
+            if (!$this->user->isLogged()) { // loged as admin
+                if ((isset($post_info['limit_access_user']) && $post_info['limit_access_user'])) {
+                    //yes limit
+                    if (!$this->customer->isLogged()) {
                         $this->postRestrict($post_id);
                         return;
+                    } else {
+                        //user is logged find in allowed
+                        $allowed_users = explode(',', $post_info['limit_users']);
+                        if (!in_array($this->customer->getId(), $allowed_users)) {
+                            $this->postRestrict($post_id);
+                            return;
+                        }
                     }
                 }
-            }
-            if (isset($post_info['limit_access_user_group']) && $post_info['limit_access_user_group']) {
-                if (!$this->customer->isLogged()) {
-                    $this->postRestrict($post_id);
-                    return;
-                } else {
-                    //user is logged find in allowed groups
-                    $allowed_groups = explode(',', $post_info['limit_user_groups']);
-                    if (!in_array($this->customer->getGroupId(), $allowed_groups)) {
+                if (isset($post_info['limit_access_user_group']) && $post_info['limit_access_user_group']) {
+                    if (!$this->customer->isLogged()) {
                         $this->postRestrict($post_id);
                         return;
+                    } else {
+                        //user is logged find in allowed groups
+                        $allowed_groups = explode(',', $post_info['limit_user_groups']);
+                        if (!in_array($this->customer->getGroupId(), $allowed_groups)) {
+                            $this->postRestrict($post_id);
+                            return;
+                        }
                     }
                 }
-            }
             }
 
             $this->model_extension_d_blog_module_post->updateViewed($post_id);
@@ -178,13 +175,13 @@ class ControllerExtensionDBlogModulePost extends Controller
 
             $data['author_name'] = (isset($author['name'])) ? $author['name'] : '';
             $data['author_description'] = (isset($author['short_description'])) ? strip_tags(html_entity_decode($author['short_description'], ENT_QUOTES, 'UTF-8')) : '';
-            $data['description'] = html_entity_decode($post_info['description'], ENT_QUOTES, 'UTF-8');
-
 
             $data['description'] = html_entity_decode($post_info['description'], ENT_QUOTES, 'UTF-8');
-            $data['date_published'] = iconv(mb_detect_encoding (strftime($this->setting['post']['date_format'][$this->config->get('config_language_id')], strtotime($post_info['date_published']))),"utf-8//IGNORE",strftime($this->setting['post']['date_format'][$this->config->get('config_language_id')], strtotime($post_info['date_published'])));
+            $data['date_published'] = iconv(mb_detect_encoding(strftime($this->setting['post']['date_format'][$this->config->get('config_language_id')], strtotime($post_info['date_published']))), "utf-8//IGNORE", strftime($this->setting['post']['date_format'][$this->config->get('config_language_id')], strtotime($post_info['date_published'])));
 
             $data['date_modified'] = strftime($this->setting['post']['date_format'][$this->config->get('config_language_id')], strtotime($post_info['date_modified']));
+            $data['date_published_link'] = $this->url->link('extension/d_blog_module/search', 'date_published=' . date("m", strtotime($post_info['date_published'])) .'-'. date("Y", strtotime($post_info['date_published'])), 'SSL');
+
             $data['date_published_utc'] = strftime($this->setting['utc_datetime_format'][$this->config->get('config_language_id')], strtotime($post_info['date_published']));
             $data['date_modified_utc'] = strftime($this->setting['utc_datetime_format'][$this->config->get('config_language_id')], strtotime($post_info['date_modified']));
             $data['custom_style'] = $this->setting['design']['custom_style'];
@@ -510,12 +507,35 @@ class ControllerExtensionDBlogModulePost extends Controller
                 $data['author'] = (!empty($author['name'])) ? $author['name'] : $this->language->get('text_anonymous');
                 $data['author_link'] = $this->url->link('extension/d_blog_module/author', 'user_id=' . $post['user_id'], 'SSL');
 
-
+                if ((isset($post['limit_access_user']) && $post['limit_access_user'])) {
+                    //yes limit
+                    if (!$this->customer->isLogged()) {
+                        $this->postRestrictLabel($post_id, 'user');
+                    } else {
+                        //user is logged find in allowed
+                        $allowed_users = explode(',', $post['limit_users']);
+                        if (!in_array($this->customer->getId(), $allowed_users)) {
+                            $this->postRestrictLabel($post_id, 'user');
+                        }
+                    }
+                }
+                if (isset($post['limit_access_user_group']) && $post['limit_access_user_group']) {
+                    if (!$this->customer->isLogged()) {
+                        $this->postRestrictLabel($post_id, 'group');
+                    } else {
+                        //user is logged find in allowed groups
+                        $allowed_groups = explode(',', $post['limit_user_groups']);
+                        if (!in_array($this->customer->getGroupId(), $allowed_groups)) {
+                            $this->postRestrictLabel($post_id, 'group');
+                        }
+                    }
+                }
                 $data['views'] = $post['viewed'];
                 $data['review'] = $post['review'];
                 $data['image_title'] = (!empty($post['image_title'])) ? $post['image_title'] : $data['title'];
                 $data['image_alt'] = (!empty($post['image_alt'])) ? $post['image_title'] : $data['title'];
-                $data['date_published'] = iconv(mb_detect_encoding (strftime($this->setting['post_thumb']['date_format'][$this->config->get('config_language_id')], strtotime($post['date_published']))),"utf-8//IGNORE",strftime($this->setting['post_thumb']['date_format'][$this->config->get('config_language_id')], strtotime($post['date_published'])));
+                $data['date_published'] = iconv(mb_detect_encoding(strftime($this->setting['post_thumb']['date_format'][$this->config->get('config_language_id')], strtotime($post['date_published']))), "utf-8//IGNORE", strftime($this->setting['post_thumb']['date_format'][$this->config->get('config_language_id')], strtotime($post['date_published'])));
+
                 $data['date_published_short'] = strftime($this->language->get('date_format_short'), strtotime($post['date_published']));
                 $data['date_published_day'] = strftime($this->setting['post_thumb']['date_format_day'], strtotime($post['date_published']));
                 $data['date_published_month'] = strftime($this->setting['post_thumb']['date_format_month'], strtotime($post['date_published']));
@@ -528,6 +548,20 @@ class ControllerExtensionDBlogModulePost extends Controller
                 return false;
             }
         }
+    }
+
+    public function postRestrictLabel($post_id, $group = 'user')
+    {
+        $data['restrict_access'] = true;
+        if (VERSION > '3') {
+            $this->load->model('account/customer_group');
+            $customer_group = $this->model_account_customer_group->getCustomerGroup($this->customer->getGroupId());
+            $data['restrict_access_label'] = sprintf($this->language->get('restrict_access_label_' . $group), $customer_group['name']);
+        }else{
+            $data['restrict_access_label'] = $this->language->get('restrict_access_label_' . $group);
+
+        }
+
     }
 
     public function savePost($setting)

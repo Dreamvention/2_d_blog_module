@@ -17,10 +17,10 @@ class ControllerExtensionDBlogModulePost extends Controller
         $this->config_file = $this->model_extension_module_d_blog_module->getConfigFile($this->id, $this->sub_versions);
         $this->setting = $this->model_extension_module_d_blog_module->getConfigData($this->id, $this->id . '_setting', $this->config->get('config_store_id'), $this->config_file);
         $this->d_admin_style = (file_exists(DIR_SYSTEM . 'library/d_shopunity/extension/d_admin_style.json'));
-//        if ($this->d_admin_style) {
-//            $this->load->model('extension/d_admin_style/style');
-//
-//        }
+        if ($this->d_admin_style) {
+            $this->load->model('extension/d_admin_style/style');
+
+        }
     }
 
     public function index()
@@ -778,7 +778,7 @@ class ControllerExtensionDBlogModulePost extends Controller
 
         $this->load->model('design/layout');
         //admin_styles
-//        $this->model_extension_d_admin_style_style->getStyles($this->setting['admin_style']);
+        $this->model_extension_d_admin_style_style->getStyles($this->setting['admin_style']);
 
         $data['layouts'] = $this->model_design_layout->getLayouts();
         $data['header'] = $this->load->controller('common/header');

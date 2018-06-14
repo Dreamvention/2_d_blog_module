@@ -265,7 +265,7 @@
                                         }
                                     });
                                     $('input[type=checkbox][name$="limit_access_user_group"]').trigger('switchChange.bootstrapSwitch', {{ limit_access_user_group }});
-                                    $('input[name=\'user\']').autocomplete({
+                                    $('input[name="user"]').autocomplete({
                                         'source': function (request, response) {
                                             $.ajax({
                                                 url: 'index.php?route=customer/customer/autocomplete&{{ url_token }}&filter_name=' + encodeURIComponent(request),
