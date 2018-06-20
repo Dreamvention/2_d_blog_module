@@ -180,7 +180,7 @@ class ControllerExtensionDBlogModulePost extends Controller
             $data['date_published'] = iconv(mb_detect_encoding(strftime($this->setting['post']['date_format'][$this->config->get('config_language_id')], strtotime($post_info['date_published']))), "utf-8//IGNORE", strftime($this->setting['post']['date_format'][$this->config->get('config_language_id')], strtotime($post_info['date_published'])));
 
             $data['date_modified'] = strftime($this->setting['post']['date_format'][$this->config->get('config_language_id')], strtotime($post_info['date_modified']));
-            $data['date_published_link'] = $this->url->link('extension/d_blog_module/search', 'date_published=' . date("m", strtotime($post_info['date_published'])) .'-'. date("Y", strtotime($post_info['date_published'])), 'SSL');
+            $data['date_published_link'] = $this->url->link('extension/d_blog_module/search', 'date_published=' . date("m", strtotime($post_info['date_published'])) . '-' . date("Y", strtotime($post_info['date_published'])), 'SSL');
 
             $data['date_published_utc'] = strftime($this->setting['utc_datetime_format'][$this->config->get('config_language_id')], strtotime($post_info['date_published']));
             $data['date_modified_utc'] = strftime($this->setting['utc_datetime_format'][$this->config->get('config_language_id')], strtotime($post_info['date_modified']));
@@ -556,8 +556,10 @@ class ControllerExtensionDBlogModulePost extends Controller
         if (VERSION > '3') {
             $this->load->model('account/customer_group');
             $customer_group = $this->model_account_customer_group->getCustomerGroup($this->customer->getGroupId());
-            $data['restrict_access_label'] = sprintf($this->language->get('restrict_access_label_' . $group), $customer_group['name']);
-        }else{
+            if (isset($customer_group)) {
+                $data['restrict_access_label'] = sprintf($this->language->get('restrict_access_label_' . $group), $customer_group['name']);
+            }
+        } else {
             $data['restrict_access_label'] = $this->language->get('restrict_access_label_' . $group);
 
         }
