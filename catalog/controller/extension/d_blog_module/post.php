@@ -556,6 +556,7 @@ class ControllerExtensionDBlogModulePost extends Controller
         if (VERSION > '3') {
             $this->load->model('account/customer_group');
             $customer_group = $this->model_account_customer_group->getCustomerGroup($this->customer->getGroupId());
+           echo "<pre>"; print_r($customer_group);echo "</pre>";
             if (isset($customer_group)) {
                 $data['restrict_access_label'] = sprintf($this->language->get('restrict_access_label_' . $group), $customer_group['name']);
             }
