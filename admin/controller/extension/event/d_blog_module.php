@@ -120,9 +120,6 @@ class ControllerExtensionEventDBlogModule extends Controller
 
     public function model_catalog_product_addPost_before(&$route, &$data, &$output)
     {
-        echo "<pre>";
-        print_r('add post before ');
-        echo "<pre>";
         $this->load_settings_vd();
         if ($this->setting_visual_designer['save_text']) {// todo
             $this->load->model('localisation/language');
@@ -196,9 +193,6 @@ class ControllerExtensionEventDBlogModule extends Controller
 
     public function model_catalog_product_addauthor_before(&$route, &$data)
     {
-        echo "<pre>";
-        print_r('add author before ');
-        echo "<pre>";
         $this->load_settings_vd();
         if ($this->setting_visual_designer['save_text']) {// todo
             $this->load->model('localisation/language');
@@ -247,9 +241,6 @@ class ControllerExtensionEventDBlogModule extends Controller
 
     public function model_catalog_product_addCategory_after(&$route, &$data, &$output)
     {
-        echo "<pre>";
-        print_r('add');
-        echo "</pre>";
         $this->load->model('extension/' . 'd_visual_designer' . '/designer');
         foreach ($data[0]['vd_content'] as $field_name => $setting_json) {
             $setting = json_decode(html_entity_decode($setting_json, ENT_QUOTES, 'UTF-8'), true);
@@ -260,9 +251,7 @@ class ControllerExtensionEventDBlogModule extends Controller
 
     public function model_catalog_product_addCategory_before(&$route, &$data)
     {
-        echo "<pre>";
-        print_r('add category before ');
-        echo "<pre>";
+
         $this->load_settings_vd();
         if ($this->setting_visual_designer['save_text']) {// todo
             $this->load->model('localisation/language');
@@ -310,8 +299,14 @@ class ControllerExtensionEventDBlogModule extends Controller
 
     public function view_post_after(&$route, &$data, &$output)
     {
+        $designer_data = array(
+            'config' => 'd_blog_module_post',
+            'output' => &$output,
+            'id' => !empty($this->request->get['post_id'])?$this->request->get['post_id']:false
+        );
 
-        $data['post_id'] = isset($this->request->get['post_id']) ? $this->request->get['post_id'] : false;
+        $vd_content = $this->load->controller('extension/'.'d_visual_designer'.'/designer', $designer_data);
+
         $html_dom = new d_simple_html_dom();
         $html_dom->load((string)$output, $lowercase = true, $stripRN = false, $defaultBRText = DEFAULT_BR_TEXT);
 
@@ -322,23 +317,23 @@ class ControllerExtensionEventDBlogModule extends Controller
         foreach ($languages as $language) {
             $html_dom->find('textarea[name^="post_description[' . $language['language_id'] . '][description]"]', 0)->class .= ' d_visual_designer';
         }
-        $designer_data = array(
-            'config' => 'd_blog_module_post',
-            'id'     => $data['post_id']
-        );
-        $this->load->model('extension/d_visual_designer/designer');
+        $html_dom->find('body', 0)->innertext .= $vd_content;
 
-        if ($this->model_extension_d_visual_designer_designer->checkPermission()) {
-            $html_dom->find('head', 0)->innertext .= $this->load->controller('extension/d_visual_designer/designer', $designer_data);
-        }
 
         $output = (string)$html_dom;
     }
 
     public function view_author_after(&$route, &$data, &$output)
     {
+        $designer_data = array(
+            'config' => 'd_blog_module_author',
+            'output' => &$output,
+            'id' => !empty($this->request->get['author_id'])?$this->request->get['author_id']:false
+        );
 
-        $data['author_id'] = isset($this->request->get['author_id']) ? $this->request->get['author_id'] : false;
+        $vd_content = $this->load->controller('extension/'.'d_visual_designer'.'/designer', $designer_data);
+
+
         $html_dom = new d_simple_html_dom();
         $html_dom->load((string)$output, $lowercase = true, $stripRN = false, $defaultBRText = DEFAULT_BR_TEXT);
 
@@ -349,22 +344,22 @@ class ControllerExtensionEventDBlogModule extends Controller
         foreach ($languages as $language) {
             $html_dom->find('textarea[name^="author_description[' . $language['language_id'] . '][description]"]', 0)->class .= ' d_visual_designer';
         }
-        $designer_data = array(
-            'config' => 'd_blog_module_author',
-            'id'     => $data['author_id']
-        );
-        $this->load->model('extension/d_visual_designer/designer');
 
-        if ($this->model_extension_d_visual_designer_designer->checkPermission()) {
-            $html_dom->find('head', 0)->innertext .= $this->load->controller('extension/d_visual_designer/designer', $designer_data);
-        }
+        $html_dom->find('body', 0)->innertext .= $vd_content;
 
         $output = (string)$html_dom;
     }
 
     public function view_category_after(&$route, &$data, &$output)
     {
-        $data['category_id'] = isset($this->request->get['category_id']) ? $this->request->get['category_id'] : false;
+        $designer_data = array(
+            'config' => 'd_blog_module_category',
+            'output' => &$output,
+            'id' => !empty($this->request->get['category_id'])?$this->request->get['category_id']:false
+        );
+
+        $vd_content = $this->load->controller('extension/'.'d_visual_designer'.'/designer', $designer_data);
+
         $html_dom = new d_simple_html_dom();
         $html_dom->load((string)$output, $lowercase = true, $stripRN = false, $defaultBRText = DEFAULT_BR_TEXT);
 
@@ -375,15 +370,8 @@ class ControllerExtensionEventDBlogModule extends Controller
         foreach ($languages as $language) {
             $html_dom->find('textarea[name^="category_description[' . $language['language_id'] . '][description]"]', 0)->class .= ' d_visual_designer';
         }
-        $designer_data = array(
-            'config' => 'd_blog_module_category',
-            'id'     => $data['category_id']
-        );
-        $this->load->model('extension/d_visual_designer/designer');
 
-        if ($this->model_extension_d_visual_designer_designer->checkPermission()) {
-            $html_dom->find('head', 0)->innertext .= $this->load->controller('extension/d_visual_designer/designer', $designer_data);
-        }
+        $html_dom->find('body', 0)->innertext .= $vd_content;
 
         $output = (string)$html_dom;
     }
