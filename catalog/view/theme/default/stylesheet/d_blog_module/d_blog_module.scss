@@ -244,3 +244,11 @@ $stars-color:#FC0;
     .auto-clear .col-xs-6:nth-child(odd){clear:left;}
 }
 }
+//07-30
+//blog and vd 3 issue icons 5 pro
+.block-container .bm .fa{
+    font-family: FontAwesome,'FontAwesome';
+}
+.content.vd .bm [class*=col-]{
+    padding: 0 15px !important;
+}

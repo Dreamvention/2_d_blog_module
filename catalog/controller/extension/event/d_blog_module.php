@@ -85,6 +85,7 @@ class ControllerExtensionEventDBlogModule extends Controller
             $designer_data = array(
                 'config'     => 'd_blog_module_post',
                 'content'    => $data['description'],
+                'header'     => &$data['header'],
                 'field_name' => 'post_description[' . (int)$this->config->get('config_language_id') . '][description]',
                 'id'         => $data['post_id']
             );
