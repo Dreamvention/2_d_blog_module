@@ -210,6 +210,6 @@ class ControllerExtensionDBlogModuleSearch extends Controller
         $data['footer'] = $this->load->controller('common/footer');
         $data['header'] = $this->load->controller('common/header');
 
-        $this->response->setOutput($this->model_extension_d_opencart_patch_load->view('d_blog_module/search', $data));
+        $this->response->setOutput($this->model_extension_d_opencart_patch_load->view('extension/d_blog_module/search', $data));
     }
 }

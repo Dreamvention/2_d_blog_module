@@ -3,7 +3,7 @@
     <div class="h2"><span>{{text_reviews}}</span></div>
     <div id="reviews">
         {% for review in reviews %}
-            {% include template('d_blog_module/review_thumb') with review %}
+            {% include template('extension/d_blog_module/review_thumb') with review %}
         {% endfor %}
         <div class="row bm-pagination">
             <div class="col-sm-6 text-left">{{pagination}}</div>
@@ -34,12 +34,14 @@
             <div class="col-sm-4 required input-rating" id="input_rating">
                 <label class="control-label">{{entry_rating}}</label>
                 <div class="rating">
-                    <input type="hidden" id="review_rating" name="rating" data-start="0" data-stop="5" data-filled="fa fa-star fa-stack-2x, fa fa-star-o fa-stack-2x" data-empty="fa fa-star-o fa-2x" >
+                    <input style="display: none" value="{{ review.rating }}" name="rating"
+                           class="" data-filled="fa fa-star fa-stack-2x" data-empty="fa fa-star-o fa-stack-2x" >
+                    <script>
+		                $('input[name=\'rating\']').rating();
+                    </script>
                 </div>
             </div>
             {% endif %}
-
-
             <div class="col-sm-4 required hidden" id="input_cancel_reply">
                 <label class="control-label">{{entry_reply_to}} </label>
                 <div class="input-group">

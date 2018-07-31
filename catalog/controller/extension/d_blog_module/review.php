@@ -227,7 +227,7 @@ class ControllerExtensionDBlogModuleReview extends Controller {
             $data['captcha'] = '';
         }
 
-        return $this->model_extension_d_opencart_patch_load->view('d_blog_module/review', $data);
+        return $this->model_extension_d_opencart_patch_load->view('extension/d_blog_module/review', $data);
     }
 
     public function thumb($review_id){
@@ -466,13 +466,13 @@ class ControllerExtensionDBlogModuleReview extends Controller {
 
         $json = array();
         if (!$json) {
-            $uploads_dir = DIR_IMAGE.'catalog/d_blog_module/review';
+            $uploads_dir = DIR_IMAGE.'catalog/extension/d_blog_module/review';
             foreach ($_FILES["fileupload"]["error"] as $key => $error) {
                 if ($error == UPLOAD_ERR_OK) {
                     $tmp_name = $_FILES["fileupload"]["tmp_name"][$key];
                     $name = $_FILES["fileupload"]["name"][$key];
                     move_uploaded_file($tmp_name, "$uploads_dir/$name");
-                    $json['code'] = "catalog/d_blog_module/review/$name";
+                    $json['code'] = "catalog/extension/d_blog_module/review/$name";
                 }
             }
         }

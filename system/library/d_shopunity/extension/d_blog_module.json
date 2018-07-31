@@ -83,14 +83,14 @@
         "system/config/d_blog_module_demo/d_blog_module.php",
         "system/config/d_blog_module_demo/d_blog_module.sql",
 
-        "catalog/view/theme/default/template/d_blog_module/author.twig",
-        "catalog/view/theme/default/template/d_blog_module/category.twig",
-        "catalog/view/theme/default/template/d_blog_module/layout_grid.twig",
-        "catalog/view/theme/default/template/d_blog_module/post.twig",
-        "catalog/view/theme/default/template/d_blog_module/post_thumb.twig",
-        "catalog/view/theme/default/template/d_blog_module/review.twig",
-        "catalog/view/theme/default/template/d_blog_module/review_thumb.twig",
-        "catalog/view/theme/default/template/d_blog_module/search.twig",
+        "catalog/view/theme/default/template/extension/d_blog_module/author.twig",
+        "catalog/view/theme/default/template/extension/d_blog_module/category.twig",
+        "catalog/view/theme/default/template/extension/d_blog_module/layout_grid.twig",
+        "catalog/view/theme/default/template/extension/d_blog_module/post.twig",
+        "catalog/view/theme/default/template/extension/d_blog_module/post_thumb.twig",
+        "catalog/view/theme/default/template/extension/d_blog_module/review.twig",
+        "catalog/view/theme/default/template/extension/d_blog_module/review_thumb.twig",
+        "catalog/view/theme/default/template/extension/d_blog_module/search.twig",
 
         "catalog/view/theme/default/javascript/d_blog_module/author.js",
         "catalog/view/theme/default/javascript/d_blog_module/category.js",
@@ -138,7 +138,7 @@
     "changelog": [
         {
             "version":"3.1.0",
-            "change": "Add support visual designer 3. Strict area limitation fix for this"
+            "change": "Add support visual designer 3. Strict area limitation fix for this, change file structure, fix bootsrap rating"
         },
         {
             "version":"3.0.12",

@@ -165,7 +165,7 @@ class ControllerExtensionDBlogModulePost extends Controller
 
             $author = $this->model_extension_d_blog_module_author->getAuthor($post_info['user_id']);
             $data['author'] = (!empty($author['name'])) ? $author['name'] : $this->language->get('text_anonymous');
-            $data['author_link'] = $this->url->link('extension/d_blog_module/author', 'user_id=' . $post_info['user_id'], 'SSL');
+            $data['author_link'] = $this->url->link('extension/d_blog_module/author', 'author_id=' . $post_info['user_id'], 'SSL');
 
             if (isset($author['image'])) {
                 $data['author_image'] = $this->model_tool_image->resize($author['image'], $this->setting['author']['image_width'], $this->setting['author']['image_height']);
@@ -362,7 +362,7 @@ class ControllerExtensionDBlogModulePost extends Controller
             $data['content_bottom'] = $this->load->controller('common/content_bottom');
             $data['footer'] = $this->load->controller('common/footer');
             $data['header'] = $this->load->controller('common/header');
-            $this->response->setOutput($this->model_extension_d_opencart_patch_load->view('d_blog_module/post', $data));
+            $this->response->setOutput($this->model_extension_d_opencart_patch_load->view('extension/d_blog_module/post', $data));
 
         } else {
             $url = '';
@@ -505,7 +505,7 @@ class ControllerExtensionDBlogModulePost extends Controller
 
                 $author = $this->model_extension_d_blog_module_author->getAuthor($post['user_id']);
                 $data['author'] = (!empty($author['name'])) ? $author['name'] : $this->language->get('text_anonymous');
-                $data['author_link'] = $this->url->link('extension/d_blog_module/author', 'user_id=' . $post['user_id'], 'SSL');
+                $data['author_link'] = $this->url->link('extension/d_blog_module/author', 'author_id=' . $post['user_id'], 'SSL');
 
                 if ((isset($post['limit_access_user']) && $post['limit_access_user'])) {
                     //yes limit

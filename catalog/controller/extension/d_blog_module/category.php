@@ -240,7 +240,7 @@ class ControllerExtensionDBlogModuleCategory extends Controller
             }
         }
 
-
+        ;
         $data['limits'] = array();
         $limits = array_unique(array($this->setting['category']['post_page_limit'], 25, 50, 75, 100));
         sort($limits);
@@ -269,6 +269,8 @@ class ControllerExtensionDBlogModuleCategory extends Controller
 
 
         $styles[] = 'd_blog_module/theme/' . $this->setting['theme'] . '.css';
+        $this->document->addStyle('catalog/view/javascript/d_bootstrap_rating/bootstrap-rating.css');
+        $this->document->addScript('catalog/view/javascript/d_bootstrap_rating/bootstrap-rating.min.js');
 
         foreach ($styles as $style) {
             if (file_exists(DIR_TEMPLATE . $this->theme . '/stylesheet/' . $style)) {
@@ -290,7 +292,6 @@ class ControllerExtensionDBlogModuleCategory extends Controller
         $this->document->setTitle($category_info['meta_title']);
         $this->document->setDescription($category_info['meta_description']);
         $this->document->setKeywords($category_info['meta_keyword']);
-
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['column_right'] = $this->load->controller('common/column_right');
         $data['content_top'] = $this->load->controller('common/content_top');
@@ -298,7 +299,7 @@ class ControllerExtensionDBlogModuleCategory extends Controller
         $data['footer'] = $this->load->controller('common/footer');
         $data['header'] = $this->load->controller('common/header');
 
-        $this->response->setOutput($this->model_extension_d_opencart_patch_load->view('d_blog_module/category', $data));
+        $this->response->setOutput($this->model_extension_d_opencart_patch_load->view('extension/d_blog_module/category', $data));
 
     }
 

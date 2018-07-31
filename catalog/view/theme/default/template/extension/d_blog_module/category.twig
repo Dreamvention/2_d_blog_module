@@ -35,7 +35,7 @@
 
             </div>
             {% endif %}
-
+            {{ posts|json_encode }}
             {% if posts %}
                 {% include template(layout_template) with posts %}
             {% endif %}

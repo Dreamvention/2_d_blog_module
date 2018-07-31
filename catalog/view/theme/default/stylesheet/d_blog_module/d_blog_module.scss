@@ -191,7 +191,7 @@ $stars-color:#FC0;
 /*fix*/
 .fa-2x,
 .fa-stack-2x {
-    font-size: 2em !important;
+    font-size: 1.5rem !important;
 }
 
 /*elements*/
@@ -246,9 +246,12 @@ $stars-color:#FC0;
 }
 //07-30
 //blog and vd 3 issue icons 5 pro
-.block-container .bm .fa{
-    font-family: FontAwesome,'FontAwesome';
-}
 .content.vd .bm [class*=col-]{
     padding: 0 15px !important;
+}
+.fa-stack-1x, .fa-stack-2x{
+    position: relative;
+}
+.bm .rating .fa.fa-star-o{
+    color: #ffa600;
 }

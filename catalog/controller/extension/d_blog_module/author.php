@@ -94,9 +94,9 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
             $site_link = $this->config->get('config_secure') ? $this->config->get('config_ssl') : $this->config->get('config_url');
 
             if (VERSION >= '3.0.0.0') {
-                $data['edit'] = $site_link . $this->setting['dir_admin'] . '/index.php?route=extension/d_blog_module/category/edit&category_id=' . $category_id . '&user_token=' . $this->session->data['user_token'];
+                $data['edit'] = $site_link . $this->setting['dir_admin'] . '/index.php?route=extension/d_blog_module/author/edit&author_id=' . $author_id . '&user_token=' . $this->session->data['user_token'];
             } else {
-                $data['edit'] = $site_link . $this->setting['dir_admin'] . '/index.php?route=extension/d_blog_module/category/edit&category_id=' . $category_id . '&token=' . $this->session->data['token'];
+                $data['edit'] = $site_link . $this->setting['dir_admin'] . '/index.php?route=extension/d_blog_module/author/edit&author_id=' . $author_id . '&token=' . $this->session->data['token'];
             }
         }
 
@@ -276,7 +276,7 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
             $data['header'] = $this->load->controller('common/header');
 
 
-            $this->response->setOutput($this->model_extension_d_opencart_patch_load->view('d_blog_module/author', $data));
+            $this->response->setOutput($this->model_extension_d_opencart_patch_load->view('extension/d_blog_module/author', $data));
 
         } else {
             $url = '';

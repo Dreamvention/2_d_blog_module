@@ -57,7 +57,7 @@ class ControllerExtensionDVisualDesignerModuleBlogPost extends Controller
             foreach ($posts as $post) {
                 $data['posts'][] = array(
                     'animate' => $this->setting['post_thumb']['animate'],
-                    'partial' => $this->model_extension_d_opencart_patch_load->view('d_blog_module/post_thumb',
+                    'partial' => $this->model_extension_d_opencart_patch_load->view('extension/d_blog_module/post_thumb',
                         array(
                             'post'    => $this->load->controller('extension/d_blog_module/post/thumb', $post['post_id']),
                             'setting' => $this->setting,
