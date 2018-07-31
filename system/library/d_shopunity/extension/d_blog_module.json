@@ -106,7 +106,20 @@
         "catalog/view/theme/default/stylesheet/d_blog_module/bootstrap.css",
         "catalog/view/theme/default/stylesheet/d_blog_module/theme/default.scss",
         "catalog/view/theme/default/stylesheet/d_blog_module/theme/default.css.map",
-        "catalog/view/theme/default/stylesheet/d_blog_module/theme/default.css"
+        "catalog/view/theme/default/stylesheet/d_blog_module/theme/default.css",
+
+        "admin/controller/extension/d_visual_designer_module/blog_post.php",
+        "admin/language/en-gb/extension/d_visual_designer_module/blog_post.php",
+        "admin/language/english/extension/d_visual_designer_module/blog_post.php",
+        "admin/model/extension/d_visual_designer_module/blog_post.php",
+        "admin/view/template/extension/d_visual_designer/settings_block/vd-setting-block-blog_post.tag",
+        "catalog/controller/extension/d_visual_designer_module/blog_post.php",
+        "catalog/language/en-gb/extension/d_visual_designer_module/blog_post.php",
+        "catalog/language/english/extension/d_visual_designer_module/blog_post.php",
+        "catalog/model/extension/d_visual_designer_module/blog_post.php",
+        "catalog/view/theme/default/template/extension/d_visual_designer/content_blocks/vd-block-blog_post.tag",
+        "catalog/view/theme/default/template/extension/d_visual_designer_module/blog_post.twig",
+        "system/config/d_visual_designer/blog_post.php"
     ],
     "dirs":[
         "admin/controller/extension/d_blog_module",

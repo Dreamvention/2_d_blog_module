@@ -20,6 +20,11 @@ class ControllerExtensionDVisualDesignerModuleBlogPost extends Controller
         $this->load->config('d_blog_module');
         $this->setting = $this->config->get('d_blog_module_setting');
 
+        $this->load->model('extension/module/d_blog_module');
+        $this->config_file = $this->model_extension_module_d_blog_module->getConfigFile('d_blog_module', $this->sub_versions);
+        $this->setting = $this->model_extension_module_d_blog_module->getConfigData('d_blog_module', 'd_blog_module'. '_setting', $this->config->get('config_store_id'), $this->config_file);
+
+
     }
 
     public function index($setting)
@@ -68,12 +73,12 @@ class ControllerExtensionDVisualDesignerModuleBlogPost extends Controller
     {
         $data = array();
         $this->load->language($this->route);
-            $data['entry_title'] = $this->language->get('entry_title');
-            $data['entry_layout'] = $this->language->get('entry_layout');
-            $data['entry_limit'] = $this->language->get('entry_limit');
-            $data['entry_mode'] = $this->language->get('entry_mode');
-            $data['text_custom_products'] = $this->language->get('text_custom_products');
-            $data['text_featured'] = $this->language->get('text_featured');
+        $data['entry_title'] = $this->language->get('entry_title');
+        $data['entry_layout'] = $this->language->get('entry_layout');
+        $data['entry_limit'] = $this->language->get('entry_limit');
+        $data['entry_mode'] = $this->language->get('entry_mode');
+        $data['text_custom_products'] = $this->language->get('text_custom_products');
+        $data['text_featured'] = $this->language->get('text_featured');
         return $data;
     }
 
