@@ -68,6 +68,7 @@ class ControllerExtensionEventDBlogModule extends Controller
             $designer_data = array(
                 'config'     => 'd_blog_module_category',
                 'content'    => $data['description'],
+                'header'     => &$data['header'],
                 'field_name' => 'description[' . (int)$this->config->get('config_language_id') . '][description]',
                 'id'         => $data['category_id']
             );
@@ -102,6 +103,7 @@ class ControllerExtensionEventDBlogModule extends Controller
             $designer_data = array(
                 'config'     => 'd_blog_module_author',
                 'content'    => $data['description'],
+                'header'     => &$data['header'],
                 'field_name' => 'description[' . (int)$this->config->get('config_language_id') . '][description]',
                 'id'         => $data['author_id']
             );
