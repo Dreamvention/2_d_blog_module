@@ -62,7 +62,7 @@
 						}
 					}
 				}
-				new_post = posts[i];
+				new_post = JSON.parse(JSON.stringify(posts[i]));
 				new_post.col = Math.round(12 / layout_array[row_id]);
 				new_posts[+row_id + cout_shemas * (sheme.length)].push(new_post);
 				//last one i in row need to increace shema_count

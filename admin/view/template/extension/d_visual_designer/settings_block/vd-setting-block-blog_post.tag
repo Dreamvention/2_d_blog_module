@@ -1,3 +1,4 @@
+
 <vd-setting-block-blog_post>
     <div class="form-group">
         <label class="control-label">{store.getLocal('blocks.blog_post.entry_title')}</label>
