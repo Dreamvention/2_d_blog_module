@@ -699,22 +699,28 @@ class ControllerExtensionDBlogModulePost extends Controller
         } else {
             $data['limit_access_user_group'] = 0;
         }
-
-        $this->load->model('customer/customer');//todo add support 2.x
-
+        if(VERSION >= '2.1.0.1'){
+            $this->load->model('customer/customer');
+            $this->load->model('customer/customer_group');
+            $customer_customer = 'model_customer_customer';
+            $customer_groups = 'model_customer_customer_group';
+        }else{
+            $this->load->model('sale/customer');
+            $this->load->model('sale/customer_group');
+            $customer_customer = 'model_sale_customer';
+            $customer_groups = 'model_sale_customer_group';
+        }
         $data['users'] = array();
         if (!empty($post_info['limit_users'])) {
             foreach (explode(',', $post_info['limit_users']) as $user_id) {
-                $user_info = $this->model_customer_customer->getCustomer($user_id);
+                $user_info = $this->{$customer_customer}->getCustomer($user_id);
                 $data['users'][$user_info['customer_id']] = $user_info['firstname'];
             }
         }
-
-        $this->load->model('customer/customer_group');//todo add support 2.x
         $data['user_groups'] = array();
         if (!empty($post_info['limit_user_groups'])) {
             foreach (explode(',', $post_info['limit_user_groups']) as $user_group_id) {
-                $user_group_info = $this->model_customer_customer_group->getCustomerGroup($user_group_id);
+                $user_group_info = $this->{$customer_groups}->getCustomerGroup($user_group_id);
                 $data['user_groups'][$user_group_id] = $user_group_info['name'];
             }
         }
