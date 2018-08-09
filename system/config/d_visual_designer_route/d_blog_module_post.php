@@ -24,5 +24,5 @@ $_['events'] = array(
     'admin/model/extension/d_blog_module/post/editPost/after'  => 'extension/event/d_blog_module/model_catalog_product_editPost_after',
     'admin/model/extension/d_blog_module/post/editPost/before' => 'extension/event/d_blog_module/model_catalog_product_editPost_before',
 
-    'catalog/view/d_blog_module/post/before'         => 'extension/event/d_blog_module/view_post_before'
+    'catalog/view/extension/d_blog_module/post/before'         => 'extension/event/d_blog_module/view_post_before'
 );

@@ -78,8 +78,9 @@ class ControllerExtensionEventDBlogModule extends Controller
         }
     }
 
-    public function view_post_before(&$view, &$data, &$output)
+    public function view_post_before(&$view, &$data)
     {
+
         // edited
         if (isset($data['description'])) {
 

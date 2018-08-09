@@ -24,5 +24,5 @@ $_['events'] = array(
     'admin/model/extension/d_blog_module/author/editAuthor/after'  => 'extension/event/d_blog_module/model_catalog_product_editauthor_after',
     'admin/model/extension/d_blog_module/author/editAuthor/before' => 'extension/event/d_blog_module/model_catalog_product_editauthor_before',
 
-    'catalog/view/d_blog_module/author/before'         => 'extension/event/d_blog_module/view_author_before'
+    'catalog/view/extension/d_blog_module/author/before'         => 'extension/event/d_blog_module/view_author_before'
 );
