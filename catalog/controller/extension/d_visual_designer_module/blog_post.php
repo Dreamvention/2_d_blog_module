@@ -103,9 +103,15 @@ class ControllerExtensionDVisualDesignerModuleBlogPost extends Controller
         $styles = array(
             'd_blog_module/d_blog_module.css',
             'd_blog_module/bootstrap.css',
+            'theme/default.css',
         );
         $styles[] = 'd_blog_module/theme/' . $this->setting['theme'] . '.css';
 
+        if ($this->config->get('config_theme') == 'default') {
+            $this->theme = $this->config->get('theme_default_directory');
+        } else {
+            $this->theme = $this->config->get('config_theme');
+        }
         foreach ($styles as $style) {
             if (file_exists(DIR_TEMPLATE . $this->theme . '/stylesheet/' . $style)) {
                 $data[] = 'catalog/view/theme/' . $this->theme . '/stylesheet/' . $style;

@@ -19,7 +19,12 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
             }else{
                 $this->user = new User($registry);
             }
-            $this->theme = $this->config->get($this->config->get('config_theme').'_directory');
+        }
+        //fix theme detection
+        if ($this->config->get('config_theme') == 'default') {
+            $this->theme = $this->config->get('theme_default_directory');
+        } else {
+            $this->theme = $this->config->get('config_theme');
         }
         $this->load->model('extension/d_opencart_patch/load');
         $this->load->language('extension/d_blog_module/author');
