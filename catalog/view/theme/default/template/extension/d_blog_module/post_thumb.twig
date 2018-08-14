@@ -6,7 +6,21 @@
             </a>
         </div>
     
-        <div class="post-thumb-heading">
+        <div class="post-thumb-heading">            
+            {% if setting.post_thumb.category_label_display %}
+                <ul class="category list-unstyled">
+                    {% for category in post.categories %}
+                    <li><a class="{{setting.post_thumb.category_label}}" href="{{category.href}}">{{category.title}}</a></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <h3 class="title"><a href="{{post.href}}">{{post.title}}</a></h3>
+            <span class="title-divider"></span>
+        </div>
+        <div class="post-thumb-body">
+            {% if setting.post_thumb.description_display %}
+                <div class="short-description">{{post.short_description}}</div>
+            {% endif %}
             {% if (setting.post_thumb.rating_display or setting.post_thumb.date_display) %}
             <div class="row">
                 <div class="{% if (setting.post_thumb.rating_display and post.rating) %}col-md-6{% else %}col-md-12{% endif %}">
@@ -25,27 +39,13 @@
                                  data-readonly>
                         <script>
 
-		                    $('input[name=\'rating\']').rating();
+                            $('input[name=\'rating\']').rating();
 
                         </script>
                     </a>
                 </div>
                 {% endif %}
             </div>
-            {% endif %}
-            {% if setting.post_thumb.category_label_display %}
-                <ul class="category list-unstyled">
-                    {% for category in post.categories %}
-                    <li><a class="{{setting.post_thumb.category_label}}" href="{{category.href}}">{{category.title}}</a></li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-            <h3 class="title"><a href="{{post.href}}">{{post.title}}</a></h3>
-            <span class="title-divider"></span>
-        </div>
-        <div class="post-thumb-body">
-            {% if setting.post_thumb.description_display %}
-                <div class="short-description">{{post.short_description}}</div>
             {% endif %}
             {% if (setting.post_thumb.tag_display and post.tags) %}
                 <div class="tag">
