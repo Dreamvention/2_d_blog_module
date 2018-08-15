@@ -33,16 +33,9 @@
                 </div>
                 {% if (setting.post_thumb.rating_display and post.rating) %}
                 <div class="col-md-6">
-                    <a href="{{post.href}}" class="rating pull-right rating-{{post.rating}}">
-                        <input style="display: none" value="{{ post.rating }}" name="rating"
-                               class="" data-filled="fa fa-star fa-stack-2x" data-empty="fa fa-star-o fa-stack-2x"
-                                 data-readonly>
-                        <script>
-
-                            $('input[name=\'rating\']').rating();
-
-                        </script>
-                    </a>
+                    <div class="pull-right">
+                        {% include template('partial/d_rating') with ({rating:post.rating})%}
+                    </div>
                 </div>
                 {% endif %}
             </div>
