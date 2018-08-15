@@ -170,7 +170,7 @@ class ControllerExtensionDBlogModulePost extends Controller
 
             $author = $this->model_extension_d_blog_module_author->getAuthor($post_info['user_id']);
             $data['author'] = (!empty($author['name'])) ? $author['name'] : $this->language->get('text_anonymous');
-            $data['author_link'] = $this->url->link('extension/d_blog_module/author', 'author_id=' . $post_info['user_id'], 'SSL');
+            $data['author_link'] = $this->url->link('extension/d_blog_module/author', 'user_id=' . $post_info['user_id'], 'SSL');
 
             if (isset($author['image'])) {
                 $data['author_image'] = $this->model_tool_image->resize($author['image'], $this->setting['author']['image_width'], $this->setting['author']['image_height']);
@@ -510,7 +510,7 @@ class ControllerExtensionDBlogModulePost extends Controller
 
                 $author = $this->model_extension_d_blog_module_author->getAuthor($post['user_id']);
                 $data['author'] = (!empty($author['name'])) ? $author['name'] : $this->language->get('text_anonymous');
-                $data['author_link'] = $this->url->link('extension/d_blog_module/author', 'author_id=' . $post['user_id'], 'SSL');
+                $data['author_link'] = $this->url->link('extension/d_blog_module/author', 'user_id=' . $post['user_id'], 'SSL');
 
                 if ((isset($post['limit_access_user']) && $post['limit_access_user'])) {
                     //yes limit
