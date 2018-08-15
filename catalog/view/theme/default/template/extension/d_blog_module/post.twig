@@ -2,8 +2,11 @@
 <style>
     {{custom_style}}
 </style>
+
 {% include template('partial/d_breadcrumb') %}
+
     {% include template('partial/d_layout_open') %}
+
         <article class="bm">
             <div class="heading bm-post-info clearfix">
                 {% if edit %}<div class="btn-group btn-group-xs btn-edit" ><a class="btn btn-default " href="{{edit}}" target="_blank"><i class="fa fa-pencil"></i> {{text_edit}}</a></div>{% endif %}
@@ -18,16 +21,7 @@
                 <span class="title-divider"></span>
                 <div class="title-information">
                     {% if setting.post.rating_display %}
-                        <a href="{{post.href}}" class="rating pull-right rating-{{rating}}">
-                            <input style="display: none" value="{{ rating }}" name="rating"
-                                   class="" data-filled="fa fa-star fa-stack-2x" data-empty="fa fa-star-o fa-stack-2x"
-                                   data-readonly>
-                            <script>
-
-			                    $('input[name=\'rating\']').rating();
-
-                            </script>
-                        </a>
+                         {% include template('partial/d_rating') with ({rating:rating,static_rating:true})%}
                     {% endif %}
                     <div class="details">
                         {% if setting.post.author_display %}

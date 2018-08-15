@@ -33,13 +33,7 @@
             {% if setting.post.rating_display %}
             <div class="col-sm-4 required input-rating" id="input_rating">
                 <label class="control-label">{{entry_rating}}</label>
-                <div class="rating">
-                    <input style="display: none" value="{{ review.rating }}" name="rating"
-                           class="" data-filled="fa fa-star fa-stack-2x" data-empty="fa fa-star-o fa-stack-2x" >
-                    <script>
-		                $('input[name=\'rating\']').rating();
-                    </script>
-                </div>
+                {% include template('partial/d_rating') with ({rating:review.rating,static_rating:false})%}
             </div>
             {% endif %}
             <div class="col-sm-4 required hidden" id="input_cancel_reply">

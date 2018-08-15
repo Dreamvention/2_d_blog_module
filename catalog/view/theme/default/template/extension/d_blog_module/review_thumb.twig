@@ -1,17 +1,6 @@
 <div class="media review review-{{review.review_id}}">
     {% if setting.review_thumb.rating_display %}
-    <div class="rating rating-{{review.rating}}">
-
-        <input style="display: none" value="{{ review.rating }}" name="rating"
-               class="" data-filled="fa fa-star fa-stack-2x" data-empty="fa fa-star-o fa-stack-2x"
-               data-readonly>
-        <script>
-
-		    $('input[name=\'rating\']').rating();
-
-        </script>
-
-    </div>
+    {% include template('partial/d_rating') with ({rating:review.rating,static_rating:true})%}
     {% endif %}
 
     {% if setting.review_thumb.image_display %}

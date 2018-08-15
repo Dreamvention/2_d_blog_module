@@ -34,7 +34,7 @@
                 {% if (setting.post_thumb.rating_display and post.rating) %}
                 <div class="col-md-6">
                     <div class="pull-right">
-                        {% include template('partial/d_rating') with ({rating:post.rating})%}
+                        {% include template('partial/d_rating') with ({rating:post.rating,static_rating:true})%}
                     </div>
                 </div>
                 {% endif %}
