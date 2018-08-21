@@ -19,6 +19,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $this->load->model('setting/setting');
         $this->load->model('extension/d_blog_module/category');
         $this->load->model('extension/d_opencart_patch/load');
+        $this->load->model('extension/d_opencart_patch/cache');
 
         $this->d_shopunity = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_shopunity.json'));
         $this->d_opencart_patch = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_opencart_patch.json'));
@@ -46,6 +47,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $this->config_file = $this->model_extension_module_d_blog_module->getConfigFile($this->codename, $this->sub_versions);
     }
 
+    
     public function index()
     {
         if($this->d_shopunity){
@@ -58,17 +60,22 @@ class ControllerExtensionModuleDBlogModule extends Controller {
             $this->model_extension_module_d_twig_manager->installCompatibility();
         }
 
+        $this->model_extension_d_opencart_patch_cache->clearTwig();
+
+        if($this->d_event_manager){
+            $this->load->model('extension/module/d_event_manager');
+            $this->model_extension_module_d_event_manager->installCompatibility();            
+        }
+
+        if(!$this->isSetup()){
+            $this->setupView();
+            return;
+        }
+
         $this->model_extension_module_d_blog_module->updateTables();
 
         //save post
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-
-            if($this->d_event_manager){
-                $this->load->model('extension/module/d_event_manager');
-                if(!$this->model_extension_module_d_event_manager->isCompatible()){
-                    $this->model_extension_module_d_event_manager->installCompatibility();
-                }
-            }
 
             $new_post = array();
             foreach ($this->request->post as $k => $v) {
@@ -121,6 +128,12 @@ class ControllerExtensionModuleDBlogModule extends Controller {
             $error_upload =  $this->session->data['error_upload'];
             unset($this->session->data['error_upload']);
             $data['error']['warning']  = $error_upload;
+        }
+
+        if(isset($this->session->data['success'])){
+            $data['success'] =  $this->session->data['success'];
+            unset($this->session->data['success']);
+
         }
 
 
@@ -245,6 +258,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $data['entry_post_date_format'] = $this->language->get('entry_post_date_format');
         $data['entry_post_review_display'] = $this->language->get('entry_post_review_display');
         $data['entry_post_rating_display'] = $this->language->get('entry_post_rating_display');
+        $data['entry_post_tag_display'] = $this->language->get('entry_post_tag_display');
         $data['entry_post_category_label_display'] = $this->language->get('entry_post_category_label_display');
         $data['entry_post_short_description_length'] = $this->language->get('entry_post_short_description_length');
         $data['entry_post_style_short_description_display'] = $this->language->get('entry_post_style_short_description_display');
@@ -319,6 +333,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         //instruction
         $data['tab_instruction'] = $this->language->get('tab_instruction');
         $data['text_instruction'] = $this->language->get('text_instruction');
+        $data['text_pro'] = $this->language->get('text_pro');
 
         $data['ads'] = false;
         $data['extension_id'] = false;
@@ -407,30 +422,119 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
         $this->response->setOutput($this->model_extension_d_opencart_patch_load->view($this->route, $data));
+    }    
+
+    public function setupView() {
+        
+        $this->load->model('extension/d_opencart_patch/load');
+        $this->load->model('extension/d_opencart_patch/url');
+
+        if($this->d_admin_style){
+            $this->load->model('extension/d_admin_style/style');
+
+            $this->model_extension_d_admin_style_style->getAdminStyle('light');
+        }
+        
+        $url_params = array();
+        
+        if (isset($this->response->get['store_id'])) {
+            $url_params['store_id'] = $this->store_id;
+        }
+        
+        $url = ((!empty($url_params)) ? '&' : '') . http_build_query($url_params);
+        
+        // Breadcrumbs
+        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'][] = array(
+            'text' => $this->language->get('text_home'),
+            'href' => $this->model_extension_d_opencart_patch_url->link('common/home')
+            );
+
+        $data['breadcrumbs'][] = array(
+            'text'      => $this->language->get('text_module'),
+            'href'      => $this->model_extension_d_opencart_patch_url->link('marketplace/extension', 'type=module')
+        );
+
+        $data['breadcrumbs'][] = array(
+            'text' => $this->language->get('heading_title_main'),
+            'href' => $this->model_extension_d_opencart_patch_url->link('marketplace/extension', $url)
+        );
+        
+        // Notification
+        foreach ($this->error as $key => $error) {
+            $data['error'][$key] = $error;
+        }
+        
+        // Heading
+        $this->document->setTitle($this->language->get('heading_title_main'));
+        $data['heading_title'] = $this->language->get('heading_title_main');
+        $data['text_edit'] = $this->language->get('text_edit');
+
+        $data['version'] = $this->extension['version'];
+        
+        $data['text_welcome_title'] = $this->language->get('text_welcome_title');
+        $data['text_welcome_description'] = $this->language->get('text_welcome_description');
+
+        $data['text_welcome_visual_editor'] = $this->language->get('text_welcome_visual_editor');
+        $data['text_welcome_building_blocks'] = $this->language->get('text_welcome_building_blocks');
+        $data['text_welcome_mobile_ready'] = $this->language->get('text_welcome_mobile_ready');
+        $data['text_welcome_increase_sales'] = $this->language->get('text_welcome_increase_sales');
+
+        $data['button_setup'] = $this->language->get('button_setup');
+
+        $data['quick_setup'] = $this->model_extension_d_opencart_patch_url->ajax($this->route.'/setup');
+        
+        $data['header'] = $this->load->controller('common/header');
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['footer'] = $this->load->controller('common/footer');
+
+        $this->response->setOutput($this->model_extension_d_opencart_patch_load->view('extension/'.$this->codename.'/welcome', $data));
     }
+
+    public function setup(){
+        $this->load->model('extension/d_opencart_patch/url');
+        $this->load->model('extension/module/d_blog_module');
+        $this->load->model('setting/setting');
+        $this->load->config('d_blog_module');
+        $setting = array();
+        $setting['d_blog_module_setting'] = $this->config->get('d_blog_module_setting');
+        $setting['d_blog_module_status'] = 1;
+        $new_setting = array();
+        foreach ($setting as $k => $v) {
+            $new_setting['module_'.$k] = $v;
+        }
+        $this->model_setting_setting->editSetting('module_'.$this->codename, $new_setting, $this->store_id);
+        $this->model_setting_setting->editSetting($this->codename, $setting, $this->store_id);
+        $this->uninstallEvents();
+        $this->installEvents();
+        if ($this->request->post['demo_data']) {
+            $demos = $this->model_extension_module_d_blog_module->getDemos();
+            foreach($demos as $demo => $data){
+                $result = $this->model_extension_module_d_blog_module->installDemoData(DIR_CONFIG.'d_blog_module_demo/'.$data['sql']);
+
+                if(!empty($data['permission']) && is_array($data['permission'])){
+                    $this->load->model('user/user_group');
+                    foreach($data['permission'] as $permission => $routes){
+                        foreach($routes as $route){
+                            $this->model_user_user_group->addPermission($this->user->getId(), $permission, $route);
+                        }
+                    }
+                }
+            }
+        }
+        $this->session->data['success'] = $this->language->get('success_setup');
+        $json['redirect'] = $this->model_extension_d_opencart_patch_url->ajax($this->route);
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 
     /**
 `
     Add Assisting functions here
 
      **/
-    private function validate($permission = 'modify') {
-
-        if (isset($this->request->post['config'])) {
-            return false;
-        }
-
-        $this->language->load($this->route);
-
-        if (!$this->user->hasPermission($permission, $this->route)) {
-            $this->error['warning'] = $this->language->get('error_permission');
-            return false;
-        }
-
-        return true;
-    }
-
-
+    
     public function install()
     {
         $this->load->model('extension/module/d_blog_module');
@@ -453,6 +557,39 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $this->load->model('setting/setting');
         $this->model_setting_setting->deleteSetting('d_blog_module');
         $this->model_setting_setting->deleteSetting('module_d_blog_module');
+    }
+
+    public function isSetup() {
+        $this->load->model('extension/d_opencart_patch/extension');
+
+        if(!$this->model_extension_d_opencart_patch_extension->isInstalled($this->codename)) {
+            return false;
+        }
+
+        $this->load->model('setting/setting');
+
+        $setting_module = $this->model_setting_setting->getSetting('module_'.$this->codename);
+
+        if(!$setting_module) {
+            return false;
+        }
+        return true;
+    }
+
+     private function validate($permission = 'modify') {
+
+        if (isset($this->request->post['config'])) {
+            return false;
+        }
+
+        $this->language->load($this->route);
+
+        if (!$this->user->hasPermission($permission, $this->route)) {
+            $this->error['warning'] = $this->language->get('error_permission');
+            return false;
+        }
+
+        return true;
     }
 
     private function permission_handler($perm = 'main')

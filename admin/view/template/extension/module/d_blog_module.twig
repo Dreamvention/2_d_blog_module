@@ -30,6 +30,9 @@
         </div>
     </div>
     <div class="container-fluid">
+        {% if not pro %}
+            <div class="notify alert alert-info">{{text_pro}}</div>
+        {% endif %}
         {% if error.warning %}
             <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error.warning }}
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -97,7 +100,7 @@
                                     <div class="tab-body">
                                         {% if not d_blog_module_status %}
 
-                                            <img src="view/image/d_blog_module/welcome.jpg" class="img-responsive"/>
+                                            {# <img src="view/image/d_blog_module/welcome.jpg" class="img-responsive"/>
                                             <br/>
                                             <div class="form-group">
                                                 <div class="col-md-6">
@@ -110,7 +113,7 @@
                                                             src="https://www.youtube.com/embed/-YllMGPu-yw?rel=0&amp;showinfo=0"
                                                             frameborder="0" allowfullscreen></iframe>
                                                 </div>
-                                            </div>
+                                            </div> #}
                                             {% for demo in demos %}
                                                 <div class="form-group">
                                                     <label class="col-sm-2 control-label"
@@ -207,26 +210,12 @@
                                             <label class="col-sm-2 control-label"
                                                    for="button_support_email">{{ entry_support }}</label>
                                             <div class="col-sm-4">
-                                                <a href="{{ support_url }}" class="btn btn-danger"
-                                                   target="_blank"><i class="fa fa-support"></i> {{ button_support }}
+                                                <a href="{{ support_url }}" class="btn btn-success"
+                                                   target="_blank">{{ button_support }}
                                                 </a>
                                             </div>
                                         </div><!-- //support_email -->
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label"
-                                                   for="input_admin_style">{{ entry_admin_style }}</label>
-                                            <div class="col-sm-10">
-                                                <select name="{{ codename }}_setting[admin_style]"
-                                                        id="input_select_admin_side" class="form-control m-b">
-                                                    {% for style in admin_styles %}
-                                                        <option value="{{ style }}"
-                                                            {% if style == setting.admin_style %} selected="selected" {% endif %}>
-                                                            {{ style }}</option>
-                                                    {% endfor %}
-                                                </select>
-
-                                            </div>
-                                        </div><!-- //admin_style -->
+                                        
                                     </div>
                                 </div>
                                 <div class="tab-pane " id="tab_category">
@@ -607,6 +596,22 @@
                                                        value="1"/>
                                             </div>
                                         </div><!-- //checkbox -->
+
+                                         <div class="form-group">
+                                            <label class="col-sm-2 control-label"
+                                                   for="input_checkbox">{{ entry_post_tag_display }}</label>
+                                            <div class="col-sm-10">
+                                                <input type="hidden"
+                                                       name="{{ codename }}_setting[post][tag_display]"
+                                                       value="0"/>
+                                                <input type="checkbox" class="switcher"
+                                                       data-label-text="{{ text_enabled }}"
+                                                       id="input_post_tag_display"
+                                                       name="{{ codename }}_setting[post][tag_display]"
+                                                       {% if setting.post.tag_display %}checked="checked"{% endif %}
+                                                       value="1"/>
+                                            </div>
+                                        </div>
 
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label"
@@ -1410,6 +1415,21 @@
                                             </div>
                                         </div><!-- //status -->
                                         <div class="form-group">
+                                            <label class="col-sm-2 control-label"
+                                                   for="input_admin_style">{{ entry_admin_style }}</label>
+                                            <div class="col-sm-10">
+                                                <select name="{{ codename }}_setting[admin_style]"
+                                                        id="input_select_admin_side" class="form-control m-b">
+                                                    {% for style in admin_styles %}
+                                                        <option value="{{ style }}"
+                                                            {% if style == setting.admin_style %} selected="selected" {% endif %}>
+                                                            {{ style }}</option>
+                                                    {% endfor %}
+                                                </select>
+
+                                            </div>
+                                        </div><!-- //admin_style -->
+                                        <div class="form-group">
                                             <label class="control-label col-sm-2">{{ entry_design_custom_style }}</label>
                                             <div class="col-sm-10">
                                                 <textarea class="form-control"
@@ -1446,22 +1466,21 @@
                         </form>
                         {% if ads %}
                     </div>
-                    {#<div class="col-md-3">#}
-                    {#<div class="d_shopunity_widget_1"></div>#}
-                    {#<script src="view/javascript/d_shopunity/d_shopunity_widget.js" type="text/javascript"></script>#}
-                    {#<script type="text/javascript">#}
-                    {#var d_shopunity_widget_1 = jQuery.extend(true, {}, d_shopunity_widget);#}
-                    {#d_shopunity_widget_1.init({#}
-                    {#class: '.d_shopunity_widget_1',#}
-                    {#token: '{{token}}',#}
-                    {#extension_id: '{{extension_id}}'#}
-                    {#})#}
-                    {#</script>#}
-                    {#</div>#}
+                    <div class="col-md-3">
+                        <div class="d_shopunity_widget"></div>
+                        <script src="view/javascript/d_shopunity/d_shopunity_widget.js" type="text/javascript"></script>
+                        <script type="text/javascript">
+                            var d_shopunity_widget = jQuery.extend(true, {}, d_shopunity_widget);
+                            d_shopunity_widget.init({
+                                class: '.d_shopunity_widget',
+                                token: '{{token}}',
+                                extension_id: '{{extension_id}}'
+                                })
+                        </script>
+                    </div>
                 </div>
                 {% endif %}
             </div>
-
         </div>
     </div>
 </div>
@@ -1560,4 +1579,6 @@
         });
     });
     //--></script>
+
+
 {{ footer }}

@@ -76,6 +76,7 @@ $_['entry_post_date_display']                   = 'Display date';
 $_['entry_post_date_format']                    = 'Date format';
 $_['entry_post_review_display']                 = 'Display reviews';
 $_['entry_post_rating_display']                 = 'Display rating';
+$_['entry_post_tag_display']					= 'Display tag';
 $_['entry_post_category_label_display']         = 'Display category label';
 $_['entry_post_short_description_length']       = 'Set short description length';
 $_['entry_post_style_short_description_display']= 'Display style for short description';
@@ -165,8 +166,8 @@ $_['error_failed']                              = 'Oops! We could not connect to
 
 //support
 $_['text_support']                              = 'Support';
-$_['entry_support']                             = 'Support';
-$_['button_support']                            = 'New ticket';
+$_['entry_support']                             = 'Support<br/><small>Create a ticket. If you find a bug, even in a free version, please let us know.</small>';
+$_['button_support']                            = 'Open ticket';
 
 //instruction
 $_['tab_instruction']                           = 'Instructions';
@@ -177,4 +178,16 @@ $_['text_not_found'] = '<div class="jumbotron">
           <p>Before you can use this module you will need to install Shopunity. Simply download the archive for your version of opencart and install it view Extension Installer or unzip the archive and upload all the files into your root folder from the UPLOAD folder.</p>
           <p><a class="btn btn-primary btn-lg" href="https://shopunity.net/download" target="_blank">Download</a></p>
         </div>';
-?>
+//welcome
+$_['text_welcome_title']            = 'Blog Module';
+$_['text_welcome_description']      = '84% of people have bought products online based on their description in blogs. Blogs improve SEO and increase your google ranking. This module will install a professional blogging platform on your OpenCart so you could start selling more today.';
+
+$_['text_welcome_visual_editor']    = 'Powerfull SEO';
+$_['text_welcome_building_blocks']  = 'Manage Author permissions';
+$_['text_welcome_mobile_ready']     = 'Choose different layouts and themes';
+$_['text_welcome_increase_sales']   = 'Add Dozens of modules';
+
+$_['button_setup']                  = 'Setup';
+$_['checkbox_setup'] 				= 'Install Demo Data';
+$_['success_setup']                 = 'Success: You have now setup Module!';
+$_['text_pro']                      = '<a href="https://dream.page.link/tc4X" target="_blank">Get the Pro version now.</a>';
