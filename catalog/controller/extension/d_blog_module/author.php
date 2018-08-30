@@ -186,7 +186,7 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
                 $limit = $this->setting['author']['post_page_limit'];
             }
 
-            $filter_data = array('filter_author_id' => $author_id, 'limit' => $limit, 'start' => ($page - 1) * $limit,);
+            $filter_data = array('filter_user_id' => $author_id, 'limit' => $limit, 'start' => ($page - 1) * $limit,);
 
             $post_total = $this->model_extension_d_blog_module_post->getTotalPosts($filter_data);
 

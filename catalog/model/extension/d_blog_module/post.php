@@ -48,7 +48,6 @@ class ModelExtensionDBlogModulePost extends Model
 
             $sql .= "AND YEAR(p.date_published) = " . $date[1] . " AND MONTH(p.date_published) = " . $date[0];
         }
-
         if (!empty($data['filter_user_id'])) {
             $sql .= " AND p.user_id = '" . (int)$data['filter_user_id'] . "'";
         }
