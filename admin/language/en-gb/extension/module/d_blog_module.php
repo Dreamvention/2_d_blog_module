@@ -172,6 +172,7 @@ $_['button_support']                            = 'Open ticket';
 //instruction
 $_['tab_instruction']                           = 'Instructions';
 $_['text_instruction']                          = 'to be added...';
+$_['text_powered_by']							= 'Tested with <a href="https://shopunity.net/extension/blog-module" target="_blank">Shopunity.net</a> <br> Find more amazing extensions at <a href="https://dreamvention.ee/" target="_blank">Dreamvention.ee</a>';
 
 $_['text_not_found'] = '<div class="jumbotron">
           <h1>Please install Shopunity</h1>

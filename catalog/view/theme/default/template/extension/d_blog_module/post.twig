@@ -67,7 +67,7 @@
                     </div>
                 {% endif %}
 
-                {% if tags %}
+                {% if setting.post.tag_display and tags %}
                 <div class="tag">
                     <span class="tag-title">{{text_tags}}</span>
                     {% for tag in tags %}

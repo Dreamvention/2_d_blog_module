@@ -334,6 +334,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $data['tab_instruction'] = $this->language->get('tab_instruction');
         $data['text_instruction'] = $this->language->get('text_instruction');
         $data['text_pro'] = $this->language->get('text_pro');
+        $data['text_powered_by'] = $this->language->get('text_powered_by');
 
         $data['ads'] = false;
         $data['extension_id'] = false;
