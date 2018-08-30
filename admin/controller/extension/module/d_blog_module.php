@@ -166,6 +166,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $data['text_edit'] = $this->language->get('text_edit');
 
         // Variable
+        $data['d_shopunity'] = $this->d_shopunity;
         $data['codename'] = $this->codename;
         $data['route'] = $this->route;
         $data['store_id'] = $this->store_id;

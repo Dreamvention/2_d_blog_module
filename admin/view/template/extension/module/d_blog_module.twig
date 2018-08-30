@@ -43,6 +43,19 @@
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
             </div>
         {% endif %}
+        {% if d_shopunity %}
+            <div class="d_shopunity_update"></div>
+            <script src="view/javascript/d_shopunity/d_shopunity_widget.js" type="text/javascript"></script>
+            <script type="text/javascript">
+            var d_shopunity_update = jQuery.extend(true, {}, d_shopunity_widget);
+            d_shopunity_update.init({
+            class: '.d_shopunity_update',
+            token: '{{token}}',
+            extension_id: 'd_blog_module',
+            action: 'loadUpdate'
+            });
+            </script>
+        {% endif %}
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
