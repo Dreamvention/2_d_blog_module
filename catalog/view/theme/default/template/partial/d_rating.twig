@@ -1,0 +1,12 @@
+<!-- > d_rating -->
+<div class="rating rating-{{rating}}">
+    <input value="{{ rating }}" type="hidden" name="rating"
+           class="rating-loading " data-filled="fa fa-star fa-stack-1x" data-empty="fa fa-star-o fa-stack-1x empty"
+            {% if static_rating %} data-readonly{% endif %}>
+</div>
+<script>
+
+	$('input[name=\'rating\']').rating();
+
+</script>
+<!-- /> d_rating -->
