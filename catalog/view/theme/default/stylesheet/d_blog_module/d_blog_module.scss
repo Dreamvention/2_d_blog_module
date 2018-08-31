@@ -255,3 +255,7 @@ $stars-color:#FC0;
 .bm .rating .fa.fa-star-o{
     color: #ffa600;
 }
+.rating-symbol-background.fa.fa-star-o.fa-stack-1x.empty{
+visibility: visible !important;   
+z-index: 2; 
+}
