@@ -184,11 +184,11 @@ $_['text_welcome_title']            = 'Blog Module';
 $_['text_welcome_description']      = '84% of people have bought products online based on their description in blogs. Blogs improve SEO and increase your google ranking. This module will install a professional blogging platform on your OpenCart so you could start selling more today.';
 
 $_['text_welcome_visual_editor']    = 'Powerfull SEO';
-$_['text_welcome_building_blocks']  = 'Manage Author permissions';
-$_['text_welcome_mobile_ready']     = 'Choose different layouts and themes';
-$_['text_welcome_increase_sales']   = 'Add Dozens of modules';
+$_['text_welcome_building_blocks']  = 'Manage Author <br> permissions';
+$_['text_welcome_mobile_ready']     = 'Choose different <br> layouts and themes';
+$_['text_welcome_increase_sales']   = 'Add Dozens <br> of modules';
 
 $_['button_setup']                  = 'Setup';
 $_['checkbox_setup'] 				= 'Install Demo Data';
-$_['success_setup']                 = 'Success: You have now setup Module!';
-$_['text_pro']                      = '<a href="https://dream.page.link/tc4X" target="_blank">Get the Pro version now.</a>';
+$_['success_setup']                 = 'Success: You have now setup Blog Module!';
+$_['text_pro']                      = '<a href="https://dream.page.link/tc4X" target="_blank">For SEO Urls and Blog Modules get the Blog Module Pro</a>';
