@@ -22,6 +22,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $this->load->model('extension/d_opencart_patch/cache');
 
         $this->d_shopunity = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_shopunity.json'));
+        $this->d_blog_module_pack = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_blog_module_pack.json'));
         $this->d_opencart_patch = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_opencart_patch.json'));
         if($this->d_opencart_patch){
             $this->load->model('extension/d_opencart_patch/url');
@@ -167,6 +168,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
 
         // Variable
         $data['d_shopunity'] = $this->d_shopunity;
+        $data['pro'] = $this->d_blog_module_pack;
         $data['codename'] = $this->codename;
         $data['route'] = $this->route;
         $data['store_id'] = $this->store_id;
