@@ -15,9 +15,16 @@ class ControllerExtensionDBlogModuleCategory extends Controller {
         $this->load->model('extension/d_opencart_patch/load');
         $this->config_file = $this->model_extension_module_d_blog_module->getConfigFile($this->codename, $this->sub_versions);
         $this->setting = $this->model_extension_module_d_blog_module->getConfigData($this->codename, $this->codename.'_setting', $this->config->get('config_store_id'),$this->config_file);
+        $this->d_admin_style = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_admin_style.json'));
     }
 
     public function index() {
+        
+        if ($this->d_admin_style){
+            $this->load->model('extension/d_admin_style/style');
+            $this->model_extension_d_admin_style_style->getStyles('light');
+        }
+
         $this->load->model('extension/d_blog_module/category');
         $this->load->language('extension/d_blog_module/category');
         $this->document->setTitle($this->language->get('heading_title'));
@@ -408,6 +415,7 @@ class ControllerExtensionDBlogModuleCategory extends Controller {
         }
 
         $data['token'] = $this->model_extension_d_opencart_patch_user->getToken();
+        $data['url_token'] = $this->model_extension_d_opencart_patch_user->getUrlToken();
         $data['category_autocomplete'] = $this->model_extension_d_opencart_patch_url->ajax('extension/d_blog_module/category/autocomplete');
 
         $this->load->model('localisation/language');
