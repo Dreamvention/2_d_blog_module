@@ -10,14 +10,13 @@ class ControllerExtensionDBlogModuleReview extends Controller {
         $this->load->model('extension/d_opencart_patch/user');
         $this->load->model('extension/d_opencart_patch/load');
         $this->d_admin_style = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_admin_style.json'));
-    }
-
-    public function index() {
-
         if ($this->d_admin_style){
             $this->load->model('extension/d_admin_style/style');
             $this->model_extension_d_admin_style_style->getStyles('light');
         }
+    }
+
+    public function index() {
 
         $this->load->language('extension/d_blog_module/review');
 
