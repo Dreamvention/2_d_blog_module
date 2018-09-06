@@ -201,8 +201,7 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
                 foreach ($posts as $post) {
                     if (isset($layout[$row])) {
                         $col_count = $layout[$row];
-                    }
-                    else {
+                    }                    else {
                         $row = 0;
                         $col_count = $layout[$row];
                     }

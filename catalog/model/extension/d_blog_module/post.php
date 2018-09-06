@@ -75,7 +75,6 @@ class ModelExtensionDBlogModulePost extends Model
 
             $sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
-
         $query = $this->db->query($sql);
 
         return $query->rows;
@@ -125,6 +124,9 @@ class ModelExtensionDBlogModulePost extends Model
         }
         if (!empty($data['filter_category_id'])) {
             $sql .= " AND p2c.category_id = '" . (int)$data['filter_category_id'] . "'";
+        }
+        if (!empty($data['filter_user_id'])) {
+            $sql .= " AND p.user_id = '" . (int)$data['filter_user_id'] . "'";
         }
 
         if (!empty($data['filter_date_published'])) {
