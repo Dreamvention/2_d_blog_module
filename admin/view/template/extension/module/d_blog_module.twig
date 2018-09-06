@@ -100,6 +100,10 @@
                                             <span class="fa fa-paint-brush"></span>
                                             {{ tab_design }}
                                         </a></li>
+                                        <li><a href="#tab_demo" data-toggle="tab">
+                                            <span class="fa fa-info-circle"></span>
+                                            {{ tab_demo }}
+                                        </a></li>
                                     <li class="hidden"><a href="#tab_instruction" data-toggle="tab">
                                             <span class="fa fa-graduation-cap"></span>
                                             {{ tab_instruction }}
@@ -111,24 +115,7 @@
                                     <div class="tab-pane active" id="tab_setting">
 
                                         <div class="tab-body">
-                                            {% if not d_blog_module_status %}
-                                                {% for demo in demos %}
-                                                    <div class="form-group">
-                                                        <label class="col-sm-2 control-label"
-                                                               for="install_demo_data">{{ entry_install_demo_data }} {{ demo.text }}</label>
-                                                        <div class="col-sm-10 notification-install-demo-data">
-                                                            <div class="alert alert-warning">
-                                                                <div class="row">
-                                                                    <div class="col-md-9">{{ demo.description }} </div>
-                                                                    <div class="col-md-3"><a data-href="{{ demo.install }}"
-                                                                                             class="btn btn-warning btn-block install-demo-data">{{ button_install_demo_data }} {{ demo.text }}</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                {% endfor %}
-                                            {% else %}
+                                            {% if d_blog_module_status %}
                                                 <div class="form-group">
                                                     <div class="col-lg-3 col-md-3 col-sm-6">
                                                         <a href="{{ menu_post }}">
@@ -1460,6 +1447,23 @@
                                     <!-- <div class="tab-pane" id="tab_instruction" >
                                 <div class="tab-body">{{ text_instruction }}</div>
                             </div> -->
+                            <div class="tab-pane" id="tab_demo" >
+                            {% for demo in demos %}
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label"
+                                           for="install_demo_data">{{ entry_install_demo_data }} {{ demo.text }}</label>
+                                    <div class="col-sm-10 notification-install-demo-data">
+                                        <div class="alert alert-warning">
+                                            <div class="row">
+                                                <div class="col-md-9">{{ demo.description }} </div>
+                                                <div class="col-md-3"><a data-href="{{ demo.install }}" class="btn btn-warning btn-block install-demo-data">{{ button_install_demo_data }} {{ demo.text }}</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
                                 </div>
                             </form>
                             <div style="text-align: center; padding: 30px;">{{text_powered_by}}</div>

@@ -485,7 +485,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $data['text_welcome_increase_sales'] = $this->language->get('text_welcome_increase_sales');
 
         $data['button_setup'] = $this->language->get('button_setup');
-
+        $data['checkbox_setup'] = $this->language->get('checkbox_setup');
         $data['quick_setup'] = $this->model_extension_d_opencart_patch_url->ajax($this->route.'/setup');
         
         $data['header'] = $this->load->controller('common/header');
