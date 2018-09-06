@@ -41,7 +41,7 @@ $_['d_blog_module_setting'] = array(
         'views_display' => 1,
         'review_display' => 1,
         'read_more_display' => 1,
-        'animate' => 'slideInUp'
+        'animate' => 'fadeIn'
     ),
     'post' => array(
         'image_display' => 1,
