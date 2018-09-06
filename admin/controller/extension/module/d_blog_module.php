@@ -186,6 +186,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $data['tab_review_thumb'] = $this->language->get('tab_review_thumb');
         $data['tab_author'] = $this->language->get('tab_author');
         $data['tab_design'] = $this->language->get('tab_design');
+        $data['tab_demo'] = $this->language->get('tab_demo');
 
         $data['menu_post'] = $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/post');
         $data['menu_category'] = $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/category');
