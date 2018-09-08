@@ -226,7 +226,19 @@ class ModelExtensionModuleDBlogModule extends Model
         }
 
         if (in_array('limit_access_user', $columns)) {
-            $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_post DROP COLUMN limit_access_user");
+            $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_post ADD limit_access_user INT(1) DEFAULT 0  NOT NULL");
+        }
+
+        if (in_array('limit_users', $columns)) {
+            $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_post ADD limit_users INT(1) DEFAULT 0  NOT NULL");
+        }
+
+        if (in_array('limit_access_user_group', $columns)) {
+            $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_post ADD limit_access_user_group INT(1) DEFAULT 0  NOT NULL");
+        }
+
+        if (in_array('limit_user_groups', $columns)) {
+            $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_post ADD limit_user_groups INT(1) DEFAULT 0  NOT NULL");
         }
 
 
