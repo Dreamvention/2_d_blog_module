@@ -225,7 +225,7 @@ class ModelExtensionModuleDBlogModule extends Model
             $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_post DROP COLUMN tag");
         }
 
-        if (in_array('tag', $columns)) {
+        if (in_array('limit_access_user', $columns)) {
             $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_post DROP COLUMN limit_access_user");
         }
 
