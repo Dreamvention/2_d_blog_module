@@ -1,6 +1,6 @@
 {
     "codename": "d_blog_module",
-    "version": "3.1.0",
+    "version": "3.1.1",
     "name": "Blog module",
     "description": "A blog module based on twig and events. Huge functionality packed in one great solution. ",
     "index": "extension/module/d_blog_module",
@@ -138,6 +138,10 @@
         "image/catalog/d_blog_module/post"
     ],
     "changelog": [
+        {
+            "version":"3.1.1",
+            "change": "bug fixes"
+        },
         {
             "version":"3.1.0",
             "change": "Add support visual designer 3. Strict area limitation fix for this, change file structure, fix bootsrap rating, add setup screen"
