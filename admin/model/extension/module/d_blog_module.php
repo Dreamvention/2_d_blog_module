@@ -225,6 +225,11 @@ class ModelExtensionModuleDBlogModule extends Model
             $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_post DROP COLUMN tag");
         }
 
+        if (in_array('tag', $columns)) {
+            $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_post DROP COLUMN limit_access_user");
+        }
+
+
         $query = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "bm_post_description' ORDER BY ORDINAL_POSITION");
         $result = $query->rows;
         $columns = array();
