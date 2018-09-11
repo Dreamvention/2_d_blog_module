@@ -21,6 +21,8 @@ $_['d_blog_module_setting'] = array(
         'sub_category_post_count' => 1,
         'sub_category_image_width' => 120,
         'sub_category_image_height' => 75,
+        'limited_post_display' => 1,
+        'main_post_display' => 1,
     ),
     'post_thumb' => array(
         'image_width' => 1200,

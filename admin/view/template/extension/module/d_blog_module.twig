@@ -435,6 +435,37 @@
                                                     </div>
                                                 </div>
                                             </div><!-- //category_image -->
+
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label"
+                                                       for="input_checkbox">{{ entry_limited_post_display }}</label>
+                                                <div class="col-sm-10">
+                                                    <input type="hidden"
+                                                           name="{{ codename }}_setting[category][limited_post_display]"
+                                                           value="0"/>
+                                                    <input type="checkbox" class="switcher"
+                                                           data-label-text="{{ text_enabled }}"
+                                                           id="input_limited_post_display"
+                                                           name="{{ codename }}_setting[category][limited_post_display]" {% if setting.category.limited_post_display %} checked="checked" {% endif %}
+                                                           value="1"/>
+                                                </div>
+                                            </div><!-- //checkbox -->
+
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label"
+                                                       for="input_checkbox">{{ entry_main_post_display }}</label>
+                                                <div class="col-sm-10">
+                                                    <input type="hidden"
+                                                           name="{{ codename }}_setting[category][main_post_display]"
+                                                           value="0"/>
+                                                    <input type="checkbox" class="switcher"
+                                                           data-label-text="{{ text_enabled }}"
+                                                           id="input_main_post_display"
+                                                           name="{{ codename }}_setting[category][main_post_display]" {% if setting.category.main_post_display %} checked="checked" {% endif %}
+                                                           value="1"/>
+                                                </div>
+                                            </div><!-- //checkbox -->
+
                                         </div>
                                     </div>
                                     <div class="tab-pane " id="tab_post">

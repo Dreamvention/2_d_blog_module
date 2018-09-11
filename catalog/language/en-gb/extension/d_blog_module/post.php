@@ -17,6 +17,7 @@ $_['text_semi_month']          = 'half-month';
 $_['text_month']               = 'month';
 $_['text_year']                = 'year';
 $_['text_restricted_access']   = 'Restricted access';
-$_['text_contact_admin']       = 'Please contact the site administrator to receive access to this content';
+$_['text_login']			   = 'Please <a href="index.php?route=account/login">login</a> to receive access to this content';
+$_['text_contact_admin']       = 'Please <a href="index.php?route=information/contact">contact</a> the site administrator to receive access to this content';
 $_['restrict_access_label_group']       = 'Access only for member of group %';
 $_['restrict_access_label_user']       = 'Access only for permited users';

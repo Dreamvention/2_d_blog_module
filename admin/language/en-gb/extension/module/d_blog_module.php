@@ -67,6 +67,8 @@ $_['entry_category_sub_category_col']           = 'Set columns for sub category'
 $_['entry_category_sub_category_image']         = 'Display sub category image';
 $_['entry_category_sub_category_post_count']    = 'Display sub category post count';
 $_['entry_category_sub_category_image_size']    = 'Sub category image size';
+$_['entry_main_post_display']					= 'Display posts on main page';
+$_['entry_limited_post_display'] 				= 'Display limited access posts';
 
 $_['entry_post_image_display']                  = 'Display main image';
 $_['entry_post_popup_display']                  = 'Display main image popup';

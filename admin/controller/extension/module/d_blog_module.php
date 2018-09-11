@@ -252,6 +252,8 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $data['entry_category_sub_category_image'] = $this->language->get('entry_category_sub_category_image');
         $data['entry_category_sub_category_post_count'] = $this->language->get('entry_category_sub_category_post_count');
         $data['entry_category_sub_category_image_size'] = $this->language->get('entry_category_sub_category_image_size');
+        $data['entry_main_post_display'] = $this->language->get('entry_main_post_display');
+        $data['entry_limited_post_display'] = $this->language->get('entry_limited_post_display');
 
 
         $data['entry_post_image_display'] = $this->language->get('entry_post_image_display');

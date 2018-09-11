@@ -2,11 +2,29 @@
 class ModelExtensionDBlogModuleCategory extends Model {
 
     public function addCategory($data) {
+        $sql = "SELECT * 
+              FROM INFORMATION_SCHEMA.COLUMNS 
+                WHERE TABLE_NAME = '" . DB_PREFIX . "bm_category'
+                AND COLUMN_NAME = 'limit_access_user_group'
+                AND TABLE_SCHEMA = '" . DB_DATABASE . "'
+                ";
+        if (empty($this->db->query($sql)->rows)) {
+            $this->db->query("ALTER TABLE `" . DB_PREFIX . "bm_category`
+            ADD COLUMN `limit_access_user` INT(1) DEFAULT 0  NOT NULL AFTER `status`,
+            ADD COLUMN `limit_users` TEXT(255) NULL AFTER `limit_access_user`,
+            ADD COLUMN `limit_access_user_group` INT(1) DEFAULT 0  NOT NULL AFTER `limit_users`,
+            ADD COLUMN `limit_user_groups` TEXT(255) NULL AFTER `limit_access_user_group`;
+        ");
+        }
 
         $this->db->query("INSERT INTO " . DB_PREFIX
             . "bm_category SET parent_id = '" . (int) $data['parent_id']
             . "', sort_order = '" . (int) $data['sort_order']
             . "', status = '" . (int) $data['status']
+            . "', limit_access_user ='" . (int)$data['limit_access_user']
+            . "', limit_users ='" . implode(",", isset($data['access_user']) ? $data['access_user'] : array())
+            . "', limit_access_user_group ='" . (int)$data['limit_access_user_group']
+            . "', limit_user_groups ='" . implode(",", isset($data['access_user_group']) ? $data['access_user_group'] : array())
             . "', custom = '" . (int) $data['custom']
             . "', setting = '" . $this->db->escape(json_encode($data['setting']))
             . "', date_modified = NOW(), date_added = NOW()");
@@ -102,11 +120,29 @@ class ModelExtensionDBlogModuleCategory extends Model {
     }
 
     public function editCategory($category_id, $data ) {
+        $sql = "SELECT * 
+              FROM INFORMATION_SCHEMA.COLUMNS 
+                WHERE TABLE_NAME = '" . DB_PREFIX . "bm_category'
+                AND COLUMN_NAME = 'limit_access_user_group'
+                AND TABLE_SCHEMA = '" . DB_DATABASE . "'
+                ";
+        if (empty($this->db->query($sql)->rows)) {
+            $this->db->query("ALTER TABLE `" . DB_PREFIX . "bm_category`
+            ADD COLUMN `limit_access_user` INT(1) DEFAULT 0  NOT NULL AFTER `status`,
+            ADD COLUMN `limit_users` TEXT(255) NULL AFTER `limit_access_user`,
+            ADD COLUMN `limit_access_user_group` INT(1) DEFAULT 0  NOT NULL AFTER `limit_users`,
+            ADD COLUMN `limit_user_groups` TEXT(255) NULL AFTER `limit_access_user_group`;
+        ");
+        }
 
         $this->db->query("UPDATE " . DB_PREFIX . "bm_category "
             . "SET parent_id = '" . (int) $data['parent_id'] . "', "
             . "sort_order = '" . (int) $data['sort_order'] . "', "
             . "status = '" . (int) $data['status'] . "', "
+            . "limit_access_user ='" . (int)$data['limit_access_user'] . "', "
+            . "limit_users ='" . implode(",", isset($data['access_user']) ? $data['access_user'] : array()) . "', "
+            . "limit_access_user_group ='" . (int)$data['limit_access_user_group'] . "',"
+            . "limit_user_groups ='" . implode(",", isset($data['access_user_group']) ? $data['access_user_group'] : array()) . "',"
             . "custom = '" . (int) $data['custom']. "', "
             . "setting = '" . $this->db->escape(json_encode($data['setting'])). "', "
             . "date_modified = NOW() WHERE category_id = '" . (int) $category_id . "'");
