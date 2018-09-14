@@ -165,6 +165,8 @@ $btn-border-radius:              2px;
             color: $rating-color ;
         }
         .fa-star + .fa-star-o {
+            position: absolute;
+            top: 0;
             color: adjust-hue($rating-color, -9%) ;
         }
     }
