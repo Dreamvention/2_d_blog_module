@@ -225,6 +225,23 @@ class ModelExtensionModuleDBlogModule extends Model
             $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_post DROP COLUMN tag");
         }
 
+        if (!in_array('limit_access_user', $columns)) {
+            $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_post ADD limit_access_user INT(1) DEFAULT 0  NOT NULL");
+        }
+
+        if (!in_array('limit_users', $columns)) {
+            $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_post ADD limit_users TEXT(255) NULL");
+        }
+
+        if (!in_array('limit_access_user_group', $columns)) {
+            $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_post ADD limit_access_user_group INT(1) DEFAULT 0  NOT NULL");
+        }
+
+        if (!in_array('limit_user_groups', $columns)) {
+            $this->db->query("ALTER TABLE " . DB_PREFIX . "bm_post ADD limit_user_groups TEXT(255) NULL");
+        }
+
+
         $query = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "bm_post_description' ORDER BY ORDINAL_POSITION");
         $result = $query->rows;
         $columns = array();
@@ -393,6 +410,10 @@ class ModelExtensionModuleDBlogModule extends Model
             sort_order INT(3) NOT NULL,
             image VARCHAR(255) DEFAULT NULL,
             status INT(1) DEFAULT 1,
+            limit_access_user INT(1) DEFAULT 0  NOT NULL,
+            limit_users TEXT(255) NULL,
+            limit_access_user_group INT(1) DEFAULT 0  NOT NULL,
+            limit_user_groups TEXT(255) NULL,
             custom INT(1) DEFAULT 0,
             setting TEXT NOT NULL,
             date_added DATETIME NOT NULL,

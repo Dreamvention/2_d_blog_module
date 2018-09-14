@@ -687,14 +687,14 @@ class ControllerExtensionDBlogModulePost extends Controller
         // access allow
         if (isset($this->request->post['limit_access_user'])) {
             $data['limit_access_user'] = $this->request->post['limit_access_user'];
-        } elseif (!empty($post_info)) {
+        } elseif (!empty($post_info) && !empty($post_info['limit_access_user'])) {
             $data['limit_access_user'] = $post_info['limit_access_user'];
         } else {
             $data['limit_access_user'] = 0;
         }
         if (isset($this->request->post['limit_access_user_group'])) {
             $data['limit_access_user_group'] = $this->request->post['limit_access_user_group'];
-        } elseif (!empty($post_info)) {
+        } elseif (!empty($post_info) && !empty($post_info['limit_access_user'])) {
             $data['limit_access_user_group'] = $post_info['limit_access_user_group'];
         } else {
             $data['limit_access_user_group'] = 0;

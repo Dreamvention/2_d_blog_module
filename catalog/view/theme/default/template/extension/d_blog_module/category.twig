@@ -39,7 +39,7 @@
                 {% include template(layout_template) with posts %}
             {% endif %}
 
-            {% if not posts %}
+            {% if not posts and post_display_on_main == false %}
                 <p class="bm-empty">{{text_empty}}</p>
                 <div class="buttons">
                     <div class="pull-right"><a href="{{continue}}" class="btn btn-primary">{{button_continue}}</a></div>

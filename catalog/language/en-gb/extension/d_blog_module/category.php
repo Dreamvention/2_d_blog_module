@@ -30,3 +30,8 @@ $_['text_name_desc']    = 'Name (Z - A)';
 $_['text_rating_asc']   = 'Rating (Lowest)';
 $_['text_rating_desc']  = 'Rating (Highest)';
 $_['text_limit']        = 'Show:';
+
+$_['text_restricted_access']   = 'Restricted access';
+$_['text_login']			   = 'Please <a href="index.php?route=account/login">login</a> to receive access to this content';
+$_['text_contact_admin']       = 'Please <a href="index.php?route=information/contact">contact</a> the site administrator to receive access to this content';
+$_['text_error']               = 'Category not found!';

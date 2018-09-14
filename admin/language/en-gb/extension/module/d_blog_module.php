@@ -24,6 +24,7 @@ $_['tab_post']                                  = 'Post';
 $_['tab_review']                                = 'Review';
 $_['tab_review_thumb']                          = 'Review thumb';
 $_['tab_author']                                = 'Author';
+$_['tab_demo']                                  = 'Demo';
 $_['tab_export']                                = 'Export';
 $_['tab_import']                                = 'Import';
 $_['text_upload']                               = 'File imported successfully';
@@ -66,6 +67,8 @@ $_['entry_category_sub_category_col']           = 'Set columns for sub category'
 $_['entry_category_sub_category_image']         = 'Display sub category image';
 $_['entry_category_sub_category_post_count']    = 'Display sub category post count';
 $_['entry_category_sub_category_image_size']    = 'Sub category image size';
+$_['entry_main_post_display']					= 'Display posts on main page';
+$_['entry_limited_post_display'] 				= 'Display limited access posts';
 
 $_['entry_post_image_display']                  = 'Display main image';
 $_['entry_post_popup_display']                  = 'Display main image popup';
@@ -190,5 +193,5 @@ $_['text_welcome_increase_sales']   = 'Add Dozens <br> of modules';
 
 $_['button_setup']                  = 'Setup';
 $_['checkbox_setup'] 				= 'Install Demo Data';
-$_['success_setup']                 = 'Success: You have now setup Blog Module!';
+$_['success_setup']                 = 'Success: You have now setup Blog Module! You should now see the blog link in the frontend category menu';
 $_['text_pro']                      = '<a href="https://dream.page.link/tc4X" target="_blank">For SEO Urls and Blog Modules get the Blog Module Pro</a>';

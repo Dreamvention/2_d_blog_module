@@ -58,6 +58,11 @@ $_['help_top']                  = 'Display in the top menu bar. Only works for t
 $_['help_column']               = 'Number of columns to use for the bottom 3 categories. Only works for the top parent categories.';
 $_['help_layout']                               = '<h4>What is layout?</h4><p>A layout is a simple way of defining how your posts should be presented on the page. You can set 1 row with 1 column: you will see only one post under another. Dull, wouldn\'t you say?. Lest spice it up. Try setting 1 row - 1 columns, 2 row - 2 columns, 3 row - 3 columns. Make your blog standout.</p>';
 
+$_['entry_limit_access_user']       = 'Allow used for only selected users';
+$_['entry_limit_access_user_group'] = 'Allow used for only selected user groups';
+$_['entry_user']                    = 'Allowed Users';
+$_['entry_user_group']              = 'User Group';
+
 // Error
 $_['error_warning']             = 'Warning: Please check the form carefully for errors!';
 $_['error_permission']          = 'Warning: You do not have permission to modify categories!';

@@ -337,6 +337,10 @@ class ControllerExtensionDBlogModuleCategory extends Controller {
         $data['entry_category_sub_category_image'] = $this->language->get('entry_category_sub_category_image');
         $data['entry_category_sub_category_post_count'] = $this->language->get('entry_category_sub_category_post_count');
         $data['entry_category_sub_category_image_size'] = $this->language->get('entry_category_sub_category_image_size');
+        $data['entry_limit_access_user'] = $this->language->get('entry_limit_access_user');
+        $data['entry_limit_access_user_group'] = $this->language->get('entry_limit_access_user_group');
+        $data['entry_user'] = $this->language->get('entry_user');
+        $data['entry_user_group'] = $this->language->get('entry_user_group');
 
         $data['help_layout'] = $this->language->get( 'help_layout' );
         $data['help_category'] = $this->language->get('help_category');
@@ -500,6 +504,47 @@ class ControllerExtensionDBlogModuleCategory extends Controller {
             $data['status'] = $category_info['status'];
         } else {
             $data['status'] = true;
+        }
+
+        // access allow
+        if (isset($this->request->post['limit_access_user'])) {
+            $data['limit_access_user'] = $this->request->post['limit_access_user'];
+        } elseif (!empty($category_info)) {
+            $data['limit_access_user'] = $category_info['limit_access_user'];
+        } else {
+            $data['limit_access_user'] = 0;
+        }
+        if (isset($this->request->post['limit_access_user_group'])) {
+            $data['limit_access_user_group'] = $this->request->post['limit_access_user_group'];
+        } elseif (!empty($category_info)) {
+            $data['limit_access_user_group'] = $category_info['limit_access_user_group'];
+        } else {
+            $data['limit_access_user_group'] = 0;
+        }
+        if(VERSION >= '2.1.0.1'){
+            $this->load->model('customer/customer');
+            $this->load->model('customer/customer_group');
+            $customer_customer = 'model_customer_customer';
+            $customer_groups = 'model_customer_customer_group';
+        }else{
+            $this->load->model('sale/customer');
+            $this->load->model('sale/customer_group');
+            $customer_customer = 'model_sale_customer';
+            $customer_groups = 'model_sale_customer_group';
+        }
+        $data['users'] = array();
+        if (!empty($category_info['limit_users'])) {
+            foreach (explode(',', $category_info['limit_users']) as $user_id) {
+                $user_info = $this->{$customer_customer}->getCustomer($user_id);
+                $data['users'][$user_info['customer_id']] = $user_info['firstname'];
+            }
+        }
+        $data['user_groups'] = array();
+        if (!empty($category_info['limit_user_groups'])) {
+            foreach (explode(',', $category_info['limit_user_groups']) as $user_group_id) {
+                $user_group_info = $this->{$customer_groups}->getCustomerGroup($user_group_id);
+                $data['user_groups'][$user_group_id] = $user_group_info['name'];
+            }
         }
 
         //setting

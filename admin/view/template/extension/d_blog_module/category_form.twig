@@ -29,6 +29,7 @@
             <li class="active"><a href="#tab-general" data-toggle="tab">{{tab_general}}</a></li>
             <li><a href="#tab-data" data-toggle="tab">{{tab_data}}</a></li>
             <li><a href="#tab-setting" data-toggle="tab">{{tab_setting}}</a></li>
+            <li><a href="#tab-links" data-toggle="tab">{{tab_links}}</a></li>
             <li><a href="#tab-design" data-toggle="tab">{{tab_design}}</a></li>
           </ul>
           <div class="tab-content">
@@ -325,6 +326,134 @@
                     </div>
                 </div>
             </div>
+
+            <div class="tab-pane" id="tab-links">
+              <script type="application/javascript">
+                  $(document).ready(function() {
+                      $(".switcher[type='checkbox']").bootstrapSwitch({
+                          'onColor': 'success',
+                          'onText': '{{ text_yes }}',
+                          'offText': '{{ text_no }}',
+                      });
+                      $('input[type=checkbox][name$="limit_access_user"]').on('switchChange.bootstrapSwitch', function (event, state) {
+                          if (state) {
+                              $('input[type=checkbox][name$="limit_access_user_group"]').bootstrapSwitch('state', false);
+                              $('#users').show();
+                          }
+                          else {
+                              $('#users').hide();
+                          }
+                      });
+                      $('input[type=checkbox][name$="limit_access_user"]').trigger('switchChange.bootstrapSwitch', {{ limit_access_user }});
+                      $('input[type=checkbox][name$="limit_access_user_group"]').on('switchChange.bootstrapSwitch', function (event, state) {
+                          if (state) {
+                              $('input[type=checkbox][name$="limit_access_user"]').bootstrapSwitch('state', false);
+                              $('#user_groups').show();
+                          }
+                          else {
+                              $('#user_groups').hide();
+                          }
+                      });
+                      $('input[type=checkbox][name$="limit_access_user_group"]').trigger('switchChange.bootstrapSwitch', {{ limit_access_user_group }});
+                      $('input[name="user"]').autocomplete({
+                          'source': function (request, response) {
+                              $.ajax({
+                                  url: 'index.php?route=customer/customer/autocomplete&{{ url_token }}&filter_name=' + encodeURIComponent(request),
+                                  dataType: 'json',
+                                  success: function (json) {
+                                      response($.map(json, function (item) {
+                                          return {
+                                              label: item['firstname'],
+                                              value: item['customer_id']
+                                          }
+                                      }));
+                                  }
+                              });
+                          },
+                          'select': function (item) {
+                              $('input[name=\'user\']').val('');
+
+                              $('#access-user' + item['value']).remove();
+
+                              $('#access-user').append('<div id="access-user' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="access_user[]" value="' + item['value'] + '" /></div>');
+                          }
+                      });
+                      $('#access-user').delegate('.fa-minus-circle', 'click', function () {
+                          $(this).parent().remove();
+                      });
+                      $('input[name=\'user_group\']').autocomplete({
+                          'source': function (request, response) {
+                              $.ajax({
+                                  url: 'index.php?route=extension/d_blog_module/post/autocompleteUserGroup&{{ url_token}}&filter_name=' + encodeURIComponent(request),
+                                  dataType: 'json',
+                                  success: function (json) {
+                                      response($.map(json, function (item) {
+                                          return {
+                                              label: item['name'],
+                                              value: item['customer_group_id']
+                                          }
+                                      }));
+                                  }
+                              });
+                          },
+                          'select': function (item) {
+                              $('input[name=\'user_group\']').val('');
+
+                              $('#access-user-group' + item['value']).remove();
+
+                              $('#access-user-group').append('<div id="access-user-group' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="access_user_group[]" value="' + item['value'] + '" /></div>');
+                          }
+                      });
+                      $('#access-user-group').delegate('.fa-minus-circle', 'click', function () {
+                          $(this).parent().remove();
+                      });
+                  });
+              </script>              
+              <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-limit-access-user">{{entry_limit_access_user}}</label>
+                  <div class="col-sm-10">
+                      <input type="hidden" name="limit_access_user" value="0" />
+                      <input type="checkbox" name="limit_access_user" class="switcher" data-label-text="{{text_enabled}}" id="input-limit-access-user" {{ limit_access_user ? 'checked="checked"' }} value="1" />
+                  </div>
+              </div>
+              <div class="form-group" id="users">
+                  <label class="col-sm-2 control-label" for="input-user">{{entry_user}}</label>
+                  <div class="col-sm-10">
+                      <input type="text" name="user" value="" placeholder="{{entry_user}}" id="input-user" class="form-control" />
+                      <div id="access-user" class="well well-sm" style="height: 150px; overflow: auto;">
+                          {% for key, value in users %}
+                              <div id="access-user{{key}}">
+                                  <i class="fa fa-minus-circle"></i>
+                                  {{value}}
+                                  <input type="hidden" name="access_user[]" value="{{key}}" />
+                              </div>
+                          {% endfor %}
+                      </div>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-limit-access-user-group">{{entry_limit_access_user_group}}</label>
+                  <div class="col-sm-10">
+                      <input type="hidden" name="limit_access_user_group" value="0" />
+                      <input type="checkbox" name="limit_access_user_group" class="switcher" data-label-text="{{text_enabled}}" id="input-limit-access-user-group" {{ limit_access_user_group ? 'checked="checked"' }} value="1" />
+                  </div>
+              </div>
+              <div class="form-group" id="user_groups">
+                  <label class="col-sm-2 control-label" for="input-user-group">{{entry_user_group}}</label>
+                  <div class="col-sm-10">
+                      <input type="text" name="user_group" value="" placeholder="{{entry_user_group}}" id="input-user-group" class="form-control" />
+                      <div id="access-user-group" class="well well-sm" style="height: 150px; overflow: auto;">
+                          {% for key, value in user_groups %}
+                              <div id="access-user-group{{key}}">
+                                  <i class="fa fa-minus-circle"></i>
+                                  {{value}}
+                                  <input type="hidden" name="access_user_group[]" value="{{key}}" />
+                              </div>
+                          {% endfor %}
+                      </div>
+                  </div>
+              </div>
+          </div>
             <div class="tab-pane" id="tab-design">
               <div class="table-responsive">
                 <table class="table table-bordered table-hover">

@@ -24,6 +24,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $this->d_shopunity = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_shopunity.json'));
         $this->d_blog_module_pack = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_blog_module_pack.json'));
         $this->d_opencart_patch = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_opencart_patch.json'));
+        $this->d_seo_module = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_seo_module.json'));
         if($this->d_opencart_patch){
             $this->load->model('extension/d_opencart_patch/url');
             $this->load->model('extension/d_opencart_patch/user');
@@ -186,6 +187,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $data['tab_review_thumb'] = $this->language->get('tab_review_thumb');
         $data['tab_author'] = $this->language->get('tab_author');
         $data['tab_design'] = $this->language->get('tab_design');
+        $data['tab_demo'] = $this->language->get('tab_demo');
 
         $data['menu_post'] = $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/post');
         $data['menu_category'] = $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/category');
@@ -250,6 +252,8 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $data['entry_category_sub_category_image'] = $this->language->get('entry_category_sub_category_image');
         $data['entry_category_sub_category_post_count'] = $this->language->get('entry_category_sub_category_post_count');
         $data['entry_category_sub_category_image_size'] = $this->language->get('entry_category_sub_category_image_size');
+        $data['entry_main_post_display'] = $this->language->get('entry_main_post_display');
+        $data['entry_limited_post_display'] = $this->language->get('entry_limited_post_display');
 
 
         $data['entry_post_image_display'] = $this->language->get('entry_post_image_display');
@@ -485,7 +489,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $data['text_welcome_increase_sales'] = $this->language->get('text_welcome_increase_sales');
 
         $data['button_setup'] = $this->language->get('button_setup');
-
+        $data['checkbox_setup'] = $this->language->get('checkbox_setup');
         $data['quick_setup'] = $this->model_extension_d_opencart_patch_url->ajax($this->route.'/setup');
         
         $data['header'] = $this->load->controller('common/header');
@@ -524,8 +528,32 @@ class ControllerExtensionModuleDBlogModule extends Controller {
                         }
                     }
                 }
+
+                if(!empty($data['d_seo_module']) && $this->d_seo_module){
+                    $this->load->model('extension/module/d_seo_module');
+                    $installed_seo_extensions = $this->model_extension_module_d_seo_module->getInstalledSEOExtensions();
+                    if (!in_array($data['d_seo_module'], $installed_seo_extensions)) {
+                        $info = $this->load->controller('extension/d_seo_module/'.$data['d_seo_module'].'/control_install_extension');
+                        $this->load->language('d_seo_module');
+                        
+                        if ($info) {
+                            $data = $info;
+                                    
+                            if ($data['error']) {
+                                $json['error'] = $data['error'];
+                            
+                            } else {
+                                $installed_seo_extensions = $this->model_extension_module_d_seo_module->getInstalledSEOExtensions();
+                            } 
+                        } else {
+                            $json['warning'] = $this->language->get('error_dependence_d_seo_module');
+                            
+                        }
+                    }
+                }
             }
         }
+
         $this->session->data['success'] = $this->language->get('success_setup');
         $json['redirect'] = $this->model_extension_d_opencart_patch_url->ajax($this->route);
         $this->response->addHeader('Content-Type: application/json');
@@ -665,6 +693,30 @@ class ControllerExtensionModuleDBlogModule extends Controller {
                 }
             }
         }
+
+        if(!empty($data['d_seo_module']) && $this->d_seo_module){
+            $this->load->model('extension/module/d_seo_module');
+            $installed_seo_extensions = $this->model_extension_module_d_seo_module->getInstalledSEOExtensions();
+            if (!in_array($data['d_seo_module'], $installed_seo_extensions)) {
+                $info = $this->load->controller('extension/d_seo_module/'.$data['d_seo_module'].'/control_install_extension');
+                $this->load->language('d_seo_module');
+                
+                if ($info) {
+                    $data = $info;
+                            
+                    if ($data['error']) {
+                        $json['error'] = $data['error'];
+                    
+                    } else {
+                        $installed_seo_extensions = $this->model_extension_module_d_seo_module->getInstalledSEOExtensions();
+                    } 
+                } else {
+                    $json['warning'] = $this->language->get('error_dependence_d_seo_module');
+                    
+                }
+            }
+        }
+
         if($result){
             $json['success'] = $this->language->get('success_install_demo_data');
         }else{

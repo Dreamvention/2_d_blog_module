@@ -75,8 +75,8 @@ $_['help_related']              = '(Autocomplete)';
 $_['help_tag']                  = 'comma separated';
 $_['help_date_published']       = 'You can set the date when you want the post to be published on your blog.';
 
-$_['entry_limit_access_user']       = 'Allow used for only selected users';
-$_['entry_limit_access_user_group'] = 'Allow used for only selected user groups';
+$_['entry_limit_access_user']       = 'Allow access for only selected users';
+$_['entry_limit_access_user_group'] = 'Allow access for only selected user groups';
 $_['entry_user']                    = 'Allowed Users';
 $_['entry_user_group']              = 'User Group';
 
