@@ -103,7 +103,7 @@ class ControllerExtensionDVisualDesignerModuleBlogPost extends Controller
         $styles = array(
             'd_blog_module/d_blog_module.css',
             'd_blog_module/bootstrap.css',
-            'theme/default.css',
+            'd_blog_module/theme/default.css',
         );
         $styles[] = 'd_blog_module/theme/' . $this->setting['theme'] . '.css';
 
