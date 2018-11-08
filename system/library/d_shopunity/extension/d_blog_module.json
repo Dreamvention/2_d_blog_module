@@ -56,9 +56,6 @@
         "d_admin_style": ">= 1.0.0"
     },
     "files": [
-        "catalog/view/theme/default/stylesheet/d_blog_module/theme/default/default.css",
-        "catalog/view/theme/default/stylesheet/d_blog_module/theme/default",
-        "catalog/view/javascript/d_blog_module/gulpfile.js",
         "system/library/d_shopunity/extension/d_blog_module.json",
         "system/config/d_blog_module.php",
 
@@ -109,6 +106,9 @@
         "catalog/view/theme/default/stylesheet/d_blog_module/bootstrap.scss",
         "catalog/view/theme/default/stylesheet/d_blog_module/bootstrap.css.map",
         "catalog/view/theme/default/stylesheet/d_blog_module/bootstrap.css",
+        "catalog/view/theme/default/stylesheet/d_blog_module/theme/default/default.scss",
+        "catalog/view/theme/default/stylesheet/d_blog_module/theme/default.css",
+        "catalog/view/javascript/d_blog_module/gulpfile.js",
 
         "admin/controller/extension/d_visual_designer_module/blog_post.php",
         "admin/language/en-gb/extension/d_visual_designer_module/blog_post.php",
@@ -129,7 +129,7 @@
         "admin/language/en-gb/extension/d_blog_module",
         "admin/view/template/extension/d_blog_module",
         "admin/view/image/d_blog_module",
-
+        "catalog/view/theme/default/stylesheet/d_blog_module/theme/default",
         "catalog/controller/extension/d_blog_module",
         "catalog/model/extension/d_blog_module",
         "catalog/language/en-gb/extension/d_blog_module",
