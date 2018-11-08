@@ -1,6 +1,6 @@
 {
     "codename": "d_blog_module",
-    "version": "3.1.1",
+    "version": "3.1.2",
     "name": "Blog module",
     "description": "A blog module based on twig and events. Huge functionality packed in one great solution. ",
     "index": "extension/module/d_blog_module",
@@ -109,7 +109,6 @@
         "catalog/view/theme/default/stylesheet/d_blog_module/theme/default/default.scss",
         "catalog/view/theme/default/stylesheet/d_blog_module/theme/default.css",
         "catalog/view/javascript/d_blog_module/gulpfile.js",
-
         "admin/controller/extension/d_visual_designer_module/blog_post.php",
         "admin/language/en-gb/extension/d_visual_designer_module/blog_post.php",
         "admin/language/english/extension/d_visual_designer_module/blog_post.php",
@@ -138,6 +137,10 @@
         "image/catalog/d_blog_module/post"
     ],
     "changelog": [
+        {
+            "version":"3.1.1",
+            "change": "fix bug with VD"
+        },
         {
             "version":"3.1.1",
             "change": "bug fixes"
