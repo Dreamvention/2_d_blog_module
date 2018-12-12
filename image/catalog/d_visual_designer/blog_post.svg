@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid" width="72" height="72" viewBox="0 0 72 72">
+  <defs>
+    <style>
+      .cls-1 {
+      fill: #d9e3ee;
+      }
+
+      .cls-2 {
+      fill: #fff;
+      }
+
+      .cls-3, .cls-4 {
+      fill: #4196f6;
+      }
+
+      .cls-4 {
+      fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <g>
+    <rect width="72" height="72" rx="12" ry="12" class="cls-1"/>
+    <rect x="13" y="16" width="27" height="20" rx="2" ry="2" class="cls-2"/>
+    <rect x="13" y="39" width="11" height="8" rx="2" ry="2" class="cls-2"/>
+    <rect x="26" y="41" width="14" height="2" class="cls-3"/>
+    <rect x="26" y="44" width="8" height="2" class="cls-3"/>
+    <rect x="43" y="30" width="16" height="2" class="cls-3"/>
+    <rect x="43" y="33" width="13" height="2" class="cls-3"/>
+    <rect x="43" y="52" width="13" height="2" class="cls-3"/>
+    <rect x="43" y="55" width="16" height="2" class="cls-3"/>
+    <rect x="26" y="52" width="10" height="2" class="cls-3"/>
+    <rect x="26" y="55" width="12" height="2" class="cls-3"/>
+    <rect x="43" y="16" width="16" height="12" rx="2" ry="2" class="cls-2"/>
+    <rect x="43" y="38" width="16" height="12" rx="2" ry="2" class="cls-2"/>
+    <rect x="13" y="50" width="11" height="8" rx="2" ry="2" class="cls-2"/>
+    <path d="M32.007,23.002 C31.453,23.002 31.004,22.552 31.004,21.997 C31.004,21.442 31.453,20.992 32.007,20.992 C32.561,20.992 33.011,21.442 33.011,21.997 C33.011,22.552 32.561,23.002 32.007,23.002 ZM18.997,30.993 L25.021,22.423 L28.107,26.528 L29.585,24.562 L34.001,30.993 L18.997,30.993 Z" class="cls-4"/>
+  </g>
+</svg>
