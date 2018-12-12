@@ -111,6 +111,7 @@ class ControllerExtensionDVisualDesignerModuleBlogPost extends Controller
         } else {
             $this->theme = $this->config->get('config_theme');
         }
+        
         foreach ($styles as $style) {
             if (file_exists(DIR_TEMPLATE . $this->theme . '/stylesheet/' . $style)) {
                 $data[] = 'catalog/view/theme/' . $this->theme . '/stylesheet/' . $style;

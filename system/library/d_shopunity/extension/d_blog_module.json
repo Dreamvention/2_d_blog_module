@@ -1,6 +1,6 @@
 {
     "codename": "d_blog_module",
-    "version": "3.1.1",
+    "version": "3.1.2",
     "name": "Blog module",
     "description": "A blog module based on twig and events. Huge functionality packed in one great solution. ",
     "index": "extension/module/d_blog_module",
@@ -56,9 +56,6 @@
         "d_admin_style": ">= 1.0.0"
     },
     "files": [
-        "catalog/view/theme/default/stylesheet/d_blog_module/theme/default/default.css",
-        "catalog/view/theme/default/stylesheet/d_blog_module/theme/default",
-        "catalog/view/javascript/d_blog_module/gulpfile.js",
         "system/library/d_shopunity/extension/d_blog_module.json",
         "system/config/d_blog_module.php",
 
@@ -109,7 +106,9 @@
         "catalog/view/theme/default/stylesheet/d_blog_module/bootstrap.scss",
         "catalog/view/theme/default/stylesheet/d_blog_module/bootstrap.css.map",
         "catalog/view/theme/default/stylesheet/d_blog_module/bootstrap.css",
-
+        "catalog/view/theme/default/stylesheet/d_blog_module/theme/default/default.scss",
+        "catalog/view/theme/default/stylesheet/d_blog_module/theme/default.css",
+        "catalog/view/javascript/d_blog_module/gulpfile.js",
         "admin/controller/extension/d_visual_designer_module/blog_post.php",
         "admin/language/en-gb/extension/d_visual_designer_module/blog_post.php",
         "admin/language/english/extension/d_visual_designer_module/blog_post.php",
@@ -129,7 +128,7 @@
         "admin/language/en-gb/extension/d_blog_module",
         "admin/view/template/extension/d_blog_module",
         "admin/view/image/d_blog_module",
-
+        "catalog/view/theme/default/stylesheet/d_blog_module/theme/default",
         "catalog/controller/extension/d_blog_module",
         "catalog/model/extension/d_blog_module",
         "catalog/language/en-gb/extension/d_blog_module",
@@ -138,6 +137,10 @@
         "image/catalog/d_blog_module/post"
     ],
     "changelog": [
+        {
+            "version":"3.1.2",
+            "change": "fix bug with VD"
+        },
         {
             "version":"3.1.1",
             "change": "bug fixes add blog themes"
