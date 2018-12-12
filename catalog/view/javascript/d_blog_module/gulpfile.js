@@ -26,12 +26,12 @@ gulp.task('browser-sync', function () {
 });
 
 gulp.task('sass-bm-bootsrap', function () {
-	return gulp.src('catalog/view/theme/default/stylesheet/d_blog_module/bootstrap.scss',{ base: 'catalog/view/theme/default/stylesheet/d_blog_module' })
+	return gulp.src(sassDir+'/bootstrap.scss')
 		.pipe(sourcemaps.init())
 		.pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
 		.pipe(autoprefixer(['last 15 versions']))
 		.pipe(sourcemaps.write(''))
-		.pipe(gulp.dest('./catalog/view/theme/default/stylesheet/d_blog_module'))
+		.pipe(gulp.dest(sassDir))
 		.pipe(browserSync.stream({match: '**/*.css'}));
 });
 gulp.task('sass_multi', function () {
@@ -48,12 +48,13 @@ gulp.task('sass_multi', function () {
 	return tasks;
 });
 gulp.task('sass', function () {
-	return gulp.src('catalog/view/theme/default/stylesheet/d_blog_module/d_blog_module.scss')
+	console.log(sassDir+'/d_blog_module.scss')
+	return gulp.src(sassDir+'/d_blog_module.scss')
 		.pipe(sourcemaps.init())
 		.pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
 		.pipe(autoprefixer(['last 15 versions']))
-		.pipe(sourcemaps.write(''))
-		.pipe(gulp.dest('./catalog/view/theme/default/stylesheet/d_blog_module'))
+		.pipe(sourcemaps.write('./'))
+		.pipe(gulp.dest(sassDir))
 		.pipe(browserSync.stream({match: '**/*.css'}));
 });
 gulp.task('watch', ['browser-sync', 'sass'], function () {

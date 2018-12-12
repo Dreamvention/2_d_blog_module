@@ -4,7 +4,6 @@ $margin: 20px;
 $border: 1px solid #ccc;
 $stars: 5;
 $stars-color:#FC0;
-
 .bm {
 /*category*/
 .bm-category-info,
@@ -249,7 +248,7 @@ $stars-color:#FC0;
 .content.vd .bm [class*=col-]{
     padding: 0 15px !important;
 }
-.fa-stack-1x, .fa-stack-2x{
+.bm .fa-stack-1x, .fa-stack-2x{
     position: relative;
 }
 .bm .rating .fa.fa-star-o{
