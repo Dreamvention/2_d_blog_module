@@ -252,8 +252,6 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $data['entry_category_sub_category_image'] = $this->language->get('entry_category_sub_category_image');
         $data['entry_category_sub_category_post_count'] = $this->language->get('entry_category_sub_category_post_count');
         $data['entry_category_sub_category_image_size'] = $this->language->get('entry_category_sub_category_image_size');
-        $data['entry_main_post_display'] = $this->language->get('entry_main_post_display');
-        $data['entry_limited_post_display'] = $this->language->get('entry_limited_post_display');
 
 
         $data['entry_post_image_display'] = $this->language->get('entry_post_image_display');
@@ -652,7 +650,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $this->model_extension_module_d_event_manager->addEvent($this->codename, 'admin/view/setting/setting/before', 'extension/event/d_blog_module/view_setting_setting_captcha_before');
         $this->model_extension_module_d_event_manager->addEvent($this->codename, 'catalog/view/common/header/before', 'extension/event/d_blog_module/view_common_header_before');
         $this->model_extension_module_d_event_manager->addEvent($this->codename, 'catalog/view/common/menu/before', 'extension/event/d_blog_module/view_common_menu_before');
-
+        $this->model_extension_module_d_event_manager->addEvent($this->codename, 'catalog/model/extension/module/d_visual_designer/getOptions/after', 'extension/event/d_blog_module/controller_after_d_visual_designer_menu');
         $this->model_extension_module_d_event_manager->addEvent($this->codename, 'admin/model/localisation/language/addLanguage/after', 'extension/event/d_blog_module/model_localisation_language_addLanguage_after');
         $this->model_extension_module_d_event_manager->addEvent($this->codename, 'admin/model/localisation/language/deleteLanguage/after', 'extension/event/d_blog_module/model_localisation_language_deleteLanguage_after');
         $this->model_extension_module_d_event_manager->addEvent($this->codename, 'catalog/model/design/layout/getLayout/after', 'extension/event/d_blog_module/model_design_layout_getLayout_after');

@@ -4,35 +4,24 @@ class ControllerExtensionEventDBlogModule extends Controller
 {
     public function view_common_header_before(&$route, &$data, &$output)
     {
-
-        $bm_status = $this->config->get('d_blog_module_status');
-        if ($bm_status) {
-            $this->load->language('extension/event/d_blog_module');
-            $this->load->model('extension/d_blog_module/category');
-            $config = $this->config->get('d_blog_module_setting');
-            $bm_category_id = (isset($config['category']['main_category_id'])) ? $config['category']['main_category_id'] : 0;
-            $bm_children_data = array();
-            $children = $this->model_extension_d_blog_module_category->getCategories($bm_category_id);
-            foreach ($children as $child) {
-                $bm_children_data[] = array(
-                    'name' => $child['title'],
-                    'href' => $this->url->link('extension/d_blog_module/category', 'category_id=' . $child['category_id'])
-                );
-            }
-
-
-            $data['text_blog'] = $this->language->get('text_blog');
-            $data['blog'] = $this->url->link('extension/d_blog_module/category', 'category_id=' . $bm_category_id, 'SSL');
-            $data['categories'][] = array(
-                'name'     => $this->language->get('text_blog'),
-                'children' => $bm_children_data,
-                'column'   => 1,
-                'href'     => $this->url->link('extension/d_blog_module/category', 'category_id=' . $bm_category_id, 'SSL')
-            );
+        if (VERSION < '3.0.0.0') {
+            $this->add_blog_into_menu($data);
+        }
+    }
+    public function view_common_menu_before(&$route, &$data, &$output)
+    {
+        if (VERSION >= '3.0.0.0') {
+            $this->add_blog_into_menu($data);
+        }
+    }
+    public function controller_after_d_visual_designer_menu(&$route, &$data, &$output)
+    {
+        if ($data[0] == 'menu') {
+            $this->add_blog_into_menu($output);
         }
     }
 
-    public function view_common_menu_before(&$route, &$data, &$output)
+    private function add_blog_into_menu(&$data)
     {
         $bm_status = $this->config->get('d_blog_module_status');
         if ($bm_status) {
