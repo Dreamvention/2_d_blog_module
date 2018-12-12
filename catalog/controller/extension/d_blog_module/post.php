@@ -75,19 +75,7 @@ class ControllerExtensionDBlogModulePost extends Controller
         }
 
         $post_info = $this->model_extension_d_blog_module_post->getPost($post_id);
-        $category_info = $this->model_extension_d_blog_module_category->getCategoryByPostId($post_id);
-        $category_id = array();
-        foreach ($category_info as $cat_id) {
-            foreach ($cat_id as $k => $v) {
-                if ($k == 'category_id') {
-                $category_id[] = $v;
-                }
-            }
-        }
-        foreach ($category_id as $id) {
-            $category_access[] = $this->model_extension_d_blog_module_category->getCategory($id);
-        }
-        
+
         if ($post_info) {
             if (VERSION >= '2.2.0.0') {
                 $this->user = new Cart\User($this->registry);
@@ -96,7 +84,7 @@ class ControllerExtensionDBlogModulePost extends Controller
             }
 
             if (!$this->user->isLogged()) { // loged as admin
-                if (isset($post_info['limit_access_user']) && $post_info['limit_access_user']) {
+                if ((isset($post_info['limit_access_user']) && $post_info['limit_access_user'])) {
                     //yes limit
                     if (!$this->customer->isLogged()) {
                         $this->postRestrict($post_id);
@@ -110,7 +98,6 @@ class ControllerExtensionDBlogModulePost extends Controller
                         }
                     }
                 }
-                
                 if (isset($post_info['limit_access_user_group']) && $post_info['limit_access_user_group']) {
                     if (!$this->customer->isLogged()) {
                         $this->postRestrict($post_id);
@@ -121,39 +108,6 @@ class ControllerExtensionDBlogModulePost extends Controller
                         if (!in_array($this->customer->getGroupId(), $allowed_groups)) {
                             $this->postRestrict($post_id);
                             return;
-                        }
-                    }
-                }
-
-                foreach ($category_access as $cat_access) {
-                        //limit by category
-                    if (isset($cat_access['limit_access_user']) && $cat_access['limit_access_user']) {
-                       //yes limit
-                        if (!$this->customer->isLogged()) {
-                            $this->postRestrict($post_id);
-                            return;
-                        } else {
-                            //user is logged find in allowed
-                            $allowed_users = explode(',', $cat_access['limit_users']);
-                            if (!in_array($this->customer->getId(), $allowed_users)) {
-                                $this->postRestrict($post_id);
-                                return;
-                            }
-                        }
-                    }
-                    
-                    //limit by category
-                    if (isset($cat_access['limit_access_user_group']) && $cat_access['limit_access_user_group']) {
-                        if (!$this->customer->isLogged()) {
-                            $this->postRestrict($post_id);
-                            return;
-                        } else {
-                            //user is logged find in allowed groups
-                            $allowed_groups = explode(',', $cat_access['limit_user_groups']);
-                            if (!in_array($this->customer->getGroupId(), $allowed_groups)) {
-                                $this->postRestrict($post_id);
-                                return;
-                            }
                         }
                     }
                 }
@@ -216,7 +170,7 @@ class ControllerExtensionDBlogModulePost extends Controller
 
             $author = $this->model_extension_d_blog_module_author->getAuthor($post_info['user_id']);
             $data['author'] = (!empty($author['name'])) ? $author['name'] : $this->language->get('text_anonymous');
-            $data['author_link'] = $this->url->link('extension/d_blog_module/author', 'user_id=' . $post_info['user_id'], 'SSL');
+            $data['author_link'] = $this->url->link('extension/d_blog_module/author', 'author_id=' . $post_info['user_id'], 'SSL');
 
             if (isset($author['image'])) {
                 $data['author_image'] = $this->model_tool_image->resize($author['image'], $this->setting['author']['image_width'], $this->setting['author']['image_height']);
@@ -454,11 +408,11 @@ class ControllerExtensionDBlogModulePost extends Controller
             'href' => $this->url->link('extension/d_blog_module/post', $url . '&post_id=' . $post_id, 'SSL')
         );
 
-        $this->document->setTitle($this->language->get('text_restricted_access'));
+        $this->document->setTitle($this->language->get('text_error'));
 
         $data['heading_title'] = $this->language->get('text_restricted_access');
 
-        $data['text_error'] = !$this->customer->isLogged() ? $this->language->get('text_login') : $this->language->get('text_contact_admin');
+        $data['text_error'] = $this->language->get('text_contact_admin');
 
         $data['button_continue'] = $this->language->get('button_continue');
 
@@ -520,7 +474,7 @@ class ControllerExtensionDBlogModulePost extends Controller
                 if ($post['image']) {
                     $image = $this->model_tool_image->resize($post['image'], $this->setting['post_thumb']['image_width'], $this->setting['post_thumb']['image_height']);
                 } else {
-                    $image = $this->model_tool_image->resize('catalog/d_blog_module/placeholder.svg', $this->setting['post_thumb']['image_width'], $this->setting['post_thumb']['image_height']);
+                    $image = $this->model_tool_image->resize('placeholder.png', $this->setting['post_thumb']['image_width'], $this->setting['post_thumb']['image_height']);
                 }
                 $category_info = array();
                 $post_categories = $this->model_extension_d_blog_module_category->getCategoryByPostId($post_id);
@@ -556,7 +510,7 @@ class ControllerExtensionDBlogModulePost extends Controller
 
                 $author = $this->model_extension_d_blog_module_author->getAuthor($post['user_id']);
                 $data['author'] = (!empty($author['name'])) ? $author['name'] : $this->language->get('text_anonymous');
-                $data['author_link'] = $this->url->link('extension/d_blog_module/author', 'user_id=' . $post['user_id'], 'SSL');
+                $data['author_link'] = $this->url->link('extension/d_blog_module/author', 'author_id=' . $post['user_id'], 'SSL');
 
                 if ((isset($post['limit_access_user']) && $post['limit_access_user'])) {
                     //yes limit

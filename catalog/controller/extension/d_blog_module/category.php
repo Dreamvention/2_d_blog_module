@@ -83,41 +83,6 @@ class ControllerExtensionDBlogModuleCategory extends Controller
         //category_info
         $category_info = $this->model_extension_d_blog_module_category->getCategory($category_id);
 
-        if (VERSION >= '2.2.0.0') {
-                $this->user = new Cart\User($this->registry);
-            } else {
-                $this->user = new User($this->registry);
-            }
-
-            if (!$this->user->isLogged()) { // loged as admin
-                if ((isset($category_info['limit_access_user']) && $category_info['limit_access_user'])) {
-                    //yes limit
-                    if (!$this->customer->isLogged()) {
-                        $this->postRestrict($category_id);
-                        return;
-                    } else {
-                        //user is logged find in allowed
-                        $allowed_users = explode(',', $category_info['limit_users']);
-                        if (!in_array($this->customer->getId(), $allowed_users)) {
-                            $this->postRestrict($category_id);
-                            return;
-                        }
-                    }
-                }
-                if (isset($category_info['limit_access_user_group']) && $category_info['limit_access_user_group']) {
-                    if (!$this->customer->isLogged()) {
-                        $this->postRestrict($category_id);
-                        return;
-                    } else {
-                        //user is logged find in allowed groups
-                        $allowed_groups = explode(',', $category_info['limit_user_groups']);
-                        if (!in_array($this->customer->getGroupId(), $allowed_groups)) {
-                            $this->postRestrict($category_id);
-                            return;
-                        }
-                    }
-                }
-            }
 
         if (!empty($category_info['custom'])) {
             $this->setting['category'] = array_merge($this->setting['category'], (array)$category_info['setting']);
@@ -242,14 +207,10 @@ class ControllerExtensionDBlogModuleCategory extends Controller
         } else {
             $filter_data = array('filter_category_id' => $category_id, 'limit' => $limit, 'start' => ($page - 1) * $limit,);
         }
-
         $post_total = $this->model_extension_d_blog_module_post->getTotalPosts($filter_data);
         $posts = $this->model_extension_d_blog_module_post->getPosts($filter_data);
+
         $new_row = false;
-        if ($category_id == $this->setting['category']['main_category_id'] && !$this->setting['category']['main_post_display']) {
-            $data['post_display_on_main'] = true;
-            $posts = false;
-        }
         if ($posts) {
             $post_thumb = $this->setting['post_thumb'];
             $data['post_thumb'] = $post_thumb;
@@ -266,133 +227,29 @@ class ControllerExtensionDBlogModuleCategory extends Controller
                     $col_count = $layout[$row];
                 }
 
-
-
-                $access_limit = false;
-                $post_info = $this->model_extension_d_blog_module_post->getPost($post['post_id']);
-                $cat_info = $this->model_extension_d_blog_module_category->getCategoryByPostId($post['post_id']);
-                $cat_id = array();
-                $category_access = array();
-                foreach ($cat_info as $cat_id) {
-                    foreach ($cat_id as $k => $v) {
-                        if ($k == 'category_id') {
-                        $cat_id[] = $v;
-                        }
-                    }
-                }
-                foreach ($cat_id as $id) {
-                    $category_access[] = $this->model_extension_d_blog_module_category->getCategory($id);
-                }
-
-                if ($post_info) {
-                    if (VERSION >= '2.2.0.0') {
-                        $this->user = new Cart\User($this->registry);
-                    } else {
-                        $this->user = new User($this->registry);
-                    }
-
-                    if (!$this->user->isLogged()) { // loged as admin
-                        if (isset($post_info['limit_access_user']) && $post_info['limit_access_user']) {
-                            //yes limit
-                            if (!$this->customer->isLogged()) {
-                                $access_limit = true;
-                            } else {
-                                //user is logged find in allowed
-                                $allowed_users = explode(',', $post_info['limit_users']);
-                                if (!in_array($this->customer->getId(), $allowed_users)) {
-                                    $access_limit = true;
-                                }
-                            }
-                        }
-                        
-                        if (isset($post_info['limit_access_user_group']) && $post_info['limit_access_user_group']) {
-                            if (!$this->customer->isLogged()) {
-                                $access_limit = true;
-                            } else {
-                                //user is logged find in allowed groups
-                                $allowed_groups = explode(',', $post_info['limit_user_groups']);
-                                if (!in_array($this->customer->getGroupId(), $allowed_groups)) {
-                                    $access_limit = true;
-                                }
-                            }
-                        }
-
-                        foreach ($category_access as $cat_access) {
-                                //limit by category
-                            if (isset($cat_access['limit_access_user']) && $cat_access['limit_access_user']) {
-                               //yes limit
-                                if (!$this->customer->isLogged()) {
-                                    $access_limit = true;
-                                } else {
-                                    //user is logged find in allowed
-                                    $allowed_users = explode(',', $cat_access['limit_users']);
-                                    if (!in_array($this->customer->getId(), $allowed_users)) {
-                                        $access_limit = true;
-                                    }
-                                }
-                            }
-                            
-                            //limit by category
-                            if (isset($cat_access['limit_access_user_group']) && $cat_access['limit_access_user_group']) {
-                                if (!$this->customer->isLogged()) {
-                                    $access_limit = true;
-                                } else {
-                                    //user is logged find in allowed groups
-                                    $allowed_groups = explode(',', $cat_access['limit_user_groups']);
-                                    if (!in_array($this->customer->getGroupId(), $allowed_groups)) {
-                                        $access_limit = true;
-
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (!$this->setting['category']['limited_post_display']) {
-                    if (!$access_limit) {
-                        $data['posts'][] = array(
-                            'access_limit' => $access_limit,
-                            'post'      => $this->load->controller('extension/d_blog_module/post/thumb', $post['post_id']),
-                            'col_count' => $col_count,
-                            'animate'   => $this->setting['post_thumb']['animate'],
-                            'col'       => ($col_count) ? round(12 / $col_count) : 12,
-                            'row'       => $new_row
-                        );
-                    
-                        $col++;
-                        $new_row = false;
-                        if ($col >= $col_count) {
-                            $col = 0;
-                            $row++;
-                            $new_row = true;
-                        }
-                    }
-
-                } else {
-                    $data['posts'][] = array(
-                    'access_limit' => $access_limit,
+                $data['posts'][] = array(
                     'post'      => $this->load->controller('extension/d_blog_module/post/thumb', $post['post_id']),
                     'col_count' => $col_count,
                     'animate'   => $this->setting['post_thumb']['animate'],
                     'col'       => ($col_count) ? round(12 / $col_count) : 12,
                     'row'       => $new_row
                 );
-            
+
                 $col++;
                 $new_row = false;
-                    if ($col >= $col_count) {
-                        $col = 0;
-                        $row++;
-                        $new_row = true;
-                    }
+                if ($col >= $col_count) {
+                    $col = 0;
+                    $row++;
+                    $new_row = true;
                 }
             }
-        };
+        }
 
+        ;
         $data['limits'] = array();
         $limits = array_unique(array($this->setting['category']['post_page_limit'], 25, 50, 75, 100));
         sort($limits);
+
         $url = '';
         $pagination = new Pagination();
         $pagination->total = $post_total;
@@ -435,6 +292,7 @@ class ControllerExtensionDBlogModuleCategory extends Controller
                 $this->document->addScript('catalog/view/theme/default/javascript/' . $script);
             }
         }
+
         //metas
         $this->document->setTitle($category_info['meta_title']);
         $this->document->setDescription($category_info['meta_description']);
@@ -448,35 +306,6 @@ class ControllerExtensionDBlogModuleCategory extends Controller
 
         $this->response->setOutput($this->model_extension_d_opencart_patch_load->view('extension/d_blog_module/category', $data));
 
-    }
-
-    public function postRestrict($category_id)
-    {
-        $url = '';
-        $data['breadcrumbs'][] = array(
-            'text' => $this->language->get('text_error'),
-            'href' => $this->url->link('extension/d_blog_module/post', $url . '&post_id=' . $category_id, 'SSL')
-        );
-
-        $this->document->setTitle($this->language->get('text_restricted_access'));
-
-        $data['heading_title'] = $this->language->get('text_restricted_access');
-
-        $data['text_error'] = !$this->customer->isLogged() ? $this->language->get('text_login') : $this->language->get('text_contact_admin');
-
-        $data['button_continue'] = $this->language->get('button_continue');
-
-        $data['continue'] = $this->url->link('common/home');
-
-        $this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
-
-        $data['column_left'] = $this->load->controller('common/column_left');
-        $data['column_right'] = $this->load->controller('common/column_right');
-        $data['content_top'] = $this->load->controller('common/content_top');
-        $data['content_bottom'] = $this->load->controller('common/content_bottom');
-        $data['footer'] = $this->load->controller('common/footer');
-        $data['header'] = $this->load->controller('common/header');
-        $this->response->setOutput($this->load->view('error/not_found', $data));
     }
 
     public function format($format, $json)
