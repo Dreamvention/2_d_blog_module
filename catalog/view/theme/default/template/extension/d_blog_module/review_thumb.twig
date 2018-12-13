@@ -9,9 +9,9 @@
             <img class="media-object" src="{{review.image}}" alt="{{review.author}}"  style="max-width:{{setting.review_thumb.image_width}}px">
             {% if provider %}
                 {% for provider in review.provider %}
-                <div id="d_social_login">
-                    <a id="dsl_{{provider.id}}_button" class="dsl-button dsl-button-icons"><span class="l-side"><span class="dsl-icon {{provider.icon}}"></span></span></a>
-                </div>
+                    <div id="d_social_login">
+                        <a id="dsl_{{provider.id}}_button" class="dsl-button dsl-button-icons"><span class="l-side"><span class="dsl-icon {{provider.icon}}"></span></span></a>
+                    </div>
                 {% endfor %}
             {% endif %}
         </div>

@@ -14,7 +14,13 @@
             {% if not posts %}
                 <p class="bm-empty">{{text_empty}}</p>
                 <div class="buttons">
-                    <div class="pull-right"><a href="{{continue}}" class="btn btn-primary">{{button_continue}}</a></div>
+                    <div class="pull-right">
+                            {% include template('partial/button') with {button:{
+                                link:continue, 
+                                style:'primary',
+                                text_button: button_continue
+                        }} %}
+                    </div>
                 </div>
             {% endif %}
         </div>
