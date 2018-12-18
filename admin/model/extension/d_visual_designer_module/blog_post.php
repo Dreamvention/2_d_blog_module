@@ -4,6 +4,7 @@ class ModelExtensionDVisualDesignerModuleBlogPost extends Model
 {
     public function getPosts($data = array())
     {
+
         $sql = "SELECT p.post_id ,pd.title";
 
 

@@ -29,6 +29,9 @@ class ControllerExtensionDVisualDesignerModuleBlogPost extends Controller
 
     public function index($setting)
     {
+        if (empty($this->setting)){
+            return;
+        }
         $posts = array();
         $data = array();
         $filter_data = array(
@@ -50,7 +53,7 @@ class ControllerExtensionDVisualDesignerModuleBlogPost extends Controller
             default:
                 break;
         }
-        $posts = $this->model_extension_d_visual_designer_module_blog_post->getPosts($filter_data);
+
 
 
         if ($posts) {
