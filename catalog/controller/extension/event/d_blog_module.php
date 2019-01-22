@@ -27,8 +27,9 @@ class ControllerExtensionEventDBlogModule extends Controller
         if ($bm_status) {
             $this->load->language('extension/event/d_blog_module');
             $this->load->model('extension/d_blog_module/category');
-            $config = $this->config->get('d_blog_module_setting');
-            $bm_category_id = (isset($config['category']['main_category_id'])) ? $config['category']['main_category_id'] : 0;
+            $this->load->model('setting/setting');
+            $config = $this->model_setting_setting->getSetting('d_blog_module');
+            $bm_category_id = (isset($config['d_blog_module_setting']['category']['main_category_id'])) ? $config['d_blog_module_setting']['category']['main_category_id'] : 0;
             $bm_children_data = array();
             $children = $this->model_extension_d_blog_module_category->getCategories($bm_category_id);
             foreach ($children as $child) {
