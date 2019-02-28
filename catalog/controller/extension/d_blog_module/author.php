@@ -21,11 +21,14 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
             }
         }
         //fix theme detection xx
-        if ($this->config->get('config_theme') == 'default') {
-            $this->theme = $this->config->get('theme_default_directory');
-        } else {
-            $this->theme = $this->config->get('config_theme');
-        }
+        if (VERSION >= '3.0.0.0') {
+			$this->theme = $this->config->get('theme_' . $this->config->get('config_theme') . '_directory');
+		} elseif (VERSION >= '2.2.0.0') {
+			$this->theme = $this->config->get($this->config->get('config_theme') . '_directory');
+		} else {
+			$this->theme = $this->config->get('config_template');
+		}
+		
         $this->load->model('extension/d_opencart_patch/load');
         $this->load->language('extension/d_blog_module/author');
         $this->load->model('extension/module/d_blog_module');

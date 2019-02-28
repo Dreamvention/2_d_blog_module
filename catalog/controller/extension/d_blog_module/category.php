@@ -26,11 +26,14 @@ class ControllerExtensionDBlogModuleCategory extends Controller
 //            $this->theme = $this->config->get($this->config->get('config_theme') . '_directory');
         }
         //fix theme detection
-        if ($this->config->get('config_theme') == 'default') {
-            $this->theme = $this->config->get('theme_default_directory');
-        } else {
-            $this->theme = $this->config->get('config_theme');
-        }
+		if (VERSION >= '3.0.0.0') {
+			$this->theme = $this->config->get('theme_' . $this->config->get('config_theme') . '_directory');
+		} elseif (VERSION >= '2.2.0.0') {
+			$this->theme = $this->config->get($this->config->get('config_theme') . '_directory');
+		} else {
+			$this->theme = $this->config->get('config_template');
+		}
+		
         $this->load->language('extension/d_blog_module/category');
 
         $this->load->model('extension/module/d_blog_module');
@@ -64,12 +67,7 @@ class ControllerExtensionDBlogModuleCategory extends Controller
         } else {
             $page = 1;
         }
-        if (isset($this->request->get['limit'])) {
-            $limit = $this->request->get['limit'];
-        } else {
-            $limit = $this->setting['category']['post_page_limit'];
-        }
-
+        
         if (!empty($this->request->get['category_id'])) {
             $category_id = $this->request->get['category_id'];
         } else {
@@ -89,6 +87,13 @@ class ControllerExtensionDBlogModuleCategory extends Controller
         }
 
         $data['setting'] = $this->setting;
+		
+		if (isset($this->request->get['limit'])) {
+            $limit = $this->request->get['limit'];
+        } else {
+            $limit = $this->setting['category']['post_page_limit'];
+        }
+		
         //category
         $parents = array();
         if ($category_info) {
@@ -278,7 +283,7 @@ class ControllerExtensionDBlogModuleCategory extends Controller
         $this->document->addScript('catalog/view/javascript/d_bootstrap_rating/bootstrap-rating.min.js');
 
         foreach ($styles as $style) {
-            if (file_exists(DIR_TEMPLATE . $this->theme . '/stylesheet/' . $style)) {
+			if (file_exists(DIR_TEMPLATE . $this->theme . '/stylesheet/' . $style)) {
                 $this->document->addStyle('catalog/view/theme/' . $this->theme . '/stylesheet/' . $style);
             } else {
                 $this->document->addStyle('catalog/view/theme/default/stylesheet/' . $style);
