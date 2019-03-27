@@ -141,7 +141,7 @@
     "changelog": [
         {
             "version":"3.1.5",
-            "change": "return comment back"
+            "change": "return comment back, addAuthor compatibility with <2.1.0.0 versions"
         },
         {
             "version":"3.1.3",
