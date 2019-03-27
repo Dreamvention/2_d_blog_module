@@ -3,6 +3,11 @@
 class ModelExtensionDBlogModuleAuthor extends Model {
 
     public function addAuthor($data) {
+	    
+	(VERSION >= '2.1.0.0') 
+        ?$saltTok = $this->db->escape($salt = token(9))
+        :$saltTok = $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9));
+	    
         $user_id = (int) $data['user_id'];
         if(!empty($data['user_id']))
         {
@@ -16,7 +21,7 @@ class ModelExtensionDBlogModuleAuthor extends Model {
 
             if ($data['password']) {
                 $this->db->query("UPDATE `" . DB_PREFIX . "user` SET 
-                    salt = '" . $this->db->escape($salt = token(9)) . "', 
+                    salt = '". $saltTok . "', 
                     password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' 
                     WHERE user_id = '" .$data['user_id'] . "'");
             }
@@ -26,7 +31,7 @@ class ModelExtensionDBlogModuleAuthor extends Model {
             $this->db->query("INSERT INTO `" . DB_PREFIX . "user` SET 
                 username = '" . $this->db->escape($data['username']) .  "', 
                 user_group_id = '" . $this->db->escape($data['user_group_id']) . "', 
-                salt = '" . $this->db->escape($salt = token(9)) . "', 
+                salt = '" . $saltTok . "', 
                 password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', 
                 firstname = '" . $this->db->escape($data['firstname']) . "', 
                 lastname = '" . $this->db->escape($data['lastname']) . "', 
