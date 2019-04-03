@@ -117,8 +117,8 @@
     {% else %}
         <div class="form-group"><div class="col-md-12"><p>{{text_login}}</p><p>{{d_social_login}}</p></div></div>
     {% endif %}
-    <input id="post_id" type="hidden" name="post_id" value="{{post_id}}">
-    <input id="reply_to_review_id" type="hidden" name="reply_to_review_id" type="text">
+   <input type="text" name="post_id"  id="post_id" class="hidden" value="{{post_id}}"  >
+    <input type="text"  name="reply_to_review_id" id="reply_to_review_id" class="hidden"  >
 </form>
 
 <script>
