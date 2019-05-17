@@ -315,7 +315,7 @@ class ControllerExtensionEventDBlogModule extends Controller
         $languages = $this->model_localisation_language->getLanguages();
 
         foreach ($languages as $language) {
-            $html_dom->find('textarea[name^="post_description[' . $language['language_id'] . '][description]"]', 0)->class .= ' d_visual_designer';
+            $html_dom->find('textarea[name^="post_description[' . $language['language_id'] . '][description"]', 0)->class .= ' d_visual_designer';
         }
         $html_dom->find('body', 0)->innertext .= $vd_content;
 
@@ -342,7 +342,7 @@ class ControllerExtensionEventDBlogModule extends Controller
         $languages = $this->model_localisation_language->getLanguages();
 
         foreach ($languages as $language) {
-            $html_dom->find('textarea[name^="author_description[' . $language['language_id'] . '][description]"]', 0)->class .= ' d_visual_designer';
+            $html_dom->find('textarea[name^="author_description[' . $language['language_id'] . '][description"]', 0)->class .= ' d_visual_designer';
         }
 
         $html_dom->find('body', 0)->innertext .= $vd_content;
@@ -368,7 +368,7 @@ class ControllerExtensionEventDBlogModule extends Controller
         $languages = $this->model_localisation_language->getLanguages();
 
         foreach ($languages as $language) {
-            $html_dom->find('textarea[name^="category_description[' . $language['language_id'] . '][description]"]', 0)->class .= ' d_visual_designer';
+            $html_dom->find('textarea[name^="category_description[' . $language['language_id'] . '][description"]', 0)->class .= ' d_visual_designer';
         }
 
         $html_dom->find('body', 0)->innertext .= $vd_content;
