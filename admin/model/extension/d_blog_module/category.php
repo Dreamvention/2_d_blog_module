@@ -385,8 +385,8 @@ class ModelExtensionDBlogModuleCategory extends Model {
         . "' AND cd2.language_id = '" . (int) $this->config->get('config_language_id') . "'";
 
 
-        if (!empty($data['filter_name'])) {
-            $sql .= " AND cd2.title LIKE '" . $this->db->escape($data['filter_name']) . "%'";
+        if (!empty($data['filter_title'])) {
+            $sql .= " AND cd2.title LIKE '" . $this->db->escape($data['filter_title']) . "%'";
         }
 
         $sql .= " GROUP BY cp.category_id";
