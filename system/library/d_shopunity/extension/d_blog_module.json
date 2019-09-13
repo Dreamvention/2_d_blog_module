@@ -1,6 +1,6 @@
 {
     "codename": "d_blog_module",
-    "version": "3.1.6",
+    "version": "3.1.7",
     "name": "Blog module",
     "description": "A blog module based on twig and events. Huge functionality packed in one great solution. ",
     "index": "extension/module/d_blog_module",
@@ -38,7 +38,8 @@
         "d_rubaxa_sortable": ">= 1.4.0",
         "d_bootstrap_colorpicker": ">= 2.5.0",
         "d_twig_partial": ">=1.0.0",
-        "d_admin_style": ">= 1.0.0"
+        "d_admin_style": ">= 1.0.0",
+        "d_validator": ">=1.0.2"
     },
     "files": [
         "system/library/d_shopunity/extension/d_blog_module.json",
@@ -123,6 +124,10 @@
         "image/catalog/d_blog_module/post"
     ],
     "changelog": [
+        {
+            "version":"3.1.7",
+            "change": "Validator dependency"
+        },
         {
             "version":"3.1.6",
             "change": "sem var"

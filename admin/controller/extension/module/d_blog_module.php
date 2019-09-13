@@ -43,6 +43,8 @@ class ControllerExtensionModuleDBlogModule extends Controller {
             $this->store_id = $this->request->get['store_id'];
         }
 
+        $this->d_validator = (file_exists(DIR_SYSTEM . 'library/d_shopunity/extension/d_validator.json'));
+
         // give some permissions
         $this->permission_handler('main');
 
@@ -67,6 +69,11 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         if($this->d_event_manager){
             $this->load->model('extension/module/d_event_manager');
             $this->model_extension_module_d_event_manager->installCompatibility();            
+        }
+
+        if ($this->d_validator) {
+            $this->load->model('extension/d_shopunity/d_validator');
+            $this->model_extension_d_shopunity_d_validator->installCompatibility();
         }
 
         if(!$this->isSetup()){
