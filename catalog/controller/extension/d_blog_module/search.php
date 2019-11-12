@@ -81,8 +81,14 @@ class ControllerExtensionDBlogModuleSearch extends Controller
         }
 
         if (isset($this->request->get['date_published'])) {
-            $date_published = $this->request->get['date_published'];
-            $title = sprintf($this->language->get('text_date_published'), date("F Y", strtotime('01-'.$this->request->get['date_published'])));
+            preg_match('/(\d*)-(\d*)/',$date_published_u,$date_published_s);
+            
+            if(isset($date_published_s[0])){
+                $date_published = $date_published_s[0];
+                $title = sprintf($this->language->get('text_date_published'), date("F Y", strtotime('01-'.$date_published)));
+            }else{
+                $date_published = '';
+            }
         }
         else {
             $date_published = '';
