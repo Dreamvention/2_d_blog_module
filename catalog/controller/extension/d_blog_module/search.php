@@ -81,7 +81,7 @@ class ControllerExtensionDBlogModuleSearch extends Controller
         }
 
         if (isset($this->request->get['date_published'])) {
-            preg_match('/(\d*)-(\d*)/',$date_published_u,$date_published_s);
+            preg_match('/(\d*)-(\d*)/', $this->request->get['date_published'], $date_published_s);
             
             if(isset($date_published_s[0])){
                 $date_published = $date_published_s[0];
