@@ -41,6 +41,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
 
         if (isset($this->request->get['store_id'])) {
             $this->store_id = $this->request->get['store_id'];
+            $this->session->data['blog']['store_id'] = $this->request->get['store_id'];
         }
 
         $this->d_validator = (file_exists(DIR_SYSTEM . 'library/d_shopunity/extension/d_validator.json'));
@@ -51,7 +52,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $this->config_file = $this->model_extension_module_d_blog_module->getConfigFile($this->codename, $this->sub_versions);
     }
 
-    
+
     public function index()
     {
         if($this->d_shopunity){
@@ -68,7 +69,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
 
         if($this->d_event_manager){
             $this->load->model('extension/module/d_event_manager');
-            $this->model_extension_module_d_event_manager->installCompatibility();            
+            $this->model_extension_module_d_event_manager->installCompatibility();
         }
 
         if ($this->d_validator) {
@@ -85,6 +86,10 @@ class ControllerExtensionModuleDBlogModule extends Controller {
 
         //save post
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+
+            if($this->session->data['blog']['store_id']){
+                $this->store_id = $this->session->data['blog']['store_id'];
+            }
 
             $new_post = array();
             foreach ($this->request->post as $k => $v) {
@@ -435,10 +440,10 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
         $this->response->setOutput($this->model_extension_d_opencart_patch_load->view($this->route, $data));
-    }    
+    }
 
     public function setupView() {
-        
+
         $this->load->model('extension/d_opencart_patch/load');
         $this->load->model('extension/d_opencart_patch/url');
 
@@ -447,15 +452,15 @@ class ControllerExtensionModuleDBlogModule extends Controller {
 
             $this->model_extension_d_admin_style_style->getAdminStyle('light');
         }
-        
+
         $url_params = array();
-        
+
         if (isset($this->response->get['store_id'])) {
             $url_params['store_id'] = $this->store_id;
         }
-        
+
         $url = ((!empty($url_params)) ? '&' : '') . http_build_query($url_params);
-        
+
         // Breadcrumbs
         $data['breadcrumbs'] = array();
         $data['breadcrumbs'][] = array(
@@ -472,19 +477,19 @@ class ControllerExtensionModuleDBlogModule extends Controller {
             'text' => $this->language->get('heading_title_main'),
             'href' => $this->model_extension_d_opencart_patch_url->link('marketplace/extension', $url)
         );
-        
+
         // Notification
         foreach ($this->error as $key => $error) {
             $data['error'][$key] = $error;
         }
-        
+
         // Heading
         $this->document->setTitle($this->language->get('heading_title_main'));
         $data['heading_title'] = $this->language->get('heading_title_main');
         $data['text_edit'] = $this->language->get('text_edit');
 
         $data['version'] = $this->extension['version'];
-        
+
         $data['text_welcome_title'] = $this->language->get('text_welcome_title');
         $data['text_welcome_description'] = $this->language->get('text_welcome_description');
 
@@ -496,7 +501,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $data['button_setup'] = $this->language->get('button_setup');
         $data['checkbox_setup'] = $this->language->get('checkbox_setup');
         $data['quick_setup'] = $this->model_extension_d_opencart_patch_url->ajax($this->route.'/setup');
-        
+
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
@@ -540,19 +545,19 @@ class ControllerExtensionModuleDBlogModule extends Controller {
                     if (!in_array($data['d_seo_module'], $installed_seo_extensions)) {
                         $info = $this->load->controller('extension/d_seo_module/'.$data['d_seo_module'].'/control_install_extension');
                         $this->load->language('d_seo_module');
-                        
+
                         if ($info) {
                             $data = $info;
-                                    
+
                             if ($data['error']) {
                                 $json['error'] = $data['error'];
-                            
+
                             } else {
                                 $installed_seo_extensions = $this->model_extension_module_d_seo_module->getInstalledSEOExtensions();
-                            } 
+                            }
                         } else {
                             $json['warning'] = $this->language->get('error_dependence_d_seo_module');
-                            
+
                         }
                     }
                 }
@@ -571,7 +576,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
     Add Assisting functions here
 
      **/
-    
+
     public function install()
     {
         $this->load->model('extension/module/d_blog_module');
@@ -705,19 +710,19 @@ class ControllerExtensionModuleDBlogModule extends Controller {
             if (!in_array($data['d_seo_module'], $installed_seo_extensions)) {
                 $info = $this->load->controller('extension/d_seo_module/'.$data['d_seo_module'].'/control_install_extension');
                 $this->load->language('d_seo_module');
-                
+
                 if ($info) {
                     $data = $info;
-                            
+
                     if ($data['error']) {
                         $json['error'] = $data['error'];
-                    
+
                     } else {
                         $installed_seo_extensions = $this->model_extension_module_d_seo_module->getInstalledSEOExtensions();
-                    } 
+                    }
                 } else {
                     $json['warning'] = $this->language->get('error_dependence_d_seo_module');
-                    
+
                 }
             }
         }
