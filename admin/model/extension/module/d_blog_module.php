@@ -630,6 +630,10 @@ class ModelExtensionModuleDBlogModule extends Model
                                 $sql = str_replace("code", "group", $sql);
                             }
                         }
+			    
+			// fix: can't install demo data
+			$sql = str_replace("DELETE FROM `oc_", "DELETE FROM `" . DB_PREFIX, $sql);
+			// fix: can't install demo data - end
 
                         $sql = str_replace("DROP TABLE IF EXISTS `oc_", "DROP TABLE IF EXISTS `" . DB_PREFIX, $sql);
                         $sql = str_replace("CREATE TABLE `oc_", "CREATE TABLE `" . DB_PREFIX, $sql);
