@@ -69,9 +69,9 @@ class ControllerExtensionDBlogModuleCategory extends Controller
         }
         
         if (!empty($this->request->get['category_id'])) {
-            $category_id = $this->request->get['category_id'];
+            $category_id = (int)$this->request->get['category_id'];
         } else {
-            $category_id = $this->setting['category']['main_category_id'];
+            $category_id = (int)$this->setting['category']['main_category_id'];
         }
 
         $url = '';
