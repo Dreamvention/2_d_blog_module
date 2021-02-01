@@ -69,8 +69,10 @@ class ControllerExtensionDBlogModuleCategory extends Controller
         }
         
         if (!empty($this->request->get['category_id'])) {
+		// SQL injection vulnerability fix by Ramadhan Amizudin
             $category_id = (int)$this->request->get['category_id'];
         } else {
+		// SQL injection vulnerability fix by Ramadhan Amizudin
             $category_id = (int)$this->setting['category']['main_category_id'];
         }
 
