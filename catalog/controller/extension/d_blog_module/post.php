@@ -235,7 +235,7 @@ class ControllerExtensionDBlogModulePost extends Controller
             foreach ($categories as $category) {
                 $data['categories'][] = array(
                     'title' => $category['title'],
-                    'href'  => $this->url->link('extension/d_blog_module/category', 'category_id=' . $category['category_id'] . $url, 'SSL')
+                    'href'  => $this->url->link('extension/d_blog_module/category', 'bm_category_id=' . $category['category_id'] . $url, 'SSL')
                 );
             }
 
@@ -258,12 +258,12 @@ class ControllerExtensionDBlogModulePost extends Controller
                 foreach ($parents as $category) {
                     $data['breadcrumbs'][] = array(
                         'text' => $category['title'],
-                        'href' => $this->url->link('extension/d_blog_module/category', 'category_id=' . $category['category_id'] . $url, 'SSL')
+                        'href' => $this->url->link('extension/d_blog_module/category', 'bm_category_id=' . $category['category_id'] . $url, 'SSL')
                     );
                 }
                 $data['breadcrumbs'][] = array(
                     'text' => $parent_category['title'],
-                    'href' => $this->url->link('extension/d_blog_module/category', 'category_id=' . $parent_category['category_id'] . $url, 'SSL')
+                    'href' => $this->url->link('extension/d_blog_module/category', 'bm_category_id=' . $parent_category['category_id'] . $url, 'SSL')
                 );
             }
 
@@ -485,7 +485,7 @@ class ControllerExtensionDBlogModulePost extends Controller
                 foreach ($post_categories as $category) {
                     $category_info[] = array(
                         'title' => $category['title'],
-                        'href'  => $this->url->link('extension/d_blog_module/category', 'category_id=' . $category['category_id'], 'SSL')
+                        'href'  => $this->url->link('extension/d_blog_module/category', 'bm_category_id=' . $category['category_id'], 'SSL')
                     );
                 }
 

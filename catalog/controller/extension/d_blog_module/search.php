@@ -115,7 +115,7 @@ class ControllerExtensionDBlogModuleSearch extends Controller
 
         $data['breadcrumbs'][] = array(
             'text' => $main_category_info['title'],
-            'href' => $this->url->link('extension/d_blog_module/category','category_id='. $this->setting['category']['main_category_id'],'SSL')
+            'href' => $this->url->link('extension/d_blog_module/category','bm_category_id='. $this->setting['category']['main_category_id'],'SSL')
             );
 
         $data['breadcrumbs'][] = array(

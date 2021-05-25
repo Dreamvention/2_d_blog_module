@@ -72,7 +72,7 @@ class ControllerExtensionDBlogModuleCategory extends Controller {
                 $this->request->post['setting'] = '';
             }
 
-            $this->model_extension_d_blog_module_category->editCategory($this->request->get['category_id'], $this->request->post);
+            $this->model_extension_d_blog_module_category->editCategory($this->request->get['bm_category_id'], $this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
 
@@ -199,7 +199,7 @@ class ControllerExtensionDBlogModuleCategory extends Controller {
                 'title' => $result['title'],
                 'sort_order' => $result['sort_order'],
                 'status' => ($result['status']) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
-                'edit' => $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/category/edit', '&category_id=' . $result['category_id'] . $url)
+                'edit' => $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/category/edit', '&bm_category_id=' . $result['category_id'] . $url)
                 );
         }
 
@@ -291,7 +291,7 @@ class ControllerExtensionDBlogModuleCategory extends Controller {
 
         $data['codename'] = $this->codename;
         $data['heading_title'] = $this->language->get('heading_title');
-        $data['text_form'] = !isset($this->request->get['category_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
+        $data['text_form'] = !isset($this->request->get['bm_category_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
         $data['text_enabled'] = $this->language->get('text_enabled');
         $data['text_disabled'] = $this->language->get('text_disabled');
         $data['text_none'] = $this->language->get('text_none');
@@ -404,17 +404,17 @@ class ControllerExtensionDBlogModuleCategory extends Controller {
             'href' => $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/category', $url)
             );
 
-        if (!isset($this->request->get['category_id'])) {
+        if (!isset($this->request->get['bm_category_id'])) {
             $data['action'] = $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/category/add', $url);
         } else {
-            $data['action'] = $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/category/edit', '&category_id=' . $this->request->get['category_id'] . $url);
+            $data['action'] = $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/category/edit', '&bm_category_id=' . $this->request->get['bm_category_id'] . $url);
         }
 
         $data['cancel'] = $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/category', $url);
 
-        if (isset($this->request->get['category_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+        if (isset($this->request->get['bm_category_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 
-            $category_info = $this->model_extension_d_blog_module_category->getCategory($this->request->get['category_id']);
+            $category_info = $this->model_extension_d_blog_module_category->getCategory($this->request->get['bm_category_id']);
         }
 
         $data['token'] = $this->model_extension_d_opencart_patch_user->getToken();
@@ -434,8 +434,8 @@ class ControllerExtensionDBlogModuleCategory extends Controller {
 
         if (isset($this->request->post['category_description'])) {
             $data['category_description'] = $this->request->post['category_description'];
-        } elseif (isset($this->request->get['category_id'])) {
-            $data['category_description'] = $this->model_extension_d_blog_module_category->getCategoryDescriptions($this->request->get['category_id']);
+        } elseif (isset($this->request->get['bm_category_id'])) {
+            $data['category_description'] = $this->model_extension_d_blog_module_category->getCategoryDescriptions($this->request->get['bm_category_id']);
         } else {
             $data['category_description'] = array();
         }
@@ -482,8 +482,8 @@ class ControllerExtensionDBlogModuleCategory extends Controller {
 
         if (isset($this->request->post['category_store'])) {
             $data['category_store'] = $this->request->post['category_store'];
-        } elseif (isset($this->request->get['category_id'])) {
-            $data['category_store'] = $this->model_extension_d_blog_module_category->getCategoryStores($this->request->get['category_id']);
+        } elseif (isset($this->request->get['bm_category_id'])) {
+            $data['category_store'] = $this->model_extension_d_blog_module_category->getCategoryStores($this->request->get['bm_category_id']);
         } elseif (isset($category_info['category_id'])) {
             $data['category_store'] = $this->model_extension_d_blog_module_category->getCategoryStores($category_info['category_id']);
         } else {
@@ -563,8 +563,8 @@ class ControllerExtensionDBlogModuleCategory extends Controller {
 
         if (isset($this->request->post['category_layout'])) {
             $data['category_layout'] = $this->request->post['category_layout'];
-        } elseif (isset($this->request->get['category_id'])) {
-            $data['category_layout'] = $this->model_extension_d_blog_module_category->getCategoryLayouts($this->request->get['category_id']);
+        } elseif (isset($this->request->get['bm_category_id'])) {
+            $data['category_layout'] = $this->model_extension_d_blog_module_category->getCategoryLayouts($this->request->get['bm_category_id']);
         } else {
             $data['category_layout'] = array();
         }

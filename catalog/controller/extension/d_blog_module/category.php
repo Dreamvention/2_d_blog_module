@@ -68,11 +68,9 @@ class ControllerExtensionDBlogModuleCategory extends Controller
             $page = 1;
         }
         
-        if (!empty($this->request->get['category_id'])) {
-		// SQL injection vulnerability fix by Ramadhan Amizudin
-            $category_id = (int)$this->request->get['category_id'];
+        if (!empty($this->request->get['bm_category_id'])) {
+            $category_id = (int)$this->request->get['bm_category_id'];
         } else {
-		// SQL injection vulnerability fix by Ramadhan Amizudin
             $category_id = (int)$this->setting['category']['main_category_id'];
         }
 
@@ -122,9 +120,9 @@ class ControllerExtensionDBlogModuleCategory extends Controller
             $site_link = $this->config->get('config_secure') ? $this->config->get('config_ssl') : $this->config->get('config_url');
 
             if (VERSION >= '3.0.0.0') {
-                $data['edit'] = $site_link . $this->setting['dir_admin'] . '/index.php?route=extension/d_blog_module/category/edit&category_id=' . $category_id . '&user_token=' . $this->session->data['user_token'];
+                $data['edit'] = $site_link . $this->setting['dir_admin'] . '/index.php?route=extension/d_blog_module/category/edit&bm_category_id=' . $category_id . '&user_token=' . $this->session->data['user_token'];
             } else {
-                $data['edit'] = $site_link . $this->setting['dir_admin'] . '/index.php?route=extension/d_blog_module/category/edit&category_id=' . $category_id . '&token=' . $this->session->data['token'];
+                $data['edit'] = $site_link . $this->setting['dir_admin'] . '/index.php?route=extension/d_blog_module/category/edit&bm_category_id=' . $category_id . '&token=' . $this->session->data['token'];
             }
         }
 
@@ -132,12 +130,12 @@ class ControllerExtensionDBlogModuleCategory extends Controller
         $data['breadcrumbs'] = array();
         $data['breadcrumbs'][] = array('text' => $this->language->get('text_home'), 'href' => $this->url->link('common/home'), '', 'SSL');
         if ($this->setting['category']['main_category_id'] == 0 && $this->setting['category']['main_category_id'] !== $category_id) {
-            $data['breadcrumbs'][] = array('text' => $this->language->get('heading_title'), 'href' => $this->url->link('extension/d_blog_module/category', 'category_id=' . $this->setting['category']['main_category_id'], 'SSL'));
+            $data['breadcrumbs'][] = array('text' => $this->language->get('heading_title'), 'href' => $this->url->link('extension/d_blog_module/category', 'bm_category_id=' . $this->setting['category']['main_category_id'], 'SSL'));
         }
         foreach ($parents as $parent) {
             $data['breadcrumbs'][] = array(
                 'text' => $parent['title'],
-                'href' => $this->url->link('extension/d_blog_module/category', 'category_id=' . $parent['category_id'], 'SSL')
+                'href' => $this->url->link('extension/d_blog_module/category', 'bm_category_id=' . $parent['category_id'], 'SSL')
             );
         }
         $data['breadcrumbs'][] = array('text' => $category_info['title']);
@@ -201,7 +199,7 @@ class ControllerExtensionDBlogModuleCategory extends Controller
                 $data['categories'][] = array(
                     'thumb' => $thumb,
                     'title' => $category['title'] . ($this->setting['category']['sub_category_post_count'] ? ' (' . $this->model_extension_d_blog_module_post->getTotalPostsByCategoryId($category['category_id']) . ')' : ''),
-                    'href'  => $this->url->link('extension/d_blog_module/category', 'category_id=' . $category['category_id'] . $url, 'SSL'),
+                    'href'  => $this->url->link('extension/d_blog_module/category', 'bm_category_id=' . $category['category_id'] . $url, 'SSL'),
                     'col'   => ($this->setting['category']['sub_category_col']) ? round(12 / $this->setting['category']['sub_category_col']) : 12
                 );
             }
@@ -262,21 +260,21 @@ class ControllerExtensionDBlogModuleCategory extends Controller
         $pagination->total = $post_total;
         $pagination->page = $page;
         $pagination->limit = $limit;
-        $pagination->url = $this->url->link('extension/d_blog_module/category', 'category_id=' . $category_info['category_id'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('extension/d_blog_module/category', 'bm_category_id=' . $category_info['category_id'] . $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
         $data['results'] = sprintf($this->language->get('text_pagination'), ($post_total) ? (($page - 1) * $limit) + 1 : 0, ((($page - 1) * $limit) > ($post_total - $limit)) ? $post_total : ((($page - 1) * $limit) + $limit), $post_total, ceil($post_total / $limit));
 
         if ($page == 1) {
-            $this->document->addLink($this->url->link('extension/d_blog_module/category', 'category_id=' . $category_info['category_id'], 'SSL'), 'canonical');
+            $this->document->addLink($this->url->link('extension/d_blog_module/category', 'bm_category_id=' . $category_info['category_id'], 'SSL'), 'canonical');
         } elseif ($page == 2) {
-            $this->document->addLink($this->url->link('extension/d_blog_module/category', 'category_id=' . $category_info['category_id'], 'SSL'), 'prev');
+            $this->document->addLink($this->url->link('extension/d_blog_module/category', 'bm_category_id=' . $category_info['category_id'], 'SSL'), 'prev');
         } else {
-            $this->document->addLink($this->url->link('extension/d_blog_module/category', 'category_id=' . $category_info['category_id'] . '&page=' . ($page - 1), 'SSL'), 'prev');
+            $this->document->addLink($this->url->link('extension/d_blog_module/category', 'bm_category_id=' . $category_info['category_id'] . '&page=' . ($page - 1), 'SSL'), 'prev');
         }
 
         if ($limit && ceil($post_total / $limit) > $page) {
-            $this->document->addLink($this->url->link('extension/d_blog_module/category', 'category_id=' . $category_info['category_id'] . '&page=' . ($page + 1), 'SSL'), 'next');
+            $this->document->addLink($this->url->link('extension/d_blog_module/category', 'bm_category_id=' . $category_info['category_id'] . '&page=' . ($page + 1), 'SSL'), 'next');
         }
 
 

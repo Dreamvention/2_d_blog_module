@@ -277,7 +277,7 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
         }
 
         $data['heading_title'] = $this->language->get('heading_title');
-        $data['text_form'] = !isset($this->request->get['category_id']) ?    $this->language->get('text_add') :    $this->language->get('text_edit');
+        $data['text_form'] = !isset($this->request->get['author_id']) ?    $this->language->get('text_add') :    $this->language->get('text_edit');
         $data['text_enabled'] = $this->language->get('text_enabled');
         $data['text_disabled'] = $this->language->get('text_disabled');
         $data['text_none'] = $this->language->get('text_none');
@@ -546,8 +546,8 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
 
         if (isset($this->request->post['category_store'])) {
             $data['category_store'] = $this->request->post['category_store'];
-        }    elseif (isset($this->request->get['category_id'])) {
-            $data['category_store'] = $this->model_extension_d_blog_module_author->getCategoryStores($this->request->get['category_id']);
+        }    elseif (isset($this->request->get['bm_category_id'])) {
+            $data['category_store'] = $this->model_extension_d_blog_module_author->getCategoryStores($this->request->get['bm_category_id']);
         }    elseif (isset($category_info['category_id'])) {
             $data['category_store'] = $this->model_extension_d_blog_module_author->getCategoryStores($category_info['category_id']);
         } else {
@@ -572,8 +572,8 @@ class ControllerExtensionDBlogModuleAuthor extends Controller {
 
         if (isset($this->request->post['category_layout'])) {
             $data['category_layout'] = $this->request->post['category_layout'];
-        } elseif (isset($this->request->get['category_id'])) {
-            $data['category_layout'] = $this->model_extension_d_blog_module_author->getcategoryLayouts($this->request->get['category_id']);
+        } elseif (isset($this->request->get['bm_category_id'])) {
+            $data['category_layout'] = $this->model_extension_d_blog_module_author->getcategoryLayouts($this->request->get['bm_category_id']);
         } else {
             $data['category_layout'] = array();
         }
