@@ -32,10 +32,10 @@ class ModelExtensionDBlogModulePost extends Model
             review_display ='" . (int)$data['review_display'] . "',
             images_review ='" . (int)$data['images_review'] . "', 
             limit_access_user ='" . (int)$data['limit_access_user'] . "',
-            limit_users ='" . implode(",", isset($data['access_user']) ? $data['access_user'] : array()) . "',
+            limit_users ='" . $this->db->escape(implode(",", isset($data['access_user']) ? $data['access_user'] : array())) . "',
             limit_access_user_group ='" . (int)$data['limit_access_user_group'] . "',
-            limit_user_groups ='" . implode(",", isset($data['access_user_group']) ? $data['access_user_group'] : array()) . "',
-            date_published = '" . $data['date_published'] . "',
+            limit_user_groups ='" . $this->db->escape(implode(",", isset($data['access_user_group']) ? $data['access_user_group'] : array())) . "',
+            date_published = '" . $this->db->escape($data['date_published']) . "',
             date_modified = NOW() WHERE post_id = '" . (int)$post_id . "'");
         if (isset($data['image'])) {
             $this->db->query("UPDATE " . DB_PREFIX . "bm_post
@@ -99,11 +99,11 @@ class ModelExtensionDBlogModulePost extends Model
             foreach ($data['post_video'] as $video) {
                 $this->db->query("INSERT INTO " . DB_PREFIX . "bm_post_video
                     SET post_id = '" . (int)$post_id . "',
-                    text = '" . serialize($video['text']) . "',
+                    text = '" . $this->db->escape(serialize($video['text'])) . "',
                     width = '" . (int)$video['width'] . "',
                     height = '" . (int)$video['height'] . "',
                     sort_order = '" . (int)$video['sort_order'] . "',
-                    video = '" . $video['video'] . "'");
+                    video = '" . $this->db->escape($video['video']) . "'");
             }
         }
         if (isset($data['post_store'])) {
@@ -322,7 +322,7 @@ class ModelExtensionDBlogModulePost extends Model
             images_review = '" . (int)$data['images_review'] . "',
             status = '" . $this->db->escape($data['status']) . "',
             date_added = NOW(),
-            date_published = '" . $data['date_published'] . "',
+            date_published = '" . $this->db->escape($data['date_published']) . "',
             date_modified = NOW()");
 
         $post_id = $this->db->getLastId();
@@ -390,7 +390,7 @@ class ModelExtensionDBlogModulePost extends Model
                     width = '" . (int)$video['width'] . "',
                     height = '" . (int)$video['height'] . "',
                     sort_order = '" . (int)$video['sort_order'] . "',
-                    video = '" . $video['video'] . "'");
+                    video = '" . $this->db->escape($video['video']) . "'");
             }
         }
 
@@ -499,7 +499,7 @@ class ModelExtensionDBlogModulePost extends Model
         );
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-            $sql .= " ORDER BY " . $data['sort'];
+            $sql .= " ORDER BY " . $this->db->escape($data['sort']);
         } else {
             $sql .= " ORDER BY pd.title";
         }

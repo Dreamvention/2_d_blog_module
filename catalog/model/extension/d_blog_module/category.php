@@ -7,7 +7,7 @@ class ModelExtensionDBlogModuleCategory extends Model {
             . "LEFT JOIN " . DB_PREFIX . "bm_category_description cd "
             . "ON (c.category_id = cd.category_id) "
             . "LEFT JOIN " . DB_PREFIX . "bm_category_to_store c2s "
-            . "ON (c.category_id = c2s.category_id) WHERE c.category_id = '" . $category_id
+            . "ON (c.category_id = c2s.category_id) WHERE c.category_id = '" . (int)$category_id
             . "' AND cd.language_id = '" . (int) $this->config->get('config_language_id')
             . "' AND c2s.store_id = '" . (int) $this->config->get('config_store_id')
             . "' AND c.status = '1'");
@@ -146,7 +146,7 @@ class ModelExtensionDBlogModuleCategory extends Model {
         LEFT JOIN " . DB_PREFIX . "bm_category_description cd2 ON (cp.category_id = cd2.category_id) 
         WHERE cd1.language_id = '" . (int)$this->config->get('config_language_id') . "' 
         AND cd2.language_id = '" . (int)$this->config->get('config_language_id') . "'
-        AND cp.category_id = '".$category_id."' 
+        AND cp.category_id = '".(int)$category_id."' 
         GROUP BY category_id";
 
 
@@ -183,7 +183,7 @@ class ModelExtensionDBlogModuleCategory extends Model {
 
                 if(count($implode) > 0){
                     $this->db->query("UPDATE " . DB_PREFIX . "bm_category_description SET ".implode(',', $implode)."
-                    WHERE category_id = '".$category_id."' AND language_id='".$language_id."'");
+                    WHERE category_id = '".(int)$category_id."' AND language_id='".(int)$language_id."'");
                 }
             }
         }

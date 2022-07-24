@@ -27,26 +27,26 @@ class ModelExtensionDBlogModulePost extends Model
             . "AND p.date_published < NOW()"
             . "AND p.status = '1' ";
         if (!empty($data['filter_name']) && !empty($data['filter_description'])) {
-            $sql .= " AND ( pd.title LIKE '%" . $data['filter_name'] . "%' OR pd.description LIKE '%" . $data['filter_description'] . "%' )";
+            $sql .= " AND ( pd.title LIKE '%" . $this->db->escape($data['filter_name']) . "%' OR pd.description LIKE '%" . $this->db->escape($data['filter_description']) . "%' )";
         } else {
 
             if (!empty($data['filter_name'])) {
-                $sql .= " AND pd.title LIKE '%" . $data['filter_name'] . "%'";
+                $sql .= " AND pd.title LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
             }
 
             if (!empty($data['filter_description'])) {
-                $sql .= " AND pd.description LIKE '%" . $data['filter_description'] . "%'";
+                $sql .= " AND pd.description LIKE '%" . $this->db->escape($data['filter_description']) . "%'";
             }
         }
 
         if (!empty($data['filter_tag'])) {
-            $sql .= " AND pd.tag LIKE '%" . $data['filter_tag'] . "%'";
+            $sql .= " AND pd.tag LIKE '%" . $this->db->escape($data['filter_tag']) . "%'";
         }
 
         if (!empty($data['filter_date_published'])) {
             $date = preg_split("/-/", $data['filter_date_published']);
 
-            $sql .= "AND YEAR(p.date_published) = " . $date[1] . " AND MONTH(p.date_published) = " . $date[0];
+            $sql .= "AND YEAR(p.date_published) = " . $this->db->escape($date[1]) . " AND MONTH(p.date_published) = " . $this->db->escape($date[0]);
         }
         if (!empty($data['filter_author_id'])) {
             $sql .= " AND p.user_id = '" . (int)$data['filter_author_id'] . "'";
@@ -111,15 +111,15 @@ class ModelExtensionDBlogModulePost extends Model
             . "AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' "
             . "AND p.status = '1' ";
         if (!empty($data['filter_name']) && !empty($data['filter_description'])) {
-            $sql .= " AND ( pd.title LIKE '%" . $data['filter_name'] . "%' OR pd.description LIKE '%" . $data['filter_description'] . "%' )";
+            $sql .= " AND ( pd.title LIKE '%" . $this->db->escape($data['filter_name']) . "%' OR pd.description LIKE '%" . $this->db->escape($data['filter_description']) . "%' )";
         } else {
 
             if (!empty($data['filter_name'])) {
-                $sql .= " AND pd.title LIKE '%" . $data['filter_name'] . "%'";
+                $sql .= " AND pd.title LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
             }
 
             if (!empty($data['filter_description'])) {
-                $sql .= " AND pd.description LIKE '%" . $data['filter_description'] . "%'";
+                $sql .= " AND pd.description LIKE '%" . $this->db->escape($data['filter_description']) . "%'";
             }
         }
         if (!empty($data['filter_category_id'])) {
@@ -131,11 +131,11 @@ class ModelExtensionDBlogModulePost extends Model
 
         if (!empty($data['filter_date_published'])) {
             $date = preg_split("/-/", $data['filter_date_published']);
-            $sql .= "AND YEAR(p.date_published) = " . $date[1] . " AND MONTH(p.date_published) = " . $date[0];
+            $sql .= "AND YEAR(p.date_published) = " . $this->db->escape($date[1]) . " AND MONTH(p.date_published) = " . $this->db->escape($date[0]);
         }
 
         if (!empty($data['filter_tag'])) {
-            $sql .= " AND pd.tag LIKE '%" . $data['filter_tag'] . "%'";
+            $sql .= " AND pd.tag LIKE '%" . $this->db->escape($data['filter_tag']) . "%'";
         }
 
         $query = $this->db->query($sql);
@@ -154,7 +154,7 @@ class ModelExtensionDBlogModulePost extends Model
             . "LEFT JOIN " . DB_PREFIX . "bm_review r ON (p.post_id = r.post_id) "
             . "WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' ";
         if ($category_id) {
-            $sql .= "AND p2c.category_id = '" . $category_id . "' ";
+            $sql .= "AND p2c.category_id = '" . (int)$category_id . "' ";
         }
         $sql .= "AND p.status = 1 GROUP BY p.post_id";
 
@@ -172,7 +172,7 @@ class ModelExtensionDBlogModulePost extends Model
             . "LEFT JOIN " . DB_PREFIX . "bm_post_description AS pd "
             . "ON (p.post_id = pd.post_id) "
             . "Left JOIN " . DB_PREFIX . "bm_review AS r ON (p.post_id = r.post_id) "
-            . "WHERE p.post_id = '" . $post_id . "' "
+            . "WHERE p.post_id = '" . (int)$post_id . "' "
             . "AND p.status = '1' "
             . "AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' ";
         $sql .= "GROUP BY p.post_id ";
@@ -195,7 +195,7 @@ class ModelExtensionDBlogModulePost extends Model
             . "FROM " . DB_PREFIX . "bm_post AS p ";
         if ($category_id) {
             $sql .= "LEFT JOIN " . DB_PREFIX . "bm_post_to_category p2c ON (p.post_id = p2c.post_id) "
-                . "WHERE p2c.category_id = '" . $category_id . "' ";
+                . "WHERE p2c.category_id = '" . (int)$category_id . "' ";
         }
         $sql .= "AND p.status = '1'";
 
@@ -302,7 +302,7 @@ class ModelExtensionDBlogModulePost extends Model
     {
         $sql = "SELECT * "
             . "FROM " . DB_PREFIX . "user "
-            . "WHERE user_id = '" . $user_id . "'";
+            . "WHERE user_id = '" . (int)$user_id . "'";
 
         $query = $this->db->query($sql);
         return $query->row;
@@ -325,7 +325,7 @@ class ModelExtensionDBlogModulePost extends Model
 
                 if (count($implode) > 0) {
                     $this->db->query("UPDATE " . DB_PREFIX . "bm_post_description SET " . implode(',', $implode) . "
-                    WHERE post_id = '" . $post_id . "' AND language_id='" . $language_id . "'");
+                    WHERE post_id = '" . (int)$post_id . "' AND language_id='" . (int)$language_id . "'");
                 }
             }
         }

@@ -17,13 +17,13 @@ class ModelExtensionDBlogModuleAuthor extends Model {
                 firstname = '" . $this->db->escape($data['firstname']) . "', 
                 lastname = '" . $this->db->escape($data['lastname']) . "', 
                 image = '" . $this->db->escape($data['image']) . "' 
-                WHERE user_id = '" . $data['user_id'] . "'");
+                WHERE user_id = '" . (int) $data['user_id'] . "'");
 
             if ($data['password']) {
                 $this->db->query("UPDATE `" . DB_PREFIX . "user` SET 
                     salt = '". $saltTok . "', 
                     password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' 
-                    WHERE user_id = '" .$data['user_id'] . "'");
+                    WHERE user_id = '" .(int)$data['user_id'] . "'");
             }
         }
         else
@@ -41,8 +41,8 @@ class ModelExtensionDBlogModuleAuthor extends Model {
         }
 
         $this->db->query("INSERT INTO `" . DB_PREFIX . "bm_author` SET 
-            user_id = '" .$user_id  . "', 
-            author_group_id = '" . $data['author_group_id'] . "'");
+            user_id = '" .(int)$user_id  . "', 
+            author_group_id = '" . (int)$data['author_group_id'] . "'");
 
         $author_id = $this->db->getLastId();
 
@@ -90,19 +90,19 @@ class ModelExtensionDBlogModuleAuthor extends Model {
                 lastname = '" . $this->db->escape($data['lastname']) . "', 
                 user_group_id = '" . $this->db->escape($data['user_group_id']) . "', 
                 image = '" . $this->db->escape($data['image']) . "' 
-                WHERE user_id = '" . $data['user_id'] . "'");
+                WHERE user_id = '" . (int)$data['user_id'] . "'");
 
             if ($data['password']) {
                 if (VERSION > '2.3.0.2'){
                     $this->db->query("UPDATE `" . DB_PREFIX . "user` SET 
                     salt = '" . $this->db->escape($salt = token(9)) . "', 
                     password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' 
-                    WHERE user_id = '" .$data['user_id'] . "'");
+                    WHERE user_id = '" .(int)$data['user_id'] . "'");
                 }else{
                     $this->db->query("UPDATE `" . DB_PREFIX . "user` SET 
                     salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', 
                     password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' 
-                    WHERE user_id = '" .$data['user_id'] . "'");
+                    WHERE user_id = '" .(int)$data['user_id'] . "'");
                 }
             }
         }
@@ -186,7 +186,7 @@ class ModelExtensionDBlogModuleAuthor extends Model {
             );
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-            $sql .= " ORDER BY " . $data['sort'];
+            $sql .= " ORDER BY " . $this->db->escape($data['sort']);
 
             if (isset($data['order']) && ($data['order'] == 'DESC')) {
                 $sql .= " DESC";

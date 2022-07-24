@@ -33,7 +33,7 @@ class ModelExtensionDBlogModuleReview extends Model {
 
     public function deleteImageReview($review_id,$image) {
 
-        $this->db->query("DELETE FROM " . DB_PREFIX . "bm_review_to_image WHERE review_id = '" . (int) $review_id . "' AND image='".$image."'");
+        $this->db->query("DELETE FROM " . DB_PREFIX . "bm_review_to_image WHERE review_id = '" . (int) $review_id . "' AND image='".$this->db->escape($image)."'");
     }
     public function deleteReview($review_id) {
 
@@ -91,7 +91,7 @@ class ModelExtensionDBlogModuleReview extends Model {
             );
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-            $sql .= " ORDER BY " . $data['sort'];
+            $sql .= " ORDER BY " . $this->db->escape($data['sort']);
         } else {
             $sql .= " ORDER BY r.date_added";
         }

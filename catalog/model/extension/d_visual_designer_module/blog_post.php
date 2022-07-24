@@ -10,7 +10,7 @@ class ModelExtensionDVisualDesignerModuleBlogPost extends Model
         if (!empty($blog_category)) {
             $categories = join("','", $blog_category);
             $sql .= " FROM " . DB_PREFIX . "bm_post_to_category p2c
-            LEFT JOIN " . DB_PREFIX . "bm_post p ON(p2c.post_id = p.post_id AND p2c.category_id IN ('" . $categories . "'))";
+            LEFT JOIN " . DB_PREFIX . "bm_post p ON(p2c.post_id = p.post_id AND p2c.category_id IN ('" . $this->db->escape($categories) . "'))";
         } else {
             $sql .= " FROM " . DB_PREFIX . "bm_post p ";
         }
@@ -36,7 +36,7 @@ class ModelExtensionDVisualDesignerModuleBlogPost extends Model
         }
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-            $sql .= " ORDER BY " . $data['sort'];
+            $sql .= " ORDER BY " . $this->db->escape($data['sort']);
         } else {
             $sql .= " ORDER BY p.date_published";
         }

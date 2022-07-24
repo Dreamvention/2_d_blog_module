@@ -41,7 +41,7 @@ class ModelExtensionDBlogModuleAuthor extends Model {
 
                 if(count($implode) > 0){
                     $this->db->query("UPDATE " . DB_PREFIX . "bm_author_description SET ".implode(',', $implode)."
-                    WHERE author_id = '".$author_id."' AND language_id='".$language_id."'");
+                    WHERE author_id = '". (int) $author_id."' AND language_id='". (int) $language_id."'");
                 }
             }
         }

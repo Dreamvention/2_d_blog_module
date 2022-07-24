@@ -182,12 +182,12 @@ class ModelExtensionModuleDBlogModule extends Model
     public function enabledSSLUrl($ssl_url, $store_id = '0')
     {
 
-        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "setting` WHERE `key`='config_ssl' AND `store_id`='" . $store_id . "'");
+        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "setting` WHERE `key`='config_ssl' AND `store_id`='" . (int)$store_id . "'");
 
         if ($query->num_rows > 0) {
-            $this->db->query("UPDATE " . DB_PREFIX . "setting SET value='" . $ssl_url . "' WHERE `store_id`='" . $store_id . "' AND `key`='config_ssl'");
+            $this->db->query("UPDATE " . DB_PREFIX . "setting SET value='" . $this->db->escape($ssl_url) . "' WHERE `store_id`='" . (int)$store_id . "' AND `key`='config_ssl'");
         } else {
-            $this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id`='" . $store_id . "', `code`='config', `key`='config_ssl', `value`='" . $ssl_url . "', `serialized`='0'");
+            $this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id`='" . (int)$store_id . "', `code`='config', `key`='config_ssl', `value`='" . $this->db->escape($ssl_url) . "', `serialized`='0'");
         }
     }
 
@@ -644,7 +644,7 @@ class ModelExtensionModuleDBlogModule extends Model
                         if (VERSION <= '2.0.3.1') {
                             if (preg_match('/' . DB_PREFIX . 'module/', $sql)) {
                                 $module_id = $this->db->getLastId();
-                                $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "module` WHERE `module_id`= " . $module_id);
+                                $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "module` WHERE `module_id`= " . (int)$module_id);
                                 if ($query->row) {
                                     $value = serialize(json_decode($query->row['setting'], true));
                                     $this->db->query("UPDATE " . DB_PREFIX . "module
@@ -655,7 +655,7 @@ class ModelExtensionModuleDBlogModule extends Model
                             if (preg_match('/' . DB_PREFIX . 'setting/', $sql)) {
 
                                 $setting_id = $this->db->getLastId();
-                                $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "setting` WHERE `setting_id`= " . $setting_id . " AND `serialized` = 1");
+                                $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "setting` WHERE `setting_id`= " . (int)$setting_id . " AND `serialized` = 1");
                                 if ($query->row) {
                                     $value = serialize(json_decode($query->row['value'], true));
                                     $this->db->query("UPDATE " . DB_PREFIX . "setting
@@ -676,13 +676,13 @@ class ModelExtensionModuleDBlogModule extends Model
                 if ($language['language_id'] != 1) {
                     $sql = "INSERT INTO " . DB_PREFIX . "bm_post_description
                         (`post_id`, `language_id`, `title`, `short_description`, `description`, `meta_title`, `meta_description`, `meta_keyword`, `tag`)
-                        SELECT `post_id`, '" . $language['language_id'] . "', `title`, `short_description`, `description`, `meta_title`, `meta_description`, `meta_keyword`, `tag`
+                        SELECT `post_id`, '" . (int)$language['language_id'] . "', `title`, `short_description`, `description`, `meta_title`, `meta_description`, `meta_keyword`, `tag`
                         FROM " . DB_PREFIX . "bm_post_description";
                     $this->db->query($sql);
 
                     $sql = "INSERT INTO " . DB_PREFIX . "bm_category_description
                         (`category_id`, `language_id`, `title`, `short_description`, `description`, `meta_title`, `meta_keyword`, `meta_description`)
-                        SELECT `category_id`, '" . $language['language_id'] . "', `title`, `short_description`, `description`, `meta_title`, `meta_keyword`, `meta_description`
+                        SELECT `category_id`, '" . (int)$language['language_id'] . "', `title`, `short_description`, `description`, `meta_title`, `meta_keyword`, `meta_description`
                         FROM " . DB_PREFIX . "bm_category_description";
                     $this->db->query($sql);
                 }

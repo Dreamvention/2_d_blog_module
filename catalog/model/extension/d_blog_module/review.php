@@ -16,7 +16,7 @@ class ModelExtensionDBlogModuleReview extends Model {
 
         $sql .= "post_id = '" . (int)$post_id . "', "
         . "status = ". (int)$data['status'] .", "
-        . "image = '". $data['image'] ."', "
+        . "image = '". $this->db->escape($data['image']) ."', "
         . "description = '" . $this->db->escape($data['description']) . "', "
         . "rating = '" . (int)$data['rating'] . "', "
         . "date_added = NOW(), date_modified = NOW()";
@@ -24,7 +24,7 @@ class ModelExtensionDBlogModuleReview extends Model {
         $review_id = $this->db->getLastId();
         if(isset($data['images'])){
             foreach ($data['images'] as $image) {
-                $this->db->query("INSERT INTO ".DB_PREFIX."bm_review_to_image SET review_id='".$review_id."', image ='".$image."'");
+                $this->db->query("INSERT INTO ".DB_PREFIX."bm_review_to_image SET review_id='".(int)$review_id."', image ='".$this->db->escape($image)."'");
             }
         }
         if ($this->config->get('config_review_mail')) {
