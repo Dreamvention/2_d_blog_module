@@ -9,9 +9,9 @@ $_['backend_route_regex'] = 'extension/d_blog_module/category/*';
 //GET параметр route на Frontend
 $_['frontend_route'] = 'extension/d_blog_module/category';
 //GET параметр содержащий id страницы в админке
-$_['backend_param'] = 'category_id';
+$_['backend_param'] = 'bm_category_id';
 //GET параметр содержащий id страницы на Frontend
-$_['frontend_param'] = 'category_id';
+$_['frontend_param'] = 'bm_category_id';
 
 //Путь для сохранения описания на Frontend
 $_['edit_route'] = 'extension/d_blog_module/category/saveCategory';

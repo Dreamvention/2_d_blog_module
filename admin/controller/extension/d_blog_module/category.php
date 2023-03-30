@@ -404,10 +404,12 @@ class ControllerExtensionDBlogModuleCategory extends Controller {
             'href' => $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/category', $url)
             );
 
-        if (!isset($this->request->get['bm_category_id'])) {
+        if (!isset($this->request->get['bm_category_id']) && !isset($this->request->get['category_id'])) {
             $data['action'] = $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/category/add', $url);
+        } else if (!isset($this->request->get['bm_category_id']) && isset($this->request->get['category_id'])) {
+            $this->response->redirect($this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/category/edit', '&bm_category_id=' . (int)$this->request->get['category_id'] . $url));
         } else {
-            $data['action'] = $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/category/edit', '&bm_category_id=' . $this->request->get['bm_category_id'] . $url);
+            $data['action'] = $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/category/edit', '&bm_category_id=' . (int)$this->request->get['bm_category_id'] . $url);
         }
 
         $data['cancel'] = $this->model_extension_d_opencart_patch_url->link('extension/d_blog_module/category', $url);

@@ -62,7 +62,7 @@ class ModelExtensionDBlogModuleAuthor extends Model {
     }
 
     public function getAuthorByUserId($user_id) {
-        $query = $this->db->query("SELECT author_id, user_id FROM " . DB_PREFIX . "bm_author WHERE user_id = '" . (int) $user_id . "'");
+        $query = $this->db->query("SELECT author_id, author_group_id, user_id FROM " . DB_PREFIX . "bm_author WHERE user_id = '" . (int) $user_id . "'");
 
         $author_data=array();
 
@@ -70,6 +70,7 @@ class ModelExtensionDBlogModuleAuthor extends Model {
         {
             $author_data = array(
                 'author_id' => $query->rows[0]['author_id'],
+                'author_group_id' => $query->rows[0]['author_group_id'],
                 'user_id' => $query->rows[0]['user_id']);
         }
 

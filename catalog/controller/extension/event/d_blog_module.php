@@ -35,18 +35,18 @@ class ControllerExtensionEventDBlogModule extends Controller
             foreach ($children as $child) {
                 $bm_children_data[] = array(
                     'name' => $child['title'],
-                    'href' => $this->url->link('extension/d_blog_module/category', 'category_id=' . $child['category_id'])
+                    'href' => $this->url->link('extension/d_blog_module/category', 'bm_category_id=' . $child['category_id'])
                 );
             }
 
 
             $data['text_blog'] = $this->language->get('text_blog');
-            $data['blog'] = $this->url->link('extension/d_blog_module/category', 'category_id=' . $bm_category_id, 'SSL');
+            $data['blog'] = $this->url->link('extension/d_blog_module/category', 'bm_category_id=' . $bm_category_id, 'SSL');
             $data['categories'][] = array(
                 'name'     => $this->language->get('text_blog'),
                 'children' => $bm_children_data,
                 'column'   => 1,
-                'href'     => $this->url->link('extension/d_blog_module/category', 'category_id=' . $bm_category_id, 'SSL')
+                'href'     => $this->url->link('extension/d_blog_module/category', 'bm_category_id=' . $bm_category_id, 'SSL')
             );
         }
     }
@@ -59,7 +59,7 @@ class ControllerExtensionEventDBlogModule extends Controller
                 'config'     => 'd_blog_module_category',
                 'content'    => $data['description'],
                 'header'     => &$data['header'],
-                'field_name' => 'description[' . (int)$this->config->get('config_language_id') . '][description]',
+                'field_name' => 'category_description[' . (int)$this->config->get('config_language_id') . '][description]',
                 'id'         => $data['category_id']
             );
             $this->load->model('extension/module/d_visual_designer');

@@ -1,7 +1,33 @@
 <?php
 
 class ModelExtensionDBlogModuleAuthor extends Model {
-	public function getAuthor($user_id) {
+
+	public function getAuthor($author_id) {
+		$author_description_data = array();
+
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "bm_author a"
+			. " LEFT JOIN " . DB_PREFIX . "bm_author_description ad "
+			. "ON (a.author_id = ad.author_id) "
+			. " LEFT JOIN " . DB_PREFIX . "user u "
+			. "ON (a.user_id = u.user_id) "
+			. "WHERE a.author_id = '" . (int) $author_id . "' AND ad.language_id = '".(int) $this->config->get('config_language_id')."'");
+
+		foreach ($query->rows as $result) {
+			$author_description_data= array(
+				'author_id' => $result['author_id'],
+				'name' => $result['name'],
+				'description' => $result['description'],
+				'short_description' => $result['short_description'],
+				'meta_title' => $result['meta_title'],
+				'meta_description' => $result['meta_description'],
+				'meta_keyword' => $result['meta_keyword'],
+				'image' => $result['image']
+			);
+		}
+ 
+		return $author_description_data;
+	}
+	public function getAuthorByUserId($user_id) {
 		$author_description_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "bm_author a"

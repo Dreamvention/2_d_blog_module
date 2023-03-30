@@ -171,9 +171,9 @@ class ControllerExtensionDBlogModulePost extends Controller
             $data['post_id'] = (int)$post_id;
             $data['setting'] = $this->setting;
 
-            $author = $this->model_extension_d_blog_module_author->getAuthor($post_info['user_id']);
+            $author = $this->model_extension_d_blog_module_author->getAuthorByUserId($post_info['user_id']);
             $data['author'] = (!empty($author['name'])) ? $author['name'] : $this->language->get('text_anonymous');
-            $data['author_link'] = $this->url->link('extension/d_blog_module/author', 'author_id=' . $post_info['user_id'], 'SSL');
+            $data['author_link'] = $this->url->link('extension/d_blog_module/author', 'author_id=' . $author['author_id'], 'SSL');
 
             if (isset($author['image'])) {
                 $data['author_image'] = $this->model_tool_image->resize($author['image'], $this->setting['author']['image_width'], $this->setting['author']['image_height']);
@@ -185,13 +185,13 @@ class ControllerExtensionDBlogModulePost extends Controller
             $data['author_description'] = (isset($author['short_description'])) ? strip_tags(html_entity_decode($author['short_description'], ENT_QUOTES, 'UTF-8')) : '';
 
             $data['description'] = html_entity_decode($post_info['description'], ENT_QUOTES, 'UTF-8');
-            $data['date_published'] = iconv(mb_detect_encoding(strftime($this->setting['post']['date_format'][$this->config->get('config_language_id')], strtotime($post_info['date_published']))), "utf-8//IGNORE", strftime($this->setting['post']['date_format'][$this->config->get('config_language_id')], strtotime($post_info['date_published'])));
+            $data['date_published'] = iconv(mb_detect_encoding(date($this->setting['post']['date_format'][$this->config->get('config_language_id')], strtotime($post_info['date_published']))), "utf-8//IGNORE", date($this->setting['post']['date_format'][$this->config->get('config_language_id')], strtotime($post_info['date_published'])));
 
-            $data['date_modified'] = strftime($this->setting['post']['date_format'][$this->config->get('config_language_id')], strtotime($post_info['date_modified']));
+            $data['date_modified'] = date($this->setting['post']['date_format'][$this->config->get('config_language_id')], strtotime($post_info['date_modified']));
             $data['date_published_link'] = $this->url->link('extension/d_blog_module/search', 'date_published=' . date("m", strtotime($post_info['date_published'])) . '-' . date("Y", strtotime($post_info['date_published'])), 'SSL');
 
-            $data['date_published_utc'] = strftime($this->setting['utc_datetime_format'][$this->config->get('config_language_id')], strtotime($post_info['date_published']));
-            $data['date_modified_utc'] = strftime($this->setting['utc_datetime_format'][$this->config->get('config_language_id')], strtotime($post_info['date_modified']));
+            $data['date_published_utc'] = date($this->setting['utc_datetime_format'][$this->config->get('config_language_id')], strtotime($post_info['date_published']));
+            $data['date_modified_utc'] = date($this->setting['utc_datetime_format'][$this->config->get('config_language_id')], strtotime($post_info['date_modified']));
             $data['custom_style'] = $this->setting['design']['custom_style'];
 
             $data['text_posted_by'] = $this->language->get('text_posted_by');
@@ -511,9 +511,9 @@ class ControllerExtensionDBlogModulePost extends Controller
                 $data['description'] = utf8_substr(strip_tags(html_entity_decode($post['description'], ENT_QUOTES, 'UTF-8')), 0, $this->setting['post_thumb']['description_length']) . '...';
                 $data['rating'] = $rating;
 
-                $author = $this->model_extension_d_blog_module_author->getAuthor($post['user_id']);
+                $author = $this->model_extension_d_blog_module_author->getAuthorByUserId($post['user_id']);
                 $data['author'] = (!empty($author['name'])) ? $author['name'] : $this->language->get('text_anonymous');
-                $data['author_link'] = $this->url->link('extension/d_blog_module/author', 'author_id=' . $post['user_id'], 'SSL');
+                $data['author_link'] = $this->url->link('extension/d_blog_module/author', 'author_id=' . $author['author_id'], 'SSL');
 
                 if ((isset($post['limit_access_user']) && $post['limit_access_user'])) {
                     //yes limit
@@ -542,12 +542,12 @@ class ControllerExtensionDBlogModulePost extends Controller
                 $data['review'] = $post['review'];
                 $data['image_title'] = (!empty($post['image_title'])) ? $post['image_title'] : $data['title'];
                 $data['image_alt'] = (!empty($post['image_alt'])) ? $post['image_title'] : $data['title'];
-                $data['date_published'] = iconv(mb_detect_encoding(strftime($this->setting['post_thumb']['date_format'][$this->config->get('config_language_id')], strtotime($post['date_published']))), "utf-8//IGNORE", strftime($this->setting['post_thumb']['date_format'][$this->config->get('config_language_id')], strtotime($post['date_published'])));
+                $data['date_published'] = iconv(mb_detect_encoding(date($this->setting['post_thumb']['date_format'][$this->config->get('config_language_id')], strtotime($post['date_published']))), "utf-8//IGNORE", date($this->setting['post_thumb']['date_format'][$this->config->get('config_language_id')], strtotime($post['date_published'])));
 
-                $data['date_published_short'] = strftime($this->language->get('date_format_short'), strtotime($post['date_published']));
-                $data['date_published_day'] = strftime($this->setting['post_thumb']['date_format_day'], strtotime($post['date_published']));
-                $data['date_published_month'] = strftime($this->setting['post_thumb']['date_format_month'], strtotime($post['date_published']));
-                $data['date_published_year'] = strftime($this->setting['post_thumb']['date_format_year'], strtotime($post['date_published']));
+                $data['date_published_short'] = date($this->language->get('date_format_short'), strtotime($post['date_published']));
+                $data['date_published_day'] = date($this->setting['post_thumb']['date_format_day'], strtotime($post['date_published']));
+                $data['date_published_month'] = date($this->setting['post_thumb']['date_format_month'], strtotime($post['date_published']));
+                $data['date_published_year'] = date($this->setting['post_thumb']['date_format_year'], strtotime($post['date_published']));
                 $data['href'] = $this->url->link('extension/d_blog_module/post', 'post_id=' . $post_id, 'SSL');
 
                 return $data;

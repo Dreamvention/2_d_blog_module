@@ -57,13 +57,13 @@
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label" for="input-short-description{{language.language_id}}">{{entry_short_description}}</label>
                                         <div class="col-sm-10">
-                                            <textarea name="post_description[{{language.language_id}}][short_description]" placeholder="{{entry_short_description}}" class="form-control" id="input-short-description{{language.language_id}}">{{ post_description[language.language_id] ? post_description[language.language_id].short_description : ''}}</textarea>
+                                            <textarea name="post_description[{{language.language_id}}][short_description]" placeholder="{{entry_short_description}}" class="form-control summernote" id="input-short-description{{language.language_id}}">{{ post_description[language.language_id] ? post_description[language.language_id].short_description : ''}}</textarea>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label" for="input-description{{language.language_id}}">{{entry_description}}</label>
                                         <div class="col-sm-10">
-                                            <textarea name="post_description[{{language.language_id}}][description]" class="d_visual_designer summernote" placeholder="{{entry_description}}" data-toggle="summernote" id="input-description{{language.language_id}}">{{ post_description[language.language_id] ? post_description[language.language_id].description : ''}}</textarea>
+                                            <textarea name="post_description[{{language.language_id}}][description]" data-lang="{{ summernote }}" class="d_visual_designer summernote" placeholder="{{entry_description}}" data-toggle="summernote" id="input-description{{language.language_id}}">{{ post_description[language.language_id] ? post_description[language.language_id].description : ''}}</textarea>
                                         </div>
                                     </div>
                                     <div class="form-group required">

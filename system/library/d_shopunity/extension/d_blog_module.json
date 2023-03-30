@@ -1,6 +1,6 @@
 {
     "codename": "d_blog_module",
-    "version": "3.1.11",
+    "version": "3.1.13",
     "name": "Blog module",
     "description": "A blog module based on twig and events. Huge functionality packed in one great solution. ",
     "index": "extension/module/d_blog_module",
@@ -107,7 +107,8 @@
         "catalog/model/extension/d_visual_designer_module/blog_post.php",
         "catalog/view/theme/default/template/extension/d_visual_designer/content_blocks/vd-block-blog_post.tag",
         "catalog/view/theme/default/template/extension/d_visual_designer_module/blog_post.twig",
-        "system/config/d_visual_designer/blog_post.php"
+        "system/config/d_visual_designer/blog_post.php",
+        "system/library/d_shopunity/install/d_blog_module.xml"
     ],
     "dirs":[
         "admin/controller/extension/d_blog_module",
@@ -124,6 +125,14 @@
         "image/catalog/d_blog_module/post"
     ],
     "changelog": [
+        {
+            "version":"3.1.13",
+            "change": "fix bug with adding author on opencart 2.1.0.x"
+        },
+        {
+            "version":"3.1.12",
+            "change": "fix Opencart Category Id"
+        },
         {
             "version":"3.1.11",
             "change": "fix Opencart Search"

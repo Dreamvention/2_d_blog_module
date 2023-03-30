@@ -21,18 +21,18 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $this->load->model('extension/d_opencart_patch/load');
         $this->load->model('extension/d_opencart_patch/cache');
 
-        $this->d_shopunity = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_shopunity.json'));
-        $this->d_blog_module_pack = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_blog_module_pack.json'));
-        $this->d_opencart_patch = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_opencart_patch.json'));
-        $this->d_seo_module = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_seo_module.json'));
+        $this->d_shopunity = (is_file(DIR_SYSTEM.'library/d_shopunity/extension/d_shopunity.json'));
+        $this->d_blog_module_pack = (is_file(DIR_SYSTEM.'library/d_shopunity/extension/d_blog_module_pack.json'));
+        $this->d_opencart_patch = (is_file(DIR_SYSTEM.'library/d_shopunity/extension/d_opencart_patch.json'));
+        $this->d_seo_module = (is_file(DIR_SYSTEM.'library/d_shopunity/extension/d_seo_module.json'));
         if($this->d_opencart_patch){
             $this->load->model('extension/d_opencart_patch/url');
             $this->load->model('extension/d_opencart_patch/user');
             $this->load->model('extension/d_opencart_patch/store');
         }
-        $this->d_twig_manager = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_twig_manager.json'));
-        $this->d_event_manager = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_event_manager.json'));
-        $this->d_admin_style = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_admin_style.json'));
+        $this->d_twig_manager = (is_file(DIR_SYSTEM.'library/d_shopunity/extension/d_twig_manager.json'));
+        $this->d_event_manager = (is_file(DIR_SYSTEM.'library/d_shopunity/extension/d_event_manager.json'));
+        $this->d_admin_style = (is_file(DIR_SYSTEM.'library/d_shopunity/extension/d_admin_style.json'));
         if ($this->d_admin_style){
             $this->load->model('extension/d_admin_style/style');
 
@@ -44,7 +44,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
             $this->session->data['blog']['store_id'] = $this->request->get['store_id'];
         }
 
-        $this->d_validator = (file_exists(DIR_SYSTEM . 'library/d_shopunity/extension/d_validator.json'));
+        $this->d_validator = (is_file(DIR_SYSTEM . 'library/d_shopunity/extension/d_validator.json'));
 
         // give some permissions
         $this->permission_handler('main');
@@ -87,7 +87,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         //save post
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 
-            if($this->session->data['blog']['store_id']){
+            if(!empty($this->session->data['blog']['store_id'])){
                 $this->store_id = $this->session->data['blog']['store_id'];
             }
 
@@ -355,11 +355,11 @@ class ControllerExtensionModuleDBlogModule extends Controller {
 
         $data['ads'] = false;
         $data['extension_id'] = false;
-        if(!file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_seo_module_blog.json')){
+        if(!is_file(DIR_SYSTEM.'library/d_shopunity/extension/d_seo_module_blog.json')){
             $data['ads'] = true;
             $data['extension_id'] = 121;
         }
-        if(!file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_blog_module_pack.json')){
+        if(!is_file(DIR_SYSTEM.'library/d_shopunity/extension/d_blog_module_pack.json')){
             $data['ads'] = true;
             $data['extension_id'] = 119;
         }
@@ -580,12 +580,21 @@ class ControllerExtensionModuleDBlogModule extends Controller {
     public function install()
     {
         $this->load->model('extension/module/d_blog_module');
-        $this->model_extension_module_d_blog_module->createTables( );
+        $this->model_extension_module_d_blog_module->createTables();
         $this->model_extension_module_d_blog_module->updateTables();
+        $this->model_extension_module_d_blog_module->addAdminUsersToBlogAuthors();
 
         if($this->d_shopunity){
             $this->load->model('extension/d_shopunity/mbooth');
             $this->model_extension_d_shopunity_mbooth->installDependencies($this->codename);
+        }
+
+        if($this->d_opencart_patch){
+            if(VERSION < '2.2.0.0'){
+                $this->load->model('extension/d_opencart_patch/modification');
+                $this->model_extension_d_opencart_patch_modification->setModification('d_blog_module.xml', 1); 
+                $this->model_extension_d_opencart_patch_modification->refreshCache();
+            }
         }
 
         $this->permission_handler('all');
@@ -595,6 +604,11 @@ class ControllerExtensionModuleDBlogModule extends Controller {
     {
         if($this->d_shopunity && $this->validate()){
             $this->uninstallEvents();
+        }
+        if($this->d_opencart_patch && VERSION < '2.2.0.0'){
+            $this->load->model('extension/d_opencart_patch/modification');
+            $this->model_extension_d_opencart_patch_modification->setModification('d_blog_module.xml', 0); 
+            $this->model_extension_d_opencart_patch_modification->refreshCache();
         }
         $this->load->model('setting/setting');
         $this->model_setting_setting->deleteSetting('d_blog_module');
@@ -665,8 +679,9 @@ class ControllerExtensionModuleDBlogModule extends Controller {
         $this->model_extension_module_d_event_manager->addEvent($this->codename, 'catalog/model/extension/module/d_visual_designer/getOptions/after', 'extension/event/d_blog_module/controller_after_d_visual_designer_menu');
         $this->model_extension_module_d_event_manager->addEvent($this->codename, 'admin/model/localisation/language/addLanguage/after', 'extension/event/d_blog_module/model_localisation_language_addLanguage_after');
         $this->model_extension_module_d_event_manager->addEvent($this->codename, 'admin/model/localisation/language/deleteLanguage/after', 'extension/event/d_blog_module/model_localisation_language_deleteLanguage_after');
+        $this->model_extension_module_d_event_manager->addEvent($this->codename, 'admin/model/user/user/addUser/after', 'extension/event/d_blog_module/model_user_user_addUser_after');
+        $this->model_extension_module_d_event_manager->addEvent($this->codename, 'admin/model/user/user/deleteUser/after', 'extension/event/d_blog_module/model_user_user_deleteUser_after');
         $this->model_extension_module_d_event_manager->addEvent($this->codename, 'catalog/model/design/layout/getLayout/after', 'extension/event/d_blog_module/model_design_layout_getLayout_after');
-
     }
 
     public function uninstallEvents()
@@ -765,7 +780,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
             $this->response->redirect($this->model_extension_d_opencart_patch_url->link($this->route));
         }
 
-        if(file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_twig_manager.json')){
+        if(is_file(DIR_SYSTEM.'library/d_shopunity/extension/d_twig_manager.json')){
             $this->load->model('extension/module/d_twig_manager');
             $this->model_extension_module_d_twig_manager->installCompatibility();
         }
@@ -781,7 +796,7 @@ class ControllerExtensionModuleDBlogModule extends Controller {
             $this->response->redirect($this->model_extension_d_opencart_patch_url->link($this->route));
         }
 
-        if(file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_event_manager.json')){
+        if(is_file(DIR_SYSTEM.'library/d_shopunity/extension/d_event_manager.json')){
             $this->load->model('extension/module/d_event_manager');
             $this->model_extension_module_d_event_manager->installCompatibility();
         }

@@ -149,6 +149,48 @@ class ControllerExtensionEventDBlogModule extends Controller
 
     }
 
+    public function model_user_user_addUser_after(&$route, &$data, &$output) {
+        $this->load->model('extension/module/d_blog_module');
+        $this->load->model('extension/d_blog_module/author');
+        $this->load->model('localisation/language');
+        $languages = $this->model_localisation_language->getLanguages();
+
+        $user = $data[0];
+        
+        $author = $this->model_extension_d_blog_module_author->getAuthorByUserId($this->user->getId());
+
+        $this->db->query("INSERT INTO `" . DB_PREFIX . "bm_author` SET user_id = '" .(int)$output  . "', author_group_id = '" . ((int)$author['author_group_id']) . "'");
+
+        $author_id = $this->db->getLastId();
+
+        foreach ($languages as $key => $language) {
+            $this->db->query("INSERT INTO " . DB_PREFIX . "bm_author_description 
+                SET author_id = '" . (int) $author_id
+                . "', language_id = '" . (int) $language['language_id']
+                . "', name = '" . $this->db->escape($user['firstname'] . ' ' . $user['lastname'])
+                . "', description = '"
+                . "', short_description = '"
+                . "', meta_title = '" . $this->db->escape($user['firstname'] . ' ' . $user['lastname'])
+                . "', meta_description = '"
+                . "', meta_keyword = ''");
+        } 
+    }
+
+    public function model_user_user_deleteUser_after(&$route, &$data, &$output) {
+        $this->load->model('extension/d_blog_module/author');
+
+        $user_id = $data[0];
+        
+        $author = $this->model_extension_d_blog_module_author->getAuthorByUserId($user_id);
+
+        $this->db->query("DELETE FROM `" . DB_PREFIX . "bm_author` WHERE user_id = '" .(int)$user_id  . "'");
+
+        $author_id = $author['author_id'];
+
+        $this->db->query("DELETE FROM `" . DB_PREFIX . "bm_author_description` WHERE author_id = '" . ((int) $author_id) . "'");
+        
+    }
+
     public function model_catalog_product_editPost_after(&$route, &$data, &$output)
     {
 
@@ -355,7 +397,7 @@ class ControllerExtensionEventDBlogModule extends Controller
         $designer_data = array(
             'config' => 'd_blog_module_category',
             'output' => &$output,
-            'id' => !empty($this->request->get['category_id'])?$this->request->get['category_id']:false
+            'id' => !empty($this->request->get['bm_category_id'])?(int)$this->request->get['bm_category_id']:false
         );
 
         $vd_content = $this->load->controller('extension/'.'d_visual_designer'.'/designer', $designer_data);

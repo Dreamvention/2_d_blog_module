@@ -34,12 +34,12 @@ class ModelExtensionModuleDBlogModule extends Model
         }
 
         $full = DIR_SYSTEM . 'config/' . $id . '.php';
-        if (file_exists($full)) {
+        if (is_file($full)) {
             return $id;
         }
 
         foreach ($sub_versions as $lite) {
-            if (file_exists(DIR_SYSTEM . 'config/' . $id . '_' . $lite . '.php')) {
+            if (is_file(DIR_SYSTEM . 'config/' . $id . '_' . $lite . '.php')) {
                 return $id . '_' . $lite;
             }
         }
@@ -547,6 +547,8 @@ class ModelExtensionModuleDBlogModule extends Model
         $this->db->query(" INSERT IGNORE INTO `" . DB_PREFIX . "layout_route` ( `layout_id`, `store_id`, `route`) VALUES ( '103', '0', 'extension/d_blog_module/author')");
 
         //add author
+        $this->db->query("DELETE FROM `" . DB_PREFIX . "bm_author`");
+        $this->db->query("DELETE FROM `" . DB_PREFIX . "bm_author_description`");
         $this->db->query(" INSERT IGNORE INTO `" . DB_PREFIX . "bm_author` (`author_id`, `user_id`, `author_group_id`) VALUES ('1', '" . $this->user->getId() . "', '1') ");
         $this->db->query(" INSERT IGNORE INTO `" . DB_PREFIX . "bm_author_description` (`author_id`, `language_id`, `name`, `description`, `short_description`, `meta_title`, `author_description_id`) VALUES ('1', '1', 'Author', '&lt;p&gt;Lorem ipsum dolor sit amet, justo aliquid reformidans ea vel, vim porro dictas et, ut elit partem invidunt vis. Saepe melius complectitur eum ea. Zril delenit vis ut. His suavitate rationibus in, tale discere ceteros eu nec. Vel ut utamur laoreet vituperata, in discere contentiones definitionem ius.&lt;/p&gt;&lt;p&gt;Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.&lt;/p&gt;&lt;p&gt;It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using \'Content here, content here\', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for \'lorem ipsum\' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).&lt;/p&gt;', 'Lorem ipsum dolor sit amet, justo aliquid reformidans ea vel, vim porro dictas et, ut elit partem invidunt vis. Saepe melius complectitur eum ea. Zril delenit vis ut. His suavitate rationibus in, tale discere ceteros eu nec. Vel ut utamur laoreet vituperata, in discere contentiones definitionem ius.', 'Author', '3')");
         if ($this->config->get('config_language_id') != 1) {
@@ -630,15 +632,9 @@ class ModelExtensionModuleDBlogModule extends Model
                                 $sql = str_replace("code", "group", $sql);
                             }
                         }
-			    
-			// fix: can't install demo data
-			$sql = str_replace("DELETE FROM `oc_", "DELETE FROM `" . DB_PREFIX, $sql);
-			// fix: can't install demo data - end
 
-                        $sql = str_replace("DROP TABLE IF EXISTS `oc_", "DROP TABLE IF EXISTS `" . DB_PREFIX, $sql);
-                        $sql = str_replace("CREATE TABLE `oc_", "CREATE TABLE `" . DB_PREFIX, $sql);
-                        $sql = str_replace("INSERT INTO `oc_", "INSERT INTO `" . DB_PREFIX, $sql);
-                        $sql = str_replace("TRUNCATE TABLE `oc_", "TRUNCATE TABLE `" . DB_PREFIX, $sql);
+                        $sql = str_replace("`oc_", "`" . DB_PREFIX, $sql);
+                        
                         $this->db->query($sql);
 
                         if (VERSION <= '2.0.3.1') {
@@ -757,6 +753,42 @@ class ModelExtensionModuleDBlogModule extends Model
             $sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         return $this->db->query($sql)->rows;
+    }
+
+    public function addAdminUsersToBlogAuthors()
+    {
+        $this->load->model('localisation/language');
+        $languages = $this->model_localisation_language->getLanguages();
+
+        $user_group_id = $this->getGroupId();
+
+        $sql = "SELECT * FROM `" . DB_PREFIX . "user`";
+        $query = $this->db->query($sql);
+        
+        foreach ($query->rows as $user) {
+            if ($user['user_id'] != $this->user->getId()) {
+                $this->db->query("DELETE FROM `" . DB_PREFIX . "bm_author` WHERE user_id = '" . ((int)$user['user_id']) . "'");
+                $this->db->query("INSERT INTO `" . DB_PREFIX . "bm_author` SET 
+                user_id = '" .(int)$user['user_id']  . "', 
+                author_group_id = '" . (($user_group_id == $user['user_group_id']) ? 1 : 3) . "'");
+
+                $author_id = $this->db->getLastId();
+
+                $this->db->query("DELETE FROM `" . DB_PREFIX . "bm_author_description` WHERE author_id = '" .(int)$author_id  . "'");
+                foreach ($languages as $key => $language) {
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "bm_author_description 
+                        SET author_id = '" . (int) $author_id
+                        . "', language_id = '" . (int) $language['language_id']
+                        . "', name = '" . $this->db->escape($user['firstname'] . ' ' . $user['lastname'])
+                        . "', description = '"
+                        . "', short_description = '"
+                        . "', meta_title = '" . $this->db->escape($user['firstname'] . ' ' . $user['lastname'])
+                        . "', meta_description = '"
+                        . "', meta_keyword = ''");
+                }
+            }
+        }
+
     }
 
     /*
