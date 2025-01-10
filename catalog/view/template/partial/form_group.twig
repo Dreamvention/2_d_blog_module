@@ -1,0 +1,54 @@
+{% set form_group_class = 'form-group form-group--' ~  form_group.type|default('text') %}
+{% set form_group_label_class = 'control-label control-label--' ~  form_group.type %}
+{% set form_group_div_class = 'col-sm-12' %}
+
+{% if component.form_group.setting.js_error is defined %}
+    {% set form_group = form_group|merge({error:false}) %}
+{% endif %}
+{% if form_group.classes %}
+    {% set form_group_class = form_group_class ~ ' ' ~ form_group.classes %}
+{% endif %}
+{% if form_group.div_classes %}
+    {% set form_group_div_class = form_group_div_class ~ ' ' ~ form_group.div_classes %}
+{% endif %}
+{% if form_group.required %}
+    {% set form_group_class = form_group_class ~ ' vz-form-group--required required' %}
+{% endif %}
+{% if form_group.error %}
+    {% set form_group_class = form_group_class ~ ' vz-form-group--has-error has-error' %}
+{% endif %}
+{% if component.form_group.setting.form is defined %}
+    {% set form = component.form_group.setting.form.value %}
+{% endif %}
+
+{% if form == 'inline' %}
+    {% set form_group_class = form_group_class ~ ' row' %}
+    {% set form_group_label_class = form_group_label_class ~ ' col-sm-2' %}
+    {% set form_group_div_class = form_group_div_class ~ ' col-sm-10' %}
+{% endif %}
+<div {% if form_group.id %} id="{{ form_group.id }}"{% endif %}
+     class="{{ form_group_class }}" {% if form_group.atributest %}{{ form_group.atributest|raw }}{% endif %}>
+     <div class="{{ form_group_div_class }}">
+        <label class="{{ form_group_label_class }}"
+                {% if form_group.id %} for="{{ input.id }}" {% endif %}>
+                <span {% if form_group.hint %} data-bs-toggle="{{ input.hint }}" {% endif %}>
+                    {{ form_group.label_text }}</span></label>
+        {% if form_group.input_group is defined %}
+            {% block input_group %}
+                {% include  'extension/blog_module/catalog/view/template/parial/input_group.twig' with form_group %}
+            {% endblock %}
+        {% endif %}
+        {% if form_group.input is defined %}
+            {% block input %}
+                {% include 'extension/blog_module/catalog/view/template/parial/input.twig' with form_group %}
+            {% endblock %}
+        {% endif %}
+        {% if form_group.button is defined %}
+            {% include 'extension/blog_module/catalog/view/template/parial/button.twig' with form_group %}
+        {% endif %}
+        {% if form_group.error %}
+            <div class="text-danger">{{ form_group.error }}</div>
+        {% endif %}
+    </div>
+
+</div>

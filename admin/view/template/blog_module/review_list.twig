@@ -1,0 +1,186 @@
+{{header}}{{column_left}}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end"><a href="{{add}}" data-bs-toggle="tooltip" title="{{button_add}}" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+        <button type="button" data-bs-toggle="tooltip" title="{{button_delete}}" class="btn btn-danger" onclick="confirm('{{text_confirm}}') ? $('#form-review').submit() : false;"><i class="far fa-trash-alt"></i></button>
+      </div>
+      <h1>{{heading_title}}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li class="breadcrumb-item"><a href="{{breadcrumb.href}}">{{breadcrumb.text}}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{error_warning}}
+      <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+    </div>
+    {% endif %}
+    {% if success %}
+    <div class="alert alert-success"><i class="fa fa-check-circle"></i> {{success}}
+      <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+    </div>
+    {% endif %}
+    <div class="row">
+      <div class="col-lg-3 col-md-12 order-lg-last d-none d-lg-block mb-3">
+        <div class="card">
+          <div class="card-header">
+            <i class="fas fa-filter"></i> {{ text_filter }}
+          </div>
+          <div class="card-body">
+            
+            <div class="row">
+              
+              <div class="mb-3">
+                <label class="col-form-label" for="input-post">{{entry_post}}</label>
+                <input type="text" name="filter_post" value="{{filter_post}}" placeholder="{{entry_post}}" id="input-post" class="form-control" />
+              </div>
+              <div class="mb-3">
+                <label class="col-form-label" for="input-author">{{entry_author}}</label>
+                <input type="text" name="filter_author" value="{{filter_author}}" placeholder="{{entry_author}}" id="input-author" class="form-control" />
+              </div>
+              
+              <div class="mb-3">
+                <label class="col-form-label" for="input-status">{{entry_status}}</label>
+                <select name="filter_status" id="input-status" class="form-select">
+                  <option value="*"></option>
+                  {% if filter_status == '1' %}
+                  <option value="1" selected="selected">{{text_enabled}}</option>
+                  {% else %}
+                  <option value="1">{{text_enabled}}</option>
+                  {% endif %}
+                  {% if filter_status == '0' %}
+                  <option value="0" selected="selected">{{text_disabled}}</option>
+                  {% else %}
+                  <option value="0">{{text_disabled}}</option>
+                  {% endif %}
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="col-form-label" for="input-date-added">{{entry_date_added}}</label>
+                <div class="input-group">
+                  <input type="text" name="filter_date_added" value="{{filter_date_added}}" placeholder="{{entry_date_added}}" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control date" />
+                  <div class="input-group-text"><i class="fas fa-calendar"></i></div>
+                </div>                  
+              </div>
+              <div class="text-end">
+                <button type="button" id="button-filter" class="btn btn-light"><i class="fas fa-filter"></i> {{button_filter}}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-9 col-md-12">
+      <div class="card">
+      <div class="card-header">
+        <i class="fa fa-list"></i> {{text_list}}
+      </div>
+      <div class="card-body">
+        
+        <form action="{{delete}}" method="post" enctype="multipart/form-data" id="form-review">
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <td style="width: 1px;" class="text-center"><input class="form-check-input" type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
+                  <td class="text-start">{% if sort == 'pd.name' %}
+                    <a href="{{sort_post}}" class="<?php echo strtolower($order)}}">{{column_post}}</a>
+                    {% else %}
+                    <a href="{{sort_post}}">{{column_post}}</a>
+                    {% endif %}</td>
+                  <td class="text-start">{% if sort == 'r.author' %}
+                    <a href="{{sort_author}}" class="<?php echo strtolower($order)}}">{{column_author}}</a>
+                    {% else %}
+                    <a href="{{sort_author}}">{{column_author}}</a>
+                    {% endif %}</td>
+                  <td class="text-end">{% if sort == 'r.rating' %}
+                    <a href="{{sort_rating}}" class="<?php echo strtolower($order)}}">{{column_rating}}</a>
+                    {% else %}
+                    <a href="{{sort_rating}}">{{column_rating}}</a>
+                    {% endif %}</td>
+                  <td class="text-start">{% if sort == 'r.status' %}
+                    <a href="{{sort_status}}" class="<?php echo strtolower($order)}}">{{column_status}}</a>
+                    {% else %}
+                    <a href="{{sort_status}}">{{column_status}}</a>
+                    {% endif %}</td>
+                  <td class="text-start">{% if sort == 'r.date_added' %}
+                    <a href="{{sort_date_added}}" class="<?php echo strtolower($order)}}">{{column_date_added}}</a>
+                    {% else %}
+                    <a href="{{sort_date_added}}">{{column_date_added}}</a>
+                    {% endif %}</td>
+                  <td class="text-end">{{column_action}}</td>
+                </tr>
+              </thead>
+              <tbody>
+                {% if reviews %}
+                {% for review in reviews %}
+                <tr>
+                  <td class="text-center">{% if review.review_id in selected %}
+                    <input class="form-check-input" type="checkbox" name="selected[]" value="{{review.review_id}}" checked="checked" />
+                    {% else %}
+                    <input class="form-check-input" type="checkbox" name="selected[]" value="{{review.review_id}}" />
+                    {% endif %}</td>
+                  <td class="text-start">{{review.title}}</td>
+                  <td class="text-start">{{review.author}}</td>
+                  <td class="text-end">{{review.rating}}</td>
+                  <td class="text-start">{{review.status}}</td>
+                  <td class="text-start">{{review.date_added}}</td>
+                  <td class="text-end"><a href="{{review.edit}}" data-bs-toggle="tooltip" title="{{button_edit}}" class="btn btn-primary"><i class="fas fa-pencil-alt"></i></a></td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                  <td class="text-center" colspan="7">{{text_no_results}}</td>
+                </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+          <div class="row">
+          <div class="col-sm-6 text-start">{{pagination}}</div>
+          <div class="col-sm-6 text-end">{{results}}</div>
+          </div>
+        </form>
+      </div>
+    </div>
+    </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript"><!--
+$('#button-filter').on('click', function() {
+	url = '{{review_filter}}'.split('&amp;').join('&');
+
+	var filter_post = $('input[name=\'filter_post\']').val();
+	
+	if (filter_post) {
+		url += '&filter_post=' + encodeURIComponent(filter_post);
+	}
+	
+	var filter_author = $('input[name=\'filter_author\']').val();
+	
+	if (filter_author) {
+		url += '&filter_author=' + encodeURIComponent(filter_author);
+	}
+	
+	var filter_status = $('select[name=\'filter_status\']').val();
+	
+	if (filter_status !== '*') {
+		url += '&filter_status=' + encodeURIComponent(filter_status); 
+	}		
+			
+	var filter_date_added = $('input[name=\'filter_date_added\']').val();
+	
+	if (filter_date_added) {
+		url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
+	}
+
+	location = url;
+});
+//--></script> 
+</div>
+{{footer}}

@@ -1,0 +1,22 @@
+{% set input_group_class = 'input-group vz-input-group' %}
+{% if input_group.classes %}
+    {% set input_group_class = input_group_class ~ ' ' ~ input_group.classes %}
+{% endif %}
+{% if input_group.buttons %}
+    {% set input_group_class = input_group_class ~ ' btn-group' %}
+{% endif %}
+<{{ input_group.tag|default('div') }}
+{% if input_group.id %}id="{{ input_group.id }}"{% endif %} class="{{ input_group_class }}" {% if input_group.atributest %}{{ input_group.atributest|raw }}{% endif %}>
+   {% if input_group.buttons %}
+        {% block buttons %}
+            {% for button in input_group.buttons %}
+                {% include 'extension/blog_module/catalog/view/template/parial/button.twig' with input_group %}
+            {% endfor %}
+        {% endblock  %}
+   {% else %}
+        {% include 'extension/blog_module/catalog/view/template/parial/input.twig' with input_group %}
+        <div class="input-group-btn">
+                {% include 'extension/blog_module/catalog/view/template/parial/button.twig' with input_group %}
+        </div>
+   {% endif %}
+</{{ input_group.tag|default('div') }}>

@@ -1,0 +1,17 @@
+<!-- > d_breadcrumb -->
+<div id="breadcrumb">
+  <div class="wrapper">
+    <div class="container">
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+            {% if breadcrumb.href %}
+                <li class="breadcrumb-item"><a href="{{breadcrumb.href}}">{{breadcrumb.text}}</a></li>
+            {% else %}
+                <li class="breadcrumb-item">{{breadcrumb.text}}</li>
+            {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- /> d_breadcrumb -->

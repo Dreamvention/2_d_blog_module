@@ -1,0 +1,196 @@
+{{header}}{{column_left}}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-review" data-bs-toggle="tooltip" title="{{button_save}}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{cancel}}" data-bs-toggle="tooltip" title="{{button_cancel}}" class="btn btn-light"><i class="fa fa-reply"></i></a></div>
+      <h1>{{heading_title}}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li class="breadcrumb-item"><a href="{{breadcrumb.href}}">{{breadcrumb.text}}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{error_warning}}
+      <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+    </div>
+    {% endif %}
+    <div class="card">
+      <div class="card-header">
+        <i class="fas fa-pencil-alt"></i> {{text_form}}
+      </div>
+      <div class="card-body">
+        <form action="{{action}}" method="post" enctype="multipart/form-data" id="form-review" class="form-horizontal">
+          <div class="row mb-3 required">
+            <label class="col-sm-2 col-form-label" for="input-author">{{entry_author}}</label>
+            <div class="col-sm-10">
+              <input type="text" name="author" value="{{author}}" placeholder="{{entry_author}}" id="input-author" class="form-control" />
+              {% if error_author %}
+              <div class="text-danger">{{error_author}}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="row mb-3 required">
+            <label class="col-sm-2 col-form-label" for="input-post"><span data-bs-toggle="tooltip" title="{{help_post}}">{{entry_post}}</span></label>
+            <div class="col-sm-10">
+              <input type="text" name="post" value="{{post}}" placeholder="{{entry_post}}" dv-data-oc-target="list-post" id="input-post" class="form-control" />
+              <ul id="list-post" class="dropdown-menu"></ul>
+              <input type="hidden" name="post_id" value="{{post_id}}" />
+              {% if error_post %}
+              <div class="text-danger">{{error_post}}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="row mb-3 required">
+            <label class="col-sm-2 col-form-label" for="input-text">{{entry_text}}</label>
+            <div class="col-sm-10">
+              <textarea name="description" cols="60" rows="8" placeholder="{{entry_text}}" id="input-text" class="form-control">{{description}}</textarea>
+              {% if error_text %}
+              <dspan class="text-danger">
+              {{error_text}}</span>
+              {% endif %}
+            </div>
+          </div>
+          <div class="row mb-3 required">
+            <label class="col-sm-2 col-form-label" for="input-name">{{entry_rating}}</label>
+            <div class="col-sm-10 d-flex align-items-center">
+              <div class="form-check form-check-inline">
+                {% if rating == 1 %}
+                <input id="rating-1" class="form-check-input" type="radio" name="rating" value="1" checked="checked" />
+               <label class="form-check-label" for="rating-1">1</label>
+                {% else %}
+                <input id="rating-1" class="form-check-input" type="radio" name="rating" value="1" />
+               <label class="form-check-label" for="rating-1">1</label>
+                {% endif %}
+              </div>
+              <div class="form-check form-check-inline">
+                {% if rating == 2 %}
+                <input id="rating-2" class="form-check-input" type="radio" name="rating" value="2" checked="checked" />
+                <label class="form-check-label" for="rating-2">2</label>
+                {% else %}
+                <input id="rating-2" class="form-check-input" type="radio" name="rating" value="2" />
+                <label class="form-check-label" for="rating-2">2</label>
+                {% endif %}
+              </div>
+              <div class="form-check form-check-inline">
+                {% if rating == 3 %}
+                <input id="rating-3" class="form-check-input" type="radio" name="rating" value="3" checked="checked" />
+                <label class="form-check-label" for="rating-3">3</label>
+                {% else %}
+                <input id="rating-3" class="form-check-input" type="radio" name="rating" value="3" />
+                <label class="form-check-label" for="rating-3">3</label>
+                {% endif %}
+              </div>
+              <div class="form-check form-check-inline">
+                {% if rating == 4 %}
+                <input id="rating-4" class="form-check-input" type="radio" name="rating" value="4" checked="checked" />
+                <label class="form-check-label" for="rating-4">4</label>
+                {% else %}
+                <input id="rating-4" class="form-check-input" type="radio" name="rating" value="4" />
+                <label class="form-check-label" for="rating-4">4</label>
+                {% endif %}
+              </div>
+              <div class="form-check form-check-inline">
+                {% if rating == 5 %}
+                <input id="rating-5" class="form-check-input" type="radio" name="rating" value="5" checked="checked" />
+                <label class="form-check-label" for="rating-5">5</label>
+                {% else %}
+                <input id="rating-5" class="form-check-input" type="radio" name="rating" value="5" />
+                <label class="form-check-label" for="rating-5">5</label>
+                {% endif %}
+              </div>
+              {% if error_rating %}
+              <div class="text-danger">{{error_rating}}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="input-status">{{entry_status}}</label>
+            <div class="col-sm-10">
+              <select name="status" id="input-status" class="form-select">
+                {% if status %}
+                <option value="1" selected="selected">{{text_enabled}}</option>
+                <option value="0">{{text_disabled}}</option>
+                {% else %}
+                <option value="1">{{text_enabled}}</option>
+                <option value="0" selected="selected">{{text_disabled}}</option>
+                {% endif %}
+              </select>
+            </div>
+          </div>
+          {% if images %}
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="input-status">{{entry_images}}</label>
+            <div class="col-sm-10">
+          <table id="images" class="table table-striped table-bordered table-hover">
+                  <thead>
+                    <tr>
+                      <td class="text-start">{{column_image}}</td>
+                      <td class="text-start">{{column_path}}</td>
+                      <td class="text-end">{{column_action}}</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% set image_row = 0 %}
+                    {% for image in images %}
+                    <tr id="image-row{{image_row}}">
+                      <td class="text-start">
+                         <img src="{{image.thumb}}" alt="" title="" data-placeholder="{{placeholder}}" />
+                      </td>
+                      <td class="text-start">
+                         {{image.href}}
+                      </td>
+                      <td class="text-end"><button type="button" id="btnRemove" data-image="{{image.href}}" data-row="{{image_row}}" data-bs-toggle="tooltip" title="{{button_remove}}" class="btn btn-danger"><i class="far fa-trash-alt"></i></button></td>
+                    </tr>
+                    {% set image_row = image_row + 1 %}
+                    {% endfor %}
+                  </tbody>
+                </table>
+               </div>
+
+          </div>
+          {% endif %}
+        </form>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript"><!--
+$('input[name=\'post\']').d_autocomplete({
+	'source': function(request, response) {
+		$.ajax({
+			url: '{{post_autocomplete}}&user_token={{token}}&filter_title=' +  encodeURIComponent(request),
+			dataType: 'json',			
+			success: function(json) {
+				response($.map(json, function(item) {
+					return {
+						label: item['title'],
+						value: item['post_id']
+					};
+				}));
+			}
+		});
+	},
+	'select': function(item) {
+		$('input[name=\'post\']').val(item['label']);
+		$('input[name=\'post_id\']').val(item['value']);		
+	}	
+});
+$(document).on('click','#btnRemove',function(){
+  var row=this.dataset.row;
+  var image=this.dataset.image;
+  if(confirm('{{text_confirm}}')){
+  $.ajax({
+      url: '{{image_remove}}&review_id={{review_id}}&image=' +  encodeURIComponent(image),
+      dataType: 'json',     
+      success: function(json) {
+        $('#image-row'+row).remove();
+        }
+      });
+  }
+});
+//--></script></div>
+{{footer}}

@@ -1,0 +1,233 @@
+{{header}} {{column_left}}
+<div id="content">
+    <div class="page-header">
+        <div class="container-fluid">
+            <div class="form-inline float-end">
+                <a href="{{cancel}}" data-bs-toggle="tooltip" title="{{button_cancel}}" class="btn btn-light">
+                    <i class="fa fa-reply"></i>
+                </a>
+            </div>
+            <h1>{{heading_title}} {{version}}</h1>
+            <ul class="breadcrumb">
+                {% for breadcrumb in breadcrumbs %}
+                <li class="breadcrumb-item">
+                    <a href="{{breadcrumb.href}}">{{breadcrumb.text}}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                    <i class="fas fa-pencil-alt"></i> {{text_edit}}
+            </div>
+            <div class="card-body">
+                <style>
+                    a#button-menu{
+                        -webkit-appearance: none!important;
+                    }
+                    .welcome {
+                        background: url('{{ constant('HTTP_CATALOG') }}extension/blog_module/admin/view/image/d_blog_module/bg.svg');
+                        background-position: bottom;
+                        background-repeat: repeat-x;
+                        background-size: 100%;
+                        min-height: 1025px;
+                        padding-top: 50px;
+                        padding-bottom: 32%;
+                    }
+
+                    .welcome-into {
+                        text-align: center;
+                        max-width: 500px;
+                        margin: auto;
+                    }
+
+                    .welcome-into-logo {
+                        padding-bottom: 15px;
+                    }
+
+                    .welcome-into-heading {
+                        font-size: 30px;
+                        font-weight: bold;
+                        padding-bottom: 15px;
+                    }
+
+                    .welcome-into-text {
+                        font-size: 18px;
+                        padding-bottom: 30px;
+                    }
+
+                    .welcome-into-start {
+                        padding-bottom: 30px;
+                    }
+
+                    .welcome-features {
+                        padding: 30px;
+                    }
+
+                    .welcome-features-icon {
+                        padding: 20px;
+                        height: 130px;
+                        text-align: center;
+                    }
+
+                    .welcome-features-text {
+                        text-align: center;
+                        font-weight: bold;
+                        font-size: 16px;
+                    }
+
+                    .panel .panel-body {
+                        padding: 0px;
+                    }
+
+                    .welcome-demo-checkbox {
+                        padding: 10px;
+                    }
+
+                    .icon-blog {
+                        height: 100px;
+                    }
+                </style>
+                <div class="welcome">
+                    <div class="welcome-into">
+                        <div class="welcome-into-logo">
+                            <img src="{{ constant('HTTP_CATALOG') }}extension/blog_module/admin/view/image/d_blog_module/main_icon_d_blog_module.svg" />
+                        </div>
+                        <div class="welcome-into-heading">{{text_welcome_title}}</div>
+                        <div class="welcome-into-text">{{text_welcome_description}}</div>
+                        {% if not pack_dependencies[0] %}
+                          <div class="welcome-into-start">
+                            <a class="btn btn-primary btn-lg addSetting">{{button_setup}}</a>
+                            <form class="welcome-demo-checkbox demo-data">
+                                <input type="hidden" name="demo_data" value="0">
+                                <input type="checkbox" name="demo_data" value="1" class="form-check-input" id="install-demo">
+                                <label class="form-check-label" for="install-demo">{{checkbox_setup}}</label>
+                            </form>
+                          </div>
+                        {% else %}
+                          <label class="col-form-label">{{ entry_install_dependencies }}</label>
+                          <div style="justify-content: center;" class="row col-sm-12 mt-2">
+                            <div id="loading-bar" class="spinner-grow" style="width: 5rem; height: 5rem;" role="status">
+                              <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <div id="loading-text"></div>
+                          </div>
+                        {% endif %}
+                    </div>
+                    <div class="welcome-features">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="welcome-features-icon">
+                                    <img class="icon-blog" src="{{ constant('HTTP_CATALOG') }}extension/blog_module/admin/view/image/d_blog_module/fullstack_d_blog_module.svg" />
+                                </div>
+                                <div class="welcome-features-text">{{text_welcome_visual_editor}}</div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="welcome-features-icon">
+                                    <img class="icon-blog" src="{{ constant('HTTP_CATALOG') }}extension/blog_module/admin/view/image/d_blog_module/powerful_d_blog_module.svg" />
+                                </div>
+                                <div class="welcome-features-text">{{text_welcome_building_blocks}}</div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="welcome-features-icon">
+                                    <img class="icon-blog" src="{{ constant('HTTP_CATALOG') }}extension/blog_module/admin/view/image/d_blog_module/awesome_layout_d_blog_module.svg" />
+                                </div>
+                                <div class="welcome-features-text">{{text_welcome_mobile_ready}}</div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="welcome-features-icon">
+                                    <img class="icon-blog" src="{{ constant('HTTP_CATALOG') }}extension/blog_module/admin/view/image/d_blog_module/dozens_d_blog_module.svg" />
+                                </div>
+                                <div class="welcome-features-text">{{text_welcome_increase_sales}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+$(document).ready(function() {
+  var dependencies = {{ pack_dependencies|json_encode() }};
+
+{% if constant('VERSION') > '4.0.1.1' %}
+  var next = 'index.php?route=extension/blog_module/module/blog_module.installPackDependencies&user_token={{ user_token }}&code=' + dependencies[0];
+{% else %}
+  var next = 'index.php?route=extension/blog_module/module/blog_module|installPackDependencies&user_token={{ user_token }}&code=' + dependencies[0];
+{% endif %}
+  var step = 0;
+
+  var install = function () {
+      $.ajax({
+          url: next,
+          dataType: 'json',
+          success: function (json) {
+              if (json['error']) {
+                $('#loading-bar').addClass('bg-danger');
+                $('#loading-text').html('<div class="text-danger">' + json['error'] + '</div>');
+              }
+
+              if (json['success']) {
+                dependencies.shift();
+                if (!dependencies[0] && !json['dependencies']) {
+                  $('#loading-text').html('<div class="text-success">' + json['success'] + '</div>');
+                  location = location;
+                } else {
+                  if (json['dependencies']) {
+                    json['dependencies'].forEach(
+                      (dependency) => {
+                        dependencies.push(dependency);
+                      }
+                    );
+                  }
+                  step += 1;
+                  {% if constant('VERSION') > '4.0.1.1' %}
+                    next = 'index.php?route=extension/blog_module/module/blog_module.installPackDependencies&user_token={{ user_token }}&code=' + dependencies[0];
+                  {% else %}
+                    next = 'index.php?route=extension/blog_module/module/blog_module|installPackDependencies&user_token={{ user_token }}&code=' + dependencies[0];
+                  {% endif %}
+                  install();
+                }
+              }
+
+              if (json['next']) {
+                  next = json['next'];
+                  install();
+              }
+          },
+          error: function (xhr, ajaxOptions, thrownError) {
+              console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+          }
+      });
+  };
+
+  install();
+});
+</script>
+<script type="text/javascript">
+    $(document).on('click', '.addSetting', function(){
+        var data = $('.demo-data').serialize();
+        $.ajax( {
+            type: 'post',
+            url: '{{quick_setup}}',
+            data: data,
+            dataType: 'json',
+            beforeSend: function() {
+                $('#form').fadeTo('slow', 0.5);
+            },
+            complete: function() {
+                $('#form').fadeTo('slow', 1);
+            },
+            success: function( json ) {
+                location.href = json.redirect.split('&amp;').join('&');
+
+            }
+        });
+
+    })
+</script>
+{{footer}}

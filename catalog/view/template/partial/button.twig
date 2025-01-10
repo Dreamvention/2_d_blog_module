@@ -1,0 +1,52 @@
+{% set btn_classes = 'btn' %}
+
+{% if button.classes %}
+    {% set btn_classes = btn_classes ~ ' ' ~ button.classes %}
+{% endif %}
+{% if button.style %}
+    {% set btn_classes = btn_classes ~ ' btn-' ~ button.style %}
+{% endif %}
+{% if button.ghost %}
+    {% set btn_classes = btn_classes ~ ' btn-ghost' %}
+{% endif %}
+{% if button.size %}
+    {% set btn_classes = btn_classes ~ ' btn-' ~ button.size %}
+{% endif %}
+{% if data_loading %}
+    {% set button = button|merge({text_button: data_loading}) %}
+{% endif %}
+{% if button.icon %}
+    {% set button = button|merge({text_button:'<i class="' ~ button.icon ~ '"></i>'}) %}
+{% endif %}
+{% if button.link %}
+    {% set button = button|merge({tag:'a',type:false}) %}
+{% endif %}
+{% if not button.type is defined %}
+    {% set button = button|merge({type:'button'}) %}
+{% endif %}
+{% if button is not defined %}
+    please make sure you use this component right.
+    use next punctuation
+    {button:{
+        id:'id',
+        style:'primary',
+        link: 'extension/aa',
+        // or if  if just click
+        onclick : 'cart.add(41)'
+    }
+{% endif %}
+
+<{{ button.tag|default('button') }}
+class="{{ btn_classes }}"
+{% if button.id %}id='{{ button.id }}'{% endif %}
+{% if button.onclick %}onclick="{{ button.onclick|raw }}"{% endif %}
+{% if button.link %}href="{{ button.link }}"{% endif %}
+{% if button.type %} type='{{ button.type }}'{% endif %}
+{% if button.title_button %}title="{{ button.title_button }}"{% endif %}
+{% if button.text_loading %}data-loading-text="{{ button.text_loading }}"{% endif %}
+{% if button.atributest %}{{ button.atributest|raw }}{% endif %}>
+{% block button_content %}
+    {{ button.text_button|raw }}
+{% endblock %}
+</{{ button.tag|default('button') }}>
+

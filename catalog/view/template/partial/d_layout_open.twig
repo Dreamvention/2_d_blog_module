@@ -1,0 +1,20 @@
+<!-- > d_layout_open -->
+<div class="container" >
+    {% include 'extension/blog_module/catalog/view/template/partial/d_notification.twig' %}
+    <div class="row">
+        {{column_left}}
+        {% if column_left %}
+                {% if column_right %}
+                    <main id="content" data-route="{{ page_route }}" class="{{class}} col-sm-6">
+                {% else %}
+                    <main id="content" data-route="{{ page_route }}" class="{{class}} col-sm-9">
+                {% endif %}
+        {% else %}
+            {% if column_right %}
+                <main id="content" data-route="{{ page_route }}" class="{{class}} col-sm-9">
+            {% else %}
+                <main id="content" data-route="{{ page_route }}" class="{{class}} col-sm-12">
+            {% endif %}
+        {% endif %}
+        {{content_top}}
+<!-- /> d_layout_open -->

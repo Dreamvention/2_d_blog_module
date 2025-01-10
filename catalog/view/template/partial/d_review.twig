@@ -1,0 +1,61 @@
+{% if review_status %}
+    <div class="tab-pane" id="tab-review">
+        <form class="form-horizontal" id="form-review">
+            <div id="review"></div>
+            <!-- Button trigger modal -->
+            {% if review_guest %}
+                <button type="button"  data-loading-text="{{ text_loading }}" class="btn d-vis btn-primary"
+                        data-bs-toggle="modal" data-target="#write_review_modal">{{ text_write }}</button>
+                <!-- Modal -->
+                <div class="modal fade" id="write_review_modal" tabindex="-1" role="dialog" aria-labelledby="">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                <h2 class="modal-title">{{ text_write }}</h2>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group required">
+                                    <div class="col-sm-12">
+                                        <label class="control-label" for="input-name">{{ entry_name }}</label>
+                                        <input type="text" name="name" value="{{ customer_name }}" id="input-name"
+                                               class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="form-group required">
+                                    <div class="col-sm-12">
+                                        <label class="control-label" for="input-review">{{ entry_review }}</label>
+                                        <textarea name="text" rows="5" id="input-review"
+                                                  class="form-control"></textarea>
+                                        <div class="help-block">{{ text_note }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer d-flex justify-content-end align-items-center">
+                                <div class="review_rating_wrap">
+                                    {% include 'partial/d_rating.twig' with partial.d_rating %}
+                                </div>
+                                {{ captcha }}
+                                <div class="buttons clearfix">
+                                    <div class="float-end">
+                                        {% include 'partial/button.twig' with partial.button|merge({
+                                        button: true,
+                                        id:'button-review',
+                                        style:'primary',
+                                        text_button:button_continue,
+                                        }) %}
+                                        {#<button type="button" id="button-review" data-loading-text="{{ text_loading }}"#}
+                                        {#class="btn btn-vis btn-primary">{{ button_continue }}</button>#}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+
+            {% endif %}
+        </form>
+    </div>
+{% endif %}

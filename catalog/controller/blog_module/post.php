@@ -1,0 +1,568 @@
+<?php
+namespace Opencart\Catalog\Controller\Extension\BlogModule\BlogModule;
+
+class Post extends \Opencart\System\Engine\Controller
+{
+    private $id = 'blog_module';
+    private $route = 'extension/blog_module/blog_module/post';
+    private $sub_versions = array('lite', 'light', 'free');
+
+    private $prefix = '';
+    private $config_file = '';
+    private $error = array();
+    private $debug = false;
+    private $setting = array();
+
+    public function __construct($registry)
+    {
+        parent::__construct($registry);
+        if (!isset($this->user)) {
+
+            $this->user = new \Opencart\System\Library\Cart\User($registry);
+
+        }
+
+        $this->load->language('extension/blog_module/blog_module/post');
+		if ($this->language->get('text_posted_by') == 'text_posted_by') {
+			$this->load->language('extension/blog_module/blog_module/post', '', 'en-gb');
+		}
+        $this->load->model('extension/blog_module/module/blog_module');
+        $this->load->model('extension/blog_module/blog_module/category');
+        $this->load->model('extension/blog_module/blog_module/post');
+        $this->load->model('extension/blog_module/blog_module/review');
+        $this->load->model('extension/blog_module/blog_module/author');
+        $this->load->model('tool/image');
+
+        $this->session->data['blog_module_debug'] = $this->config->get('blog_module_debug');
+
+        $this->config_file = $this->model_extension_blog_module_module_blog_module->getConfigFile($this->id, $this->sub_versions);
+
+        $this->setting = $this->model_extension_blog_module_module_blog_module->getConfigData($this->id, $this->id . '_setting', $this->config->get('config_store_id'), $this->config_file);
+
+        $this->load->model('localisation/language');
+        $lang = $this->model_localisation_language->getLanguage($this->config->get('config_language_id'));
+        $locales = array();
+        foreach (explode(',', $lang['locale']) as $l) {
+            $locales [] = $l;
+        }
+        $loc_de = setlocale(LC_ALL, $locales);
+
+    }
+
+    public function index()
+    {
+
+        if (!$this->config->get('blog_module_status')) {
+            $this->response->redirect($this->url->link('error/not_found'));
+        }
+
+        $data['breadcrumbs'] = array();
+
+        $data['breadcrumbs'][] = array(
+            'text' => $this->language->get('text_home'),
+            'href' => $this->url->link('common/home', '', 'SSL')
+        );
+
+        if (isset($this->request->get['post_id'])) {
+            $post_id = (int)$this->request->get['post_id'];
+        } else {
+            $post_id = 0;
+        }
+
+        $post_info = $this->model_extension_blog_module_blog_module_post->getPost($post_id);
+
+        if ($post_info) {
+
+            $this->user = new \Opencart\System\Library\Cart\User($this->registry);
+
+
+            if (!$this->user->isLogged()) { // loged as admin
+                if ((isset($post_info['limit_access_user']) && $post_info['limit_access_user'])) {
+                    //yes limit
+                    if (!$this->customer->isLogged()) {
+                        $this->postRestrict($post_id);
+                        return;
+                    } else {
+                        //user is logged find in allowed
+                        $allowed_users = explode(',', $post_info['limit_users']);
+                        if (!in_array($this->customer->getId(), $allowed_users)) {
+                            $this->postRestrict($post_id);
+                            return;
+                        }
+                    }
+                }
+                if (isset($post_info['limit_access_user_group']) && $post_info['limit_access_user_group']) {
+                    if (!$this->customer->isLogged()) {
+                        $this->postRestrict($post_id);
+                        return;
+                    } else {
+                        //user is logged find in allowed groups
+                        $allowed_groups = explode(',', $post_info['limit_user_groups']);
+                        if (!in_array($this->customer->getGroupId(), $allowed_groups)) {
+                            $this->postRestrict($post_id);
+                            return;
+                        }
+                    }
+                }
+            }
+
+            $this->model_extension_blog_module_blog_module_post->updateViewed($post_id);
+            $url = '';
+            $parent_category = array();
+
+            $this->document->addScript('extension/blog_module/catalog/view/javascript/jquery/magnific/jquery.magnific-popup.min.js');
+            $this->document->addStyle('extension/blog_module/catalog/view/javascript/jquery/magnific/magnific-popup.css');
+
+            $this->document->addScript('extension/blog_module/catalog/view/javascript/jquery/datetimepicker/moment/moment.min.js');
+
+            $this->document->addScript('extension/blog_module/catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js');
+            $this->document->addStyle('extension/blog_module/catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css');
+
+            $styles = array(
+                'blog_module/blog_module.css',
+                'blog_module/bootstrap.css',
+                'blog_module/theme/' . $this->setting['theme'] . '.css'
+            );
+
+            foreach ($styles as $style) {
+                if (is_file(DIR_EXTENSION . 'blog_module_pack/catalog/view/stylesheet/'.$style)) {
+					$this->document->addStyle('extension/blog_module_pack/catalog/view/stylesheet/'.$style);
+				} else {
+					$this->document->addStyle('extension/blog_module/catalog/view/stylesheet/'.$style);
+				}
+            }
+
+            $scripts = array(
+                'blog_module/main.js',
+                'blog_module/post.js'
+            );
+
+            foreach ($scripts as $script) {
+                if (is_file(DIR_EXTENSION . 'blog_module_pack/catalog/view/javascript/'.$script)) {
+					$this->document->addScript('extension/blog_module_pack/catalog/view/javascript/'.$script);
+				} else {
+					$this->document->addScript('extension/blog_module/catalog/view/javascript/'.$script);
+				}
+            }
+
+            if ($this->user->isLogged()) {
+                $data['user'] = true;
+            } else {
+                $data['user'] = false;
+            }
+
+            $this->load->language('product/category');
+
+            $data['heading_title'] = $post_info['title'];
+            $data['post_id'] = (int)$post_id;
+            $data['setting'] = $this->setting;
+
+            $author = $this->model_extension_blog_module_blog_module_author->getAuthorByUserId($post_info['user_id']);
+            $author_id = $author['author_id'] ?? 0;
+            $data['author'] = (!empty($author['name'])) ? $author['name'] : $this->language->get('text_anonymous');
+            $data['author_link'] = $this->url->link('extension/blog_module/blog_module/author', 'author_id=' . $author_id, 'SSL');
+
+            if (isset($author['image'])) {
+                $data['author_image'] = $this->model_tool_image->resize($author['image'], $this->setting['author']['image_width'], $this->setting['author']['image_height']);
+            } else {
+                $data['author_image'] = $this->model_tool_image->resize('placeholder.png', $this->setting['author']['image_width'], $this->setting['author']['image_height']);
+            }
+
+            $data['author_name'] = (isset($author['name'])) ? $author['name'] : '';
+            $data['author_description'] = (isset($author['short_description'])) ? strip_tags(html_entity_decode($author['short_description'], ENT_QUOTES, 'UTF-8')) : '';
+
+            $data['description'] = html_entity_decode($post_info['description'], ENT_QUOTES, 'UTF-8');
+            $data['date_published'] = iconv(mb_detect_encoding(date(($this->setting['post']['date_format'][$this->config->get('config_language_id')] ?? 'l d F, Y'), strtotime($post_info['date_published']))), "utf-8//IGNORE", date(($this->setting['post']['date_format'][$this->config->get('config_language_id')] ?? 'l d F, Y'), strtotime($post_info['date_published'])));
+
+            $data['date_modified'] = date(($this->setting['post']['date_format'][$this->config->get('config_language_id')] ?? 'l d F, Y'), strtotime($post_info['date_modified']));
+            $data['date_published_link'] = $this->url->link('extension/blog_module/blog_module/search', 'date_published=' . date("m", strtotime($post_info['date_published'])) . '-' . date("Y", strtotime($post_info['date_published'])), 'SSL');
+
+            $data['date_published_utc'] = date($this->setting['utc_datetime_format'][$this->config->get('config_language_id')], strtotime($post_info['date_published']));
+            $data['date_modified_utc'] = date($this->setting['utc_datetime_format'][$this->config->get('config_language_id')], strtotime($post_info['date_modified']));
+            $data['custom_style'] = $this->setting['design']['custom_style'];
+
+            $this->load->language('extension/blog_module/blog_module/category');
+
+			if ($this->language->get('text_read_more') == 'text_read_more') {
+				$this->load->language('extension/blog_module/blog_module/category', '', 'en-gb');
+			}
+
+            $data['edit'] = false;
+            if ($this->user->isLogged()) {
+                $data['edit'] = $this->config->get('config_url') . $this->setting['dir_admin'] . '/index.php?route=extension/blog_module/blog_module/post|edit&post_id=' . $post_id . '&user_token=' . $this->session->data['user_token'];
+            }
+
+            // Categories
+            $categories = $this->model_extension_blog_module_blog_module_category->getCategoryByPostId($post_id);
+            $data['categories'] = array();
+            foreach ($categories as $category) {
+                $data['categories'][] = array(
+                    'title' => $category['title'],
+                    'href'  => $this->url->link('extension/blog_module/blog_module/category', 'bm_category_id=' . $category['category_id'] . $url, 'SSL')
+                );
+            }
+
+            if (isset($categories[0])) {
+                $parent_category = $categories[0];
+            }
+
+            //Videos
+            $post_videos = $this->model_extension_blog_module_blog_module_post->getPostVideos($post_id);
+            $data['post_videos'] = array();
+            foreach ($post_videos as $video) {
+                $data['post_videos'][] = array(
+                    'text' => $video['text'],
+                    'code' => '<iframe frameborder="0" allowfullscreen src="' . str_replace("watch?v=", "embed/", $video['video']) . '" height="' . $video['height'] . '" width="100%" style="max-width:' . $video['width'] . 'px"></iframe>'
+                );
+            }
+
+            if ($parent_category) {
+                $parents = $this->model_extension_blog_module_blog_module_category->getCategoryParents($parent_category['category_id']);
+                foreach ($parents as $category) {
+                    $data['breadcrumbs'][] = array(
+                        'text' => $category['title'],
+                        'href' => $this->url->link('extension/blog_module/blog_module/category', 'bm_category_id=' . $category['category_id'] . $url, 'SSL')
+                    );
+                }
+                $data['breadcrumbs'][] = array(
+                    'text' => $parent_category['title'],
+                    'href' => $this->url->link('extension/blog_module/blog_module/category', 'bm_category_id=' . $parent_category['category_id'] . $url, 'SSL')
+                );
+            }
+
+
+            $data['breadcrumbs'][] = array(
+                'text' => $post_info['title']
+            );
+
+            $data['tags'] = array();
+            $tags = array();
+            if (!empty($post_info['image_title'])) {
+                $data['image_title'] = $post_info['image_title'];
+            } else {
+                $data['image_title'] = $data['heading_title'];
+            }
+            if (!empty($post_info['image_alt'])) {
+                $data['image_alt'] = $post_info['image_alt'];
+            } else {
+                $data['image_alt'] = $data['heading_title'];
+            }
+            $data['image_alt'] = $post_info['image_alt'];
+            $data['image_title'] = $post_info['image_title'];
+
+            if ($post_info['tag']) {
+                $tags = explode(',', $post_info['tag']);
+
+                foreach ($tags as $tag) {
+                    $data['tags'][] = array(
+                        'text' => trim($tag),
+                        'href' => $this->url->link('extension/blog_module/blog_module/search', 'tag=' . trim($tag), 'SSL')
+                    );
+                }
+            }
+
+            if ($post_info['image'] && $this->setting['post']['popup_display']) {
+                $data['popup'] = $this->model_tool_image->resize($post_info['image'], $this->setting['post']['popup_width'], $this->setting['post']['popup_height']);
+            } else {
+                $data['popup'] = '';
+            }
+
+            if ($post_info['image'] && $this->setting['post']['image_display']) {
+                $data['thumb'] = $this->model_tool_image->resize($post_info['image'], $this->setting['post']['image_width'], $this->setting['post']['image_height']);
+            } else {
+                $data['thumb'] = '';
+            }
+
+            $review_total_info = $this->model_extension_blog_module_blog_module_review->getTotalReviewsByPostId($post_id);
+            $data['rating'] = (float)$review_total_info['rating'];
+
+            if (isset($this->request->get['format'])) {
+                $format = $this->request->get['format'];
+                if ($this->format($format, $data)) {
+                    return false;
+                }
+            }
+
+            if ($post_info['review_display'] == 1) {
+                $data['review_display'] = true;
+            } elseif ($post_info['review_display'] == 2) {
+                $data['review_display'] = false;
+            } else {
+                $data['review_display'] = $this->setting['post']['review_display'];
+            }
+            $data['review'] = $this->load->controller('extension/blog_module/blog_module/review');
+
+            //next and prev posts
+            $nav_category_id = 0;
+            if ($this->setting['post']['nav_same_category'] && $parent_category) {
+                $nav_category_id = $parent_category['category_id'];
+            }
+            $next_post_info = $this->model_extension_blog_module_blog_module_post->getNextPost($post_id, $nav_category_id);
+            $prev_post_info = $this->model_extension_blog_module_blog_module_post->getPrevPost($post_id, $nav_category_id);
+            $this->load->model('extension/dv_opencart_patch/helper/general');
+            $data['next_post'] = array();
+            if ($next_post_info) {
+                $data['next_post'] = array(
+                    'text'              => $next_post_info['title'],
+                    'href'              => $this->url->link('extension/blog_module/blog_module/post', 'post_id=' . $next_post_info['post_id'] . $url, 'SSL'),
+                    'short_description' => ($this->model_extension_dv_opencart_patch_helper_general->substr(strip_tags(html_entity_decode($next_post_info['short_description'], ENT_QUOTES, 'UTF-8')), 0, $this->setting['post']['short_description_length']) . '...'),
+                    'thumb'             => ($next_post_info['image']) ? $this->model_tool_image->resize($next_post_info['image'], $this->setting['post_thumb']['image_width'], $this->setting['post_thumb']['image_height']) : '',
+                );
+            }
+
+            $data['prev_post'] = array();
+            if ($prev_post_info) {
+                $data['prev_post'] = array(
+                    'text'              => $prev_post_info['title'],
+                    'href'              => $this->url->link('extension/blog_module/blog_module/post', 'post_id=' . $prev_post_info['post_id'] . $url, 'SSL'),
+                    'short_description' => ($this->model_extension_dv_opencart_patch_helper_general->substr(strip_tags(html_entity_decode($prev_post_info['short_description'], ENT_QUOTES, 'UTF-8')), 0, $this->setting['post']['short_description_length']) . '...'),
+                    'thumb'             => ($prev_post_info['image']) ? $this->model_tool_image->resize($prev_post_info['image'], $this->setting['post_thumb']['image_width'], $this->setting['post_thumb']['image_height']) : '',
+                );
+            }
+
+
+            //metas
+            $this->document->setTitle($post_info['meta_title']);
+            $this->document->setDescription($post_info['meta_description']);
+            $this->document->setKeywords($post_info['meta_keyword']);
+            $this->document->addLink($this->url->link('extension/blog_module/blog_module/post', 'post_id=' . $post_id, 'SSL'), 'canonical');
+
+            $data['column_left'] = $this->load->controller('common/column_left');
+            $data['column_right'] = $this->load->controller('common/column_right');
+            $data['content_top'] = $this->load->controller('common/content_top');
+            $data['content_bottom'] = $this->load->controller('common/content_bottom');
+            $data['footer'] = $this->load->controller('common/footer');
+            $data['header'] = $this->load->controller('common/header');
+            $this->response->setOutput($this->load->view('extension/blog_module/blog_module/post', $data));
+
+        } else {
+            $url = '';
+
+            $data['breadcrumbs'][] = array(
+                'text' => $this->language->get('text_error'),
+                'href' => $this->url->link('extension/blog_module/blog_module/post', $url . '&post_id=' . $post_id, 'SSL')
+            );
+
+            $this->document->setTitle($this->language->get('text_error'));
+
+            $data['heading_title'] = $this->language->get('text_error');
+
+            $data['text_error'] = $this->language->get('text_error');
+
+            $data['button_continue'] = $this->language->get('button_continue');
+
+            $data['continue'] = $this->url->link('common/home');
+
+            $this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
+
+            $data['column_left'] = $this->load->controller('common/column_left');
+            $data['column_right'] = $this->load->controller('common/column_right');
+            $data['content_top'] = $this->load->controller('common/content_top');
+            $data['content_bottom'] = $this->load->controller('common/content_bottom');
+            $data['footer'] = $this->load->controller('common/footer');
+            $data['header'] = $this->load->controller('common/header');
+
+            $this->response->setOutput($this->load->view('error/not_found', $data));
+        }
+    }
+
+    public function postRestrict($post_id)
+    {
+        $url = '';
+        $data['breadcrumbs'][] = array(
+            'text' => $this->language->get('text_error'),
+            'href' => $this->url->link('extension/blog_module/blog_module/post', $url . '&post_id=' . $post_id, 'SSL')
+        );
+
+        $this->document->setTitle($this->language->get('text_error'));
+
+        $data['heading_title'] = $this->language->get('text_restricted_access');
+
+        $data['text_error'] = $this->language->get('text_contact_admin');
+
+        $data['button_continue'] = $this->language->get('button_continue');
+
+        $data['continue'] = $this->url->link('common/home');
+
+        $this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
+
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['column_right'] = $this->load->controller('common/column_right');
+        $data['content_top'] = $this->load->controller('common/content_top');
+        $data['content_bottom'] = $this->load->controller('common/content_bottom');
+        $data['footer'] = $this->load->controller('common/footer');
+        $data['header'] = $this->load->controller('common/header');
+        $this->response->setOutput($this->load->view('error/not_found', $data));
+    }
+
+    public function format($format, $json)
+    {
+        if ($format == 'json') {
+            $this->response->addHeader('Content-Type: application/json');
+
+            if (isset($this->request->get['callback'])) {
+                $this->response->setOutput($this->request->get['callback'] . '(' . json_encode($json) . ');');
+            } else {
+                $this->response->setOutput(json_encode($json));
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public function thumb($post_id)
+    {
+        if ($post_id) {
+
+            $data['setting'] = $this->setting;
+
+            $post = $this->model_extension_blog_module_blog_module_post->getPost($post_id);
+
+            if ($post) {
+                $url = '';
+
+				$this->document->addStyle('extension/blog_module/catalog/view/javascript/d_bootstrap_rating/bootstrap-rating.css');
+        		$this->document->addScript('extension/blog_module/catalog/view/javascript/d_bootstrap_rating/bootstrap-rating.min.js');
+
+                $this->document->addStyle('extension/blog_module/catalog/view/stylesheet/blog_module/blog_module.css');
+
+                if ($post['image']) {
+                    $image = $this->model_tool_image->resize($post['image'], $this->setting['post_thumb']['image_width'], $this->setting['post_thumb']['image_height']);
+                } else {
+                    $image = $this->model_tool_image->resize('placeholder.png', $this->setting['post_thumb']['image_width'], $this->setting['post_thumb']['image_height']);
+                }
+                $category_info = array();
+                $post_categories = $this->model_extension_blog_module_blog_module_category->getCategoryByPostId($post_id);
+
+                foreach ($post_categories as $category) {
+                    $category_info[] = array(
+                        'title' => $category['title'],
+                        'href'  => $this->url->link('extension/blog_module/blog_module/category', 'bm_category_id=' . $category['category_id'], 'SSL')
+                    );
+                }
+
+
+                $rating = (isset($post['rating'])) ? $post['rating'] : FALSE;
+
+                $tags = explode(',', $post['tag']);
+                $data['tags'] = array();
+                foreach ($tags as $tag) {
+                    if ($tag) {
+                        $data['tags'][] = array(
+                            'text' => trim($tag),
+                            'href' => $this->url->link('extension/blog_module/blog_module/search', 'tag=' . trim($tag), 'SSL')
+                        );
+                    }
+                }
+                $this->load->model('extension/dv_opencart_patch/helper/general');
+                $data['post_id'] = $post_id;
+                $data['thumb'] = $image;
+                $data['title'] = ($this->model_extension_dv_opencart_patch_helper_general->substr($post['title'], 0, $this->setting['post_thumb']['title_length']));
+                $data['categories'] = $category_info;
+                $data['short_description'] = $this->setting['post']['style_short_description_display'] ? html_entity_decode($post['short_description'], ENT_QUOTES, 'UTF-8') : $this->model_extension_dv_opencart_patch_helper_general->substr(strip_tags(html_entity_decode($post['short_description'], ENT_QUOTES, 'UTF-8')), 0, $this->setting['post_thumb']['short_description_length']) . '...';
+                $data['description'] = ($this->model_extension_dv_opencart_patch_helper_general->substr(strip_tags(html_entity_decode($post['description'], ENT_QUOTES, 'UTF-8')), 0, $this->setting['post_thumb']['description_length']) . '...');
+                $data['rating'] = $rating;
+
+                $author = $this->model_extension_blog_module_blog_module_author->getAuthorByUserId($post['user_id']);
+                $data['author'] = (!empty($author['name'])) ? $author['name'] : $this->language->get('text_anonymous');
+				$author_id = $author['author_id'] ?? 0;
+                $data['author_link'] = $this->url->link('extension/blog_module/blog_module/author', 'author_id=' . $author_id, 'SSL');
+
+                if ((isset($post['limit_access_user']) && $post['limit_access_user'])) {
+                    //yes limit
+                    if (!$this->customer->isLogged()) {
+                        $this->postRestrictLabel($post_id, 'user');
+                    } else {
+                        //user is logged find in allowed
+                        $allowed_users = explode(',', $post['limit_users']);
+                        if (!in_array($this->customer->getId(), $allowed_users)) {
+                            $this->postRestrictLabel($post_id, 'user');
+                        }
+                    }
+                }
+                if (isset($post['limit_access_user_group']) && $post['limit_access_user_group']) {
+                    if (!$this->customer->isLogged()) {
+                        $this->postRestrictLabel($post_id, 'group');
+                    } else {
+                        //user is logged find in allowed groups
+                        $allowed_groups = explode(',', $post['limit_user_groups']);
+                        if (!in_array($this->customer->getGroupId(), $allowed_groups)) {
+                            $this->postRestrictLabel($post_id, 'group');
+                        }
+                    }
+                }
+                $data['views'] = $post['viewed'];
+                $data['review'] = $post['review'];
+                $data['image_title'] = (!empty($post['image_title'])) ? $post['image_title'] : $data['title'];
+                $data['image_alt'] = (!empty($post['image_alt'])) ? $post['image_title'] : $data['title'];
+                $data['date_published'] = iconv(mb_detect_encoding(date(($this->setting['post_thumb']['date_format'][$this->config->get('config_language_id')] ?? 'l d F, Y'), strtotime($post['date_published']))), "utf-8//IGNORE", date(($this->setting['post_thumb']['date_format'][$this->config->get('config_language_id')] ?? 'l d F, Y'), strtotime($post['date_published'])));
+
+                $data['date_published_short'] = date($this->language->get('date_format_short'), strtotime($post['date_published']));
+                $data['date_published_day'] = date($this->setting['post_thumb']['date_format_day'], strtotime($post['date_published']));
+                $data['date_published_month'] = date($this->setting['post_thumb']['date_format_month'], strtotime($post['date_published']));
+                $data['date_published_year'] = date($this->setting['post_thumb']['date_format_year'], strtotime($post['date_published']));
+                $data['href'] = $this->url->link('extension/blog_module/blog_module/post', 'post_id=' . $post_id, 'SSL');
+
+                return $data;
+            } else {
+
+                return false;
+            }
+        }
+    }
+
+    public function postRestrictLabel($post_id, $group = 'user')
+    {
+        $data['restrict_access'] = true;
+        if (VERSION > '3') {
+            $this->load->model('account/customer_group');
+            $customer_group = $this->model_account_customer_group->getCustomerGroup($this->customer->getGroupId());
+            if (isset($customer_group['name'])) {
+                $data['restrict_access_label'] = sprintf($this->language->get('restrict_access_label_' . $group), $customer_group['name']);
+            }
+        } else {
+            $data['restrict_access_label'] = $this->language->get('restrict_access_label_' . $group);
+
+        }
+
+    }
+
+    public function savePost($setting)
+    {
+        $result = false;
+
+        if (!empty($setting['content']['post_description']) && !empty($setting['id'])) {
+            $this->model_extension_blog_module_blog_module_post->editPost($setting['id'], $setting['content']);
+            $result = true;
+        }
+
+        return $result;
+    }
+
+    public function editPost()
+    {
+        $json = array();
+
+        if (!empty($this->request->post['description'])) {
+            $description = $this->request->post['description'];
+        }
+
+        if (!empty($this->request->get['id'])) {
+            $post_id = $this->request->get['id'];
+        }
+
+        if (isset($description) && isset($post_id)) {
+
+            $this->model_extension_blog_module_blog_module_post->editPost($post_id, array('description' => $description));
+
+            $json['success'] = 'success';
+        } else {
+            $json['error'] = 'error';
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+}

@@ -1,0 +1,247 @@
+{% set input_classes = 'form-controll input-' ~  input.type|default('text') %}
+{% if input.classes %}
+    {% set input_classes = input_classes ~ ' ' ~ input.classes %}
+{% endif %}
+{% if input.input_group %}
+    {% set input_classes = input_classes ~ ' input--group' %}
+{% endif %}
+{% if input.form == 'inline' %}
+    {% set input_classes = input_classes ~ ' input--inline' %}
+{% elseif input.form == 'block'%}
+    {% set input_classes = input_classes ~ ' input--block' %}
+{% endif %}
+{% if input.style %}
+    {% set input_classes = input_classes ~ ' btn-' ~ input.style %}
+{% endif %}
+{% if input.size %}
+    {% set input_classes = input_classes ~ ' input--' ~ input.size %}
+{% endif %}
+{% if input.type !='radio' and  input.type != 'checkbox' %}
+    {% set input_classes = input_classes ~ ' form-control'  %}
+{% endif %}
+{% if input.type=='button' or input.type=='submit' and input.button %}
+    {% set input_classes = input.classes ~ ' btn btn-' ~ input.style %}
+{% endif %}
+{#<{{ input.tag|default('input') }}#}
+{#{% if input.id %}id="{{ input.id }}"{% endif %} class="{{ input_classes }}" {% if input.atributest %}{{ input.atributest|raw }}{% endif %}>#}
+{#</{{ input.tag|default('input') }}>#}
+{#<{{ input_group.tag|default('div') }} class="input input--{{ type }} {% if size %}input--{{ size }}{% endif %}{% if input_group %} input--group{% endif %}">#}
+{% if input.type == 'checkbox' %}
+{% if input.values is iterable %}
+{#set default values #}
+{% if not input.value %}
+    {% set input=input|merge({value:'value'}) %}
+{% endif %}
+{% if not input.text %}
+    {% set input=input|merge({text:'text'}) %}
+{% endif %}
+{% if not input.image %}
+    {% set input=input|merge({image:'image'}) %}
+{% endif %}
+<div class="input-checkbox-wrap"
+        {% if input.id %}
+             id="{{ input.id }}"
+        {% endif %}>
+    {% for option in input.values %}
+        <label class='{{ input_classes }}'>
+                {% block checkbox_option %}
+                    <input type="checkbox"
+                    {% if option.id %}
+                        id="{{ option.id }}"
+                    {% endif %}
+                    {% if input.name %}
+                        name="{{ input.name }}"
+                    {% endif %}
+                    {% if classes %}
+                        class="{{ input_classes }} "
+                    {% endif %}
+                    value="{{ option[input.value] }}"
+                    {% if input.checked == option[input.value] %}checked="checked"{% endif %}
+                    />
+                    <div >{{ option[input.text] }}</div>
+                    {% if option[input.image]%}
+                        <img src="image/{{ option[input.image] }}" >
+                    {% endif %}
+                {% endblock %}
+            <span class="input--checkbox-checkmark"></span>
+        </label>
+    {% endfor %}
+</div>
+{% else %}
+<label class="{{ input_classes }}" >
+    <input type="checkbox"
+            {% if id %}
+                id="{{ input.id }}"
+            {% endif %}
+            {% if classes %}
+                class="{{ input_classes }} "
+            {% endif %}
+           name="{{ input.name }}"
+           value="{{ input.value }}"
+            {% if input.checked %}checked="checked"{% endif %}
+    />
+    <span class="input--checkbox-checkmark"></span>
+    <div class=input__text>{{ input.text_input }}</div>
+</label>
+{% endif %}
+{% elseif input.type=='select' %}
+    <div class="input-select-wrap">
+        <select 
+            class="input__input {{ input_classes }}"
+                {% if input.id %}
+                    id="{{ input.id }}"
+                {% endif %}
+                {% if input.name %}
+                    name="{{ input.name }}"
+                {% endif %}
+                {% if input.id %}
+                    onchange="{{ input.on_change }}">
+                {% endif %}
+                {% if input.placeholder %}
+                    <option value="">{{ input.placeholder }}</option>
+                {% endif %}
+                {% for option in input.values %}
+                    {% block select_option %}
+                        <option value="{{ option[input.select_values_val] }}"
+                        {% if option[input.select_values_check_val] == input.select_values_check %} selected="selected" {% endif %}>
+                            {{ option[input.select_values_name] }}
+                        </option>
+                    {% endblock %}
+                {% endfor %}
+        </select>
+    </div>
+    {% if input.text_input %}
+        <label class="input__label" for="{{ input.id }}">{{ input.text_input }}</label>
+    {% endif %}
+{% elseif input.type=='radio' %}
+    {% if input.values is iterable %}
+        {#set default values #}
+        {% if not input.value %}
+            {% set input=input|merge({value:'value'}) %}
+        {% endif %}
+        {% if not input.text %}
+            {% set input=input|merge({text:'text'}) %}
+        {% endif %}
+        {% if not input.image %}
+            {% set input=input|merge({image:'image'}) %}
+        {% endif %}
+        
+        <div class="input-radio-wrap"
+                {% if input.id %}
+                    id="{{ input.id }}"
+                {% endif %}>
+            {% for option in input.values %}
+                <label class='{{ input_classes }}'>
+                        {% block radio_option %}
+                            <input type="radio"
+                            {% if option.id %}
+                                id="{{ option.id }}"
+                            {% endif %}
+                            {% if input.name %}
+                                name="{{ input.name }}"
+                            {% endif %}
+                            {% if classes %}
+                                class="{{ input_classes }} "
+                            {% endif %}
+                            value="{{ option[input.value] }}"
+                            {% if input.checked == option[input.value] %}checked="checked"{% endif %}
+                            />
+                            <div class=input__text>{{ option[input.text] }}</div>
+                            {% if option[input.image]%}
+                                <img src="image/{{ option[input.image] }}" >
+                            {% endif %}
+                        {% endblock %}
+                            <span class="input--radio-checkmark"></span>
+                </label>
+            {% endfor %}
+        </div>
+    {% else %}
+        <label class="{{ input_classes }}" >
+            <input type="radio"
+                    {% if id %}
+                        id="{{ input.id }}"
+                    {% endif %}
+                    {% if classes %}
+                        class="{{ input_classes }} "
+                    {% endif %}
+                   name="{{ input.name }}"
+                   value="{{ input.value }}"
+                    {% if input.checked %}checked="checked"{% endif %}
+            />
+            <span class="input--radio-checkmark"></span>
+            <div class=input__text>{{ input.text_input }}</div>
+        </label>
+    {% endif %}
+
+{% elseif input.type=='button' %}
+    <input type="{{ input.type }}"
+            {% if id %}
+                id="{{ input.id }}"
+            {% endif %}
+           class="{{ input.input_classes }}"
+           value="{{ input.value }}"
+            {% if input.atributes %}{{ input.atributes }}{% endif %}
+    />
+{% elseif input.type=='textarea' %}
+    <textarea
+            type="{{ input.type }}"
+            {% if input.id %}
+                id="{{ input.id }}"
+            {% endif %}
+            name="{{ input.name }}"
+            class="{{ input_classes }}"
+            {% if input.cols %}
+                cols ="{{ input.cols }}"
+            {% endif %}
+            {% if input.rows %}
+                rows ="{{ input.rows }}"
+            {% endif %}
+            {{ input.attributes|raw }}
+    >{{ input.value }}</textarea>
+    {% if input.text_input %}
+        <div class="input__text"></div>
+        {{ input.text_input }}
+    {% endif %}
+{% elseif input.type=='time' %}
+    <input type="text" name="{{ input.name }}"
+            {% if input.id %}
+                id="{{ input.id }}"
+            {% endif %}
+           value="{{ input.value }}"
+           placeholder="{{ input.placeholder }}"
+           data-date-format="HH:mm"
+           class="{{ input_classes }}"/>
+{% elseif input.type=='date' %}
+    <input type="text" name="{{ input.name }}" value="{{ input.value }}"
+            {% if input.id %}
+                id="{{ input.id }}"
+            {% endif %}
+           placeholder="{{ input.placeholder }}"
+           data-date-format="YYYY-MM-DD"
+           class="{{ input_classes }}"/>
+{% elseif input.type=='datetime' %}
+    <input type="text" name="{{ input.name }}" value="{{ input.value }}"
+            {% if input.id %}
+                id="{{ input.id }}"
+            {% endif %}
+           placeholder="{{ input.placeholder }}"
+           data-date-format="YYYY-MM-DD HH:mm"
+           class="{{ input_classes }}"
+    />
+{% elseif input.type=='email' or input.type=='text' or input.type=='submit' or input.type=='password' or input.type=='hidden'%}
+    <input type="{{ input.type }}"
+            {% if input.id %}
+                id="{{ input.id }}"
+            {% endif %}
+            {% if input.name %}
+                name="{{ input.name }}"
+            {% endif %} 
+            {% if input.value %}
+                value="{{ input.value }}"
+            {% endif %}
+           placeholder="{{ input.placeholder }}"
+           class="{{ input_classes }}"
+            {% if atributest %}{{ atributest|raw }}{% endif %}
+    />
+{% endif %}
+{#</{{ input.input_group.tag|default('div') }}>#}

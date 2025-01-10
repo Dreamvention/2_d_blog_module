@@ -1,0 +1,12 @@
+{
+    "name": "Blog Module",
+    "codename": "blog_module",
+    "license": "GPL",
+    "version": "1.0.15",
+    "author": "Dreamvention",
+    "link": "https://dreamvention.com/",
+    "dependencies": {
+      "dv_opencart_patch": ">=1.0.0",
+      "d_autocomplete": ">=1.0.0"
+    }
+}

@@ -1,0 +1,85 @@
+{{header}}{{column_left}}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end"><a href="{{add}}" data-bs-toggle="tooltip" title="{{button_add}}" class="btn btn-primary"><i class="fa fa-plus"></i></a> 
+										<button type="button" data-bs-toggle="tooltip" title="{{button_copy}}" class="btn btn-light" onclick="$('#form-category').attr('action', '{{copy}}').submit();"><i class="fa fa-copy"></i></button>
+        <button type="button" data-bs-toggle="tooltip" title="{{button_delete}}" class="btn btn-danger" onclick="confirm('{{text_confirm}}') ? $('#form-category').submit() : false;"><i class="far fa-trash-alt"></i></button>
+      </div>
+      <h1>{{heading_title}}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li class="breadcrumb-item"><a href="{{breadcrumb.href}}">{{breadcrumb.text}}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{error_warning}}
+      <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+    </div>
+    {% endif %}
+    {% if success %}
+    <div class="alert alert-success"><i class="fa fa-check-circle"></i> {{success}}
+      <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+    </div>
+    {% endif %}
+    <div class="card">
+      <div class="card-header">
+        <i class="fa fa-list"></i> {{text_list}}
+      </div>
+      <div class="card-body">
+        <form action="{{delete}}" method="post" enctype="multipart/form-data" id="form-category">
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <td style="width: 1px;" class="text-center"><input class="form-check-input" type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
+                  <td class="text-start">{% if sort == 'title' %}
+                    <a href="{{sort_title}}" class="{{order|lower}}">{{column_title}}</a>
+                    {% else %}
+                    <a href="{{sort_title}}">{{column_title}}</a>
+                    {% endif %}</td>
+                  <td class="text-end">{% if sort == 'sort_order' %}
+                    <a href="{{sort_order}}" class="{{order|lower}}">{{column_sort_order}}</a>
+                    {% else %}
+                    <a href="{{sort_order}}">{{column_sort_order}}</a>
+                    {% endif %}</td>
+                  <td class="text-end">{{column_status}}</td>
+                  <td class="text-end">{{column_action}}</td>
+                </tr>
+              </thead>
+              <tbody>
+                {% if categories %}
+                {% for category in categories %}
+                <tr>
+                  <td class="text-center">{% if category.category_id in selected %}
+                    <input class="form-check-input" type="checkbox" name="selected[]" value="{{category.category_id}}" checked="checked" />
+                    {% else %}
+                    <input class="form-check-input" type="checkbox" name="selected[]" value="{{category.category_id}}" />
+                    {% endif %}</td>
+                  <td class="text-start">{{category.title}}</td>
+                  <td class="text-end">{{category.sort_order}}</td>
+                  <td class="text-end">{{category.status}}</td>
+                  <td class="text-end"><a href="{{category['edit']}}" data-bs-toggle="tooltip" title="{{button_edit}}" class="btn btn-primary"><i class="fas fa-pencil-alt"></i></a></td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                  <td class="text-center" colspan="5">{{text_no_results}}</td>
+                </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </form>
+        <div class="row">
+          <div class="col-sm-6 text-start">{{pagination}}</div>
+          <div class="col-sm-6 text-end">{{results}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{footer}}

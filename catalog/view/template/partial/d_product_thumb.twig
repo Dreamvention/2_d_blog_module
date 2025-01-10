@@ -1,0 +1,29 @@
+<!-- > d_product_thumb -->
+<div class="product-thumb transition">
+    <div class="image"><a href="{{href}}"><img src="{{thumb}}" alt="{{name}}" title="{{name}}" class="img-responsive" /></a></div>
+    <div class="caption">
+        <div class="h4"><a href="{{href}}">{{name}}</a></div>
+        <p>{{description}}</p>
+        {% if rating %}
+            {% include 'extension/blog_module/catalog/view/template/partial/d_rating.twig' %}
+        {% endif %}
+        {% if price %}
+        <p class="price">
+            {% if special %}
+                <span class="price-new">{{special}}</span> <span class="price-old">{{price}}</span>
+            {% else %}
+                {{price}}
+            {% endif %}
+            {% if tax %}
+            <span class="price-tax">{{text_tax}} {{tax}}</span>
+            {% endif %}
+        </p>
+        {% endif %}
+    </div>
+    <div class="button-group">
+        <button type="button" onclick="cart.add('{{product_id}}');"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">{{button_cart}}</span></button>
+        <button type="button" data-bs-toggle="tooltip" title="{{button_wishlist}}" onclick="wishlist.add('{{product_id}}');"><i class="fa fa-heart"></i></button>
+        <button type="button" data-bs-toggle="tooltip" title="{{button_compare}}" onclick="compare.add('{{product_id}}');"><i class="fa fa-exchange"></i></button>
+    </div>
+</div>
+<!-- /> d_product_thumb -->

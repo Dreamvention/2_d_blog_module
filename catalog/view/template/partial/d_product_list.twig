@@ -1,0 +1,16 @@
+{% if products %}
+    {% include 'partial/d_product_sort.twig' with partial.d_product_sort %}
+<div class="row products-list">
+    {% for product in products %}
+        <div class="product-layout product-list col-12">
+            {% include 'partial/d_product_thumb.twig' with partial.d_product_thumb|merge(product) %}
+        </div>
+    {% endfor %}
+</div>
+<div class="row">
+    <div class="col-sm-12 text-center-lg text-right">{{ pagination }}</div>
+</div>
+{% else %}
+<p>{{text_empty}}</p>
+{% include 'partial/d_button_continue.twig' with partial.d_button_continue %}
+{% endif %}

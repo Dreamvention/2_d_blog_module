@@ -1,0 +1,64 @@
+{{header}}{{column_left}}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-user-group" data-bs-toggle="tooltip" title="{{button_save}}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{cancel}}" data-bs-toggle="tooltip" title="{{button_cancel}}" class="btn btn-light"><i class="fa fa-reply"></i></a></div>
+      <h1>{{heading_title}}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li class="breadcrumb-item"><a href="{{breadcrumb.href}}">{{breadcrumb.text}}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{error_warning}}
+      <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+    </div>
+    {% endif %}
+    <div class="card">
+      <div class="card-header">
+        <i class="fas fa-pencil-alt"></i> {{text_form}}
+      </div>
+      <div class="card-body">
+        <form action="{{action}}" method="post" enctype="multipart/form-data" id="form-user-group" class="form-horizontal">
+          <div class="row mb-3 required">
+            <label class="col-sm-2 col-form-label" for="input-name">{{entry_name}}</label>
+            <div class="col-sm-10">
+              <input type="text" name="name" value="{{name}}" placeholder="{{entry_name}}" id="input-name" class="form-control" />
+              {% if error_name %}
+              <div class="text-danger">{{error_name}}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{entry_permission}}</label>
+            <div class="col-sm-10">
+              <div class="form-control" style="height: 150px; overflow: auto;">
+                {% if permissions %}
+                {% for permission in permissions %}
+                <div class="py-1">
+                  <label>
+                    {% if permission in selected %}
+                    <input class="form-check-input" type="checkbox" name="permission[]" value="{{permission}}" checked="checked" />
+                    {{permission}}
+                    {% else %}
+                    <input class="form-check-input" type="checkbox" name="permission[]" value="{{permission}}" />
+                    {{permission}}
+                    {% endif %}
+                  </label>
+                </div>
+                {% endfor %}
+                {% endif %}
+              </div>
+              <button class="btn btn-link" type="button" onclick="$(this).parent().find(':checkbox').prop('checked', true);">{{text_select_all}}</button> / <button class="btn btn-link" type="button" onclick="$(this).parent().find(':checkbox').prop('checked', false);">{{text_unselect_all}}</button></div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{footer}}

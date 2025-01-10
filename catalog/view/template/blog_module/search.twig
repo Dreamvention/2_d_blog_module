@@ -1,0 +1,28 @@
+{{header}}
+<style>
+    {{custom_style}}
+</style>
+{% include 'extension/blog_module/catalog/view/template/partial/d_breadcrumb.twig' %}
+    {% include 'extension/blog_module/catalog/view/template/partial/d_layout_open.twig' %}
+        <div class="bm">
+            <div class="bm-search-info clearfix">
+                 <h1 class="h1 title">{{heading_title}}</h1>
+            </div>
+            {% if posts %}
+                {% include 'extension/blog_module/catalog/view/template/blog_module/layout_grid.twig' with posts %}
+            {% endif %}
+            {% if not posts %}
+                <p class="bm-empty">{{text_empty}}</p>
+                <div class="buttons">
+                    <div class="float-end">
+                            {% include 'extension/blog_module/catalog/view/template/partial/button.twig' with {button:{
+                                link:continue, 
+                                style:'primary',
+                                text_button: button_continue
+                        }} %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    {% include 'extension/blog_module/catalog/view/template/partial/d_layout_close.twig' %}
+{{footer}}
